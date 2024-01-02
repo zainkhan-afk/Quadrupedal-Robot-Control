@@ -565,3 +565,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 ######################### visual studio .gitignore part end #########################
+
+
+eigen3/ 

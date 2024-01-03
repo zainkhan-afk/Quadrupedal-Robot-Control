@@ -21,12 +21,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Spatial.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\QuadrupedControl.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\State.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Quadruped.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\QuadrupedControl.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Quadruped.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

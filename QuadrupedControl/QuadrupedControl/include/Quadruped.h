@@ -10,11 +10,18 @@ public:
 	Quadruped() {}
 	~Quadruped() {}
 
-
+	void SetFloatingBaseStateFromIMU(double[] IMUData);
+	void SetJointsStateFromSensors(double[] jointStateData);
 
 private:
-	State state;
-	StateDot stateDot;
+	struct 
+	{
+		int numDoF{ 18 }, numActuatedDoF{ 12 }, numUnActuatedDoF{ 6 };
+	} robotParameters;
+
+
+	State<T> state;
+	StateDot<T> stateDot;
 };
 
 

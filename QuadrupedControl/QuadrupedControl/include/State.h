@@ -6,22 +6,22 @@
 template <typename T>
 struct State
 {
-	Vec3 bodyPosition;
-	Quat bodyOrientation;
+	Vec3<T> bodyPosition;
+	Quats<T> bodyOrientation;
 
-	VecSp bodyVelocity;
+	VecSp<T> bodyVelocity;
 
-	Vec12 q;
-	Vec12 qDot;
+	Vec12<T> q;
+	Vec12<T> qDot;
 };
 
 template <typename T>
 struct StateDot
 {
-	Vec3 bodyPositionDot;
-	VecSp bodyVelocityDDot;
+	Vec3<T> bodyPositionDot;
+	VecSp<T> bodyVelocityDDot;
 
-	Vec12 qDDot;
+	Vec12<T> qDDot;
 };
 
 #endif

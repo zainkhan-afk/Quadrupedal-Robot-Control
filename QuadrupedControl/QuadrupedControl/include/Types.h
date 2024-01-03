@@ -13,6 +13,12 @@ template <typename T>
 using Vec3 = typename Eigen::Matrix<T, 3, 1>;
 
 template <typename T>
+using Vec4 = typename Eigen::Matrix<T, 4, 1>;
+
+template <typename T>
+using Vec6 = typename Eigen::Matrix<T, 6, 1>;
+
+template <typename T>
 using Vec12 = typename Eigen::Matrix<T, 12, 1>;
 
 template <typename T>

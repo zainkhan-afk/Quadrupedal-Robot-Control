@@ -15,7 +15,8 @@ struct State
 	Vec12 qDot;
 };
 
-struct State_dot
+template <typename T>
+struct StateDot
 {
 	Vec3 bodyPositionDot;
 	VecSp bodyVelocityDDot;

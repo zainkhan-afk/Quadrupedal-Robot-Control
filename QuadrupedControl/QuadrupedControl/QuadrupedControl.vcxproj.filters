@@ -36,12 +36,18 @@
     <ClInclude Include="include\Quadruped.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\MPC.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\QuadrupedControl.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Quadruped.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPC.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

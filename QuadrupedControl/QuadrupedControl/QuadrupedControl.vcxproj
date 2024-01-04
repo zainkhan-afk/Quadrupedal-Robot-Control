@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\LegController.h" />
     <ClInclude Include="include\MPC.h" />
     <ClInclude Include="include\Quadruped.h" />
     <ClInclude Include="include\QuadrupedControl.h" />
@@ -27,6 +28,7 @@
     <ClInclude Include="include\Types.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\LegController.cpp" />
     <ClCompile Include="src\MPC.cpp" />
     <ClCompile Include="src\Quadruped.cpp" />
     <ClCompile Include="src\QuadrupedControl.cpp" />

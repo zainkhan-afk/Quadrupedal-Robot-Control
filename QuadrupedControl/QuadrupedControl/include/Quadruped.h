@@ -17,6 +17,7 @@ private:
 	struct 
 	{
 		int numDoF{ 18 }, numActuatedDoF{ 12 }, numUnActuatedDoF{ 6 };
+		
 	} robotParameters;
 
 

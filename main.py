@@ -19,7 +19,7 @@ p.setRealTimeSimulation(0)  # we want to be faster than real time :
 robot = Robot("urdf/mini_cheetah/mini_cheetah.urdf.xacro", [1,0,0.5], [0,0,0])
 
 while True:
-	base_pose = p.getBasePositionAndOrientation(robot.robot) # returns base position [x, y, z] and angular pose in quat [wx, wy, wz]
+	base_pose = p.getBasePositionAndOrientation(robot.robot) # returns base position [x, y, z] and angular pose in quat
 
 	get_velocity = p.getBaseVelocity(robot.robot) # returns linear velocity [x, y, z] and angular velocity [wx, wy, wz]
 	get_invert = p.invertTransform(base_pose[0], base_pose[1]) 

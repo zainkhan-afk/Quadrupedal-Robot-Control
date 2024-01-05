@@ -2,16 +2,20 @@
 #define QUARDUPED_H
 
 #include "State.h"
+#include "LegController.h"
 
 template <typename T>
 class Quadruped
 {
 public:
-	Quadruped() {}
-	~Quadruped() {}
+	Quadruped();
+	~Quadruped();
 
-	void SetFloatingBaseStateFromIMU(double[] IMUData);
-	void SetJointsStateFromSensors(double[] jointStateData);
+	void SetFloatingBaseStateFromIMU(double IMUData[]);
+	void SetJointsStateFromSensors(double jointStateData[]);
+	void SetState(State<T>& newState);
+	void SetState(double* bodyState, double* jointState);
+
 
 private:
 	struct 

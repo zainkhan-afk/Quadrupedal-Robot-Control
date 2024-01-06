@@ -12,7 +12,7 @@ void QuadrupedControl::GetTorques(double* torques)
 {
 	for (int i = 0; i < 12; i++)
 	{
-		torques[i] = 0;
+		torques[i] = 50;
 	}
 }
 

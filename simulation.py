@@ -10,11 +10,11 @@ class Simulation:
 	def __init__(self, dll_filename, robot_filename):
 		self.cpp_gait_ctrller = ctypes.cdll.LoadLibrary(dll_filename)
 		self.cpp_gait_ctrller.Init()
+		self.cpp_gait_ctrller.GetTorques.restype = ctypes.POINTER(ctypes.c_double * 12)
 
 		physicsClient = p.connect(p.GUI)
 		p.setAdditionalSearchPath(pybullet_data.getDataPath()) #Loads the plane urdf file
 		planeId = p.loadURDF("plane.urdf")
-
 
 
 		p.setGravity(0,0,-9.81, physicsClientId = physicsClient)
@@ -60,6 +60,16 @@ class Simulation:
 		motor_data = [0]*24
 
 		torques = self.cpp_gait_ctrller.GetTorques(self.ConvertType(body_pose), self.ConvertType(motor_data))
+
+		# set tau to simulator
+		p.setJointMotorControlArray(bodyUniqueId=self.robot.robot,
+									jointIndices=list(self.robot.joint_dict.keys()),
+									controlMode=p.TORQUE_CONTROL,
+									forces=list(torques.contents))
+
+		# print(torques.contents)
+		# print(torques.contents[0])
+		# print(list(torques.contents))
 
 
 

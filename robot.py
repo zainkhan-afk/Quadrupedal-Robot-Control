@@ -27,7 +27,7 @@ class Robot:
 			if 'toe' not in joint_name:
 				self.joint_dict[i] = joint_name
 
-		print(self.joint_dict)
+		print(self.joint_dict.keys())
 
 		self.joint_indices = self.joint_dict.keys()
 

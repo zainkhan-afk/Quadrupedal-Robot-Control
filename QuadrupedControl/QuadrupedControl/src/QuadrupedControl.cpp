@@ -10,6 +10,7 @@ QuadrupedControl::QuadrupedControl()
 
 void QuadrupedControl::GetTorques(double* torques)
 {
+	std::cout << "Getting Torques." << std::endl;
 	for (int i = 0; i < 12; i++)
 	{
 		torques[i] = 50;

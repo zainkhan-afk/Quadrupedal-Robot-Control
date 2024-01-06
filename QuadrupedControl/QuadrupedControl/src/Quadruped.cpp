@@ -55,3 +55,6 @@ void Quadruped<T>::SetState(double* bodyState, double* jointState)
 		state.qDot[i] = jointState[robotParameters.numActuatedDoF + i];
 	}
 }
+
+template class Quadruped<double>;
+template class Quadruped<float>;

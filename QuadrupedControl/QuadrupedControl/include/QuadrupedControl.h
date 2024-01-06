@@ -11,6 +11,8 @@ class QuadrupedControl
 {
 public:
 	QuadrupedControl();
+
+	void GetTorques(double* torques);
 private:
 	Quadruped<float> robot;
 };
@@ -18,21 +20,26 @@ private:
 
 
 
-extern "C" {
+extern "C" 
+{
 
 	QuadrupedControl* controller = NULL;
 
 	// first step, init the controller
-	void Init() {
+	__declspec(dllexport) void Init(void)
+	{
 		if (controller != NULL) {
 			delete controller;
 		}
 		controller = new QuadrupedControl();
 	}
 
-	// after init controller and pre work, the mpc calculator can work
-	double* torque_calculator(double imuData[], double motorData[]) {
-		double eff[12] = { 0.0 };
+	//// after init controller and pre work, the mpc calculator can work
+	__declspec(dllexport) double* GetTorques(double imuData[], double motorData[])
+	{
+		double eff[12] = { 0.0f };
+		controller->GetTorques(eff);
+
 		return eff;
 	}
 }

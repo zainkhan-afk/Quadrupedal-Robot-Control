@@ -4,12 +4,43 @@
 #include "State.h"
 #include "LegController.h"
 
+
+
+/*
+* The quadruped has 4 legs, the legs are arranged in the follwing way when viewed from top.
+* 
+*						Front
+* 
+* 
+* 
+* 
+*						Head
+*				Leg 2			Leg 1
+* 
+* 
+*Left											Right
+* 
+* 
+*				Leg 3			Leg 4
+* 
+* 
+* 
+* 
+* 
+*						Back
+*/
+
+
 template <typename T>
 class Quadruped
 {
 public:
 	Quadruped();
 	~Quadruped();
+
+	void Initialize();
+	void Stand();
+
 
 	void SetFloatingBaseStateFromIMU(double IMUData[]);
 	void SetJointsStateFromSensors(double jointStateData[]);

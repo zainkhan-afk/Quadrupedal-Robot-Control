@@ -1,4 +1,5 @@
 #include "LegController.h"
+#include "Utilities.h"
 
 /*
 * The constructor takes the link lengths of the robot and uses that to compute the IK, FK and Jacobian.
@@ -29,11 +30,9 @@ Vec3<T> LegController<T>::InverseKinematics(Vec3<T> pos, int leg)
 {
     T l14 = l1 + l4;
 
-    T sideSign = quad.getSideSign(leg);
+    T sideSign = GetLegSign(leg);
 
-    T D = (pos[0] * pos[0] + pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14 -
-        l2 * l2 - l3 * l3) /
-        (2 * l2 * l3);
+    T D = (pos[0] * pos[0] + pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14 - l2 * l2 - l3 * l3) / (2 * l2 * l3);
 
     if (D > 1)
     {
@@ -45,15 +44,15 @@ Vec3<T> LegController<T>::InverseKinematics(Vec3<T> pos, int leg)
         D = -1;
     }
 
-    T gamma = atan2(-sqrt(1 - D * D), D);
-    T theta = -atan2(pos[2], pos[1]) - atan2(sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l1 * l1), sideSign * l1);
-    T alpha = atan2(-pos[0], sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14)) - atan2(l3 * sin(gamma), l2 + l3 * cos(gamma));
+    T t1 = atan2(-sqrt(1 - D * D), D);
+    T t2 = -atan2(pos[2], pos[1]) - atan2(sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l1 * l1), sideSign * l1);
+    T t3 = atan2(-pos[0], sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14)) - atan2(l3 * sin(t1), l2 + l3 * cos(t1));
 
     Vec3<T> q;
 
-    q[0] = -theta;
-    q[1] = alpha;
-    q[2] = gamma;
+    q[0] = -t1;
+    q[1] = t2;
+    q[2] = t3;
 
     return q;
 }

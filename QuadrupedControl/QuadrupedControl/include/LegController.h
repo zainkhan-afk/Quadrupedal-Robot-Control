@@ -7,6 +7,7 @@ template<typename T>
 class LegController
 {
 public:
+	LegController() {}
 	LegController(T _l1, T _l2, T _l3, T _l4);
 	~LegController() {}
 

@@ -14,6 +14,8 @@ Quadruped<T>::~Quadruped()
 }
 
 
+
+
 template<typename T>
 void Quadruped<T>::SetFloatingBaseStateFromIMU(double IMUData[])
 {

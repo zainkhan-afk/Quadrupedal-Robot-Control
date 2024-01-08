@@ -42,6 +42,9 @@
     <ClInclude Include="include\LegController.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Utilities.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\QuadrupedControl.cpp">

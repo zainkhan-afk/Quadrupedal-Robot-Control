@@ -23,11 +23,24 @@ private:
 	{
 		int numDoF{ 18 }, numActuatedDoF{ 12 }, numUnActuatedDoF{ 6 };
 
+		T bodyLength, bodyWidth, bodyHeight;
+		T abdGearRatio, hipGearRatio, kneeGearRatio;
+		
+		T abdLinkLength, hipLinkLength, kneeLinkLength, kneeLinkYOffset, maxLegLength;
+
+		T bodyMass;
+
 	} robotParameters;
+
+	/*SpatialInertia<T> _abadInertia, _hipInertia, _kneeInertia, _abadRotorInertia,
+		_hipRotorInertia, _kneeRotorInertia, _bodyInertia;*/
+	Vec3<T> _abadLocation, _abadRotorLocation, _hipLocation, _hipRotorLocation,
+		_kneeLocation, _kneeRotorLocation;
 
 
 	State<T> state;
 	StateDot<T> stateDot;
+	LegController<T> legController;
 };
 
 

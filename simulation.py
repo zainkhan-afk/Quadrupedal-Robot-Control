@@ -59,6 +59,15 @@ class Simulation:
 		body_pose = [0]*7
 		motor_data = [0]*24
 
+		body_pose[0] = base_pose[0][0]
+		body_pose[1] = base_pose[0][1]
+		body_pose[2] = base_pose[0][2]
+
+		body_pose[3] = base_pose[1][0]
+		body_pose[4] = base_pose[1][1]
+		body_pose[5] = base_pose[1][2]
+		body_pose[6] = base_pose[1][3]
+
 		torques = self.cpp_gait_ctrller.GetTorques(self.ConvertType(body_pose), self.ConvertType(motor_data))
 
 		# set tau to simulator

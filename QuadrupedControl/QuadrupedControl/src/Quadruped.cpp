@@ -18,13 +18,29 @@ template<typename T>
 void Quadruped<T>::SetFloatingBaseStateFromIMU(double IMUData[])
 {
 
+	state.bodyPosition[0] = IMUData[0];
+	state.bodyPosition[1] = IMUData[1];
+	state.bodyPosition[2] = IMUData[2];
+
+	state.bodyOrientation[0] = IMUData[3];
+	state.bodyOrientation[1] = IMUData[4];
+	state.bodyOrientation[2] = IMUData[5];
+	state.bodyOrientation[3] = IMUData[6];
 }
 
 
 template<typename T>
 void Quadruped<T>::SetJointsStateFromSensors(double jointStateData[])
 {
+	for (int i = 0; i < robotParameters.numActuatedDoF; i++)
+	{
+		state.q[i] = jointStateData[i];
+	}
 
+	for (int i = 0; i < robotParameters.numActuatedDoF; i++)
+	{
+		state.qDot[i] = jointStateData[robotParameters.numActuatedDoF + i];
+	}
 }
 
 template<typename T>
@@ -34,26 +50,16 @@ void Quadruped<T>::SetState(State<T>& newState)
 }
 
 template<typename T>
-void Quadruped<T>::SetState(double* bodyState, double* jointState)
+void Quadruped<T>::SetState(double IMUData[], double jointStateData[])
 {
-	state.bodyPosition[0] = bodyState[0];
-	state.bodyPosition[1] = bodyState[1];
-	state.bodyPosition[2] = bodyState[2];
+	SetFloatingBaseStateFromIMU(IMUData);
+	SetJointsStateFromSensors(jointStateData);
+}
 
-	state.bodyOrientation[0] = bodyState[3];
-	state.bodyOrientation[1] = bodyState[4];
-	state.bodyOrientation[2] = bodyState[5];
-	state.bodyOrientation[3] = bodyState[6];
-
-	for (int i = 0; i < robotParameters.numActuatedDoF; i++)
-	{
-		state.q[i] = jointState[i];
-	}
-
-	for (int i = 0; i < robotParameters.numActuatedDoF; i++)
-	{
-		state.qDot[i] = jointState[robotParameters.numActuatedDoF + i];
-	}
+template<typename T>
+State<T> Quadruped<T>::GetState()
+{
+	return state;
 }
 
 template class Quadruped<double>;

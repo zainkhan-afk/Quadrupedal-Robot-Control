@@ -1,33 +1,21 @@
 #include <iostream>
 
 #include "QuadrupedControl.h"
-
+#include "State.h"
 
 
 QuadrupedControl::QuadrupedControl()
 {
 }
 
-void QuadrupedControl::GetTorques(double* torques)
+void QuadrupedControl::GetTorques(double imuData[], double motorData[], double* torques)
 {
-	std::cout << "Getting Torques." << std::endl;
+	robot.SetState(imuData, motorData);
+	State<float> state = robot.GetState();
+	state.PrintState();
+	//std::cout << "Getting Torques." << std::endl;
 	for (int i = 0; i < 12; i++)
 	{
-		torques[i] = 50;
+		torques[i] = 0;
 	}
 }
-
-//void SetRobotData(double* imuData, double* legData)
-//{
-//
-//}
-//
-//int main()
-//{
-//	std::cout << "Main Func." << std::endl;
-//
-//	QuadrupedControl* controller = NULL;
-//	//controller = new QuadrupedControl();
-//
-//	return 0;
-//}

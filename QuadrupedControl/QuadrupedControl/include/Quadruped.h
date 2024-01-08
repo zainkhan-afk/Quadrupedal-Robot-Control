@@ -14,8 +14,9 @@ public:
 	void SetFloatingBaseStateFromIMU(double IMUData[]);
 	void SetJointsStateFromSensors(double jointStateData[]);
 	void SetState(State<T>& newState);
-	void SetState(double* bodyState, double* jointState);
+	void SetState(double IMUData[], double jointStateData[]);
 
+	State<T> GetState();
 
 private:
 	struct 

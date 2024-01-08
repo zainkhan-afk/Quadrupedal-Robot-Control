@@ -2,6 +2,7 @@
 #define STATE_H
 
 #include "Types.h"
+#include <iostream>
 
 template <typename T>
 struct State
@@ -13,6 +14,11 @@ struct State
 
 	Vec12<T> q;
 	Vec12<T> qDot;
+
+	void PrintState()
+	{
+		std::cout << "Position - (" << bodyPosition[0] << ", " << bodyPosition[1] << ", " << bodyPosition[2] << ")\n";
+	}
 };
 
 template <typename T>
@@ -23,4 +29,5 @@ struct StateDot
 
 	Vec12<T> qDDot;
 };
+
 #endif

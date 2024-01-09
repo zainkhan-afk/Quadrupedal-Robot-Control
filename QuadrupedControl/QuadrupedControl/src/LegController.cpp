@@ -34,13 +34,13 @@ Vec3<T> LegController<T>::ForwardKinematics(Vec3<T> q, int leg)
 
     int sideSign = GetLegSign(leg);
 
-    T s1 = std::sin(q(0));
-    T s2 = std::sin(q(1));
-    T s3 = std::sin(q(2));
+    T s1 = std::sin(q[0]);
+    T s2 = std::sin(q[1]);
+    T s3 = std::sin(q[2]);
 
-    T c1 = std::cos(q(0));
-    T c2 = std::cos(q(1));
-    T c3 = std::cos(q(2));
+    T c1 = std::cos(q[0]);
+    T c2 = std::cos(q[1]);
+    T c3 = std::cos(q[2]);
 
     T c23 = c2 * c3 - s2 * s3;
     T s23 = s2 * c3 + c2 * s3;

@@ -64,6 +64,10 @@ void Quadruped<T>::SetState(double IMUData[], double jointStateData[])
 {
 	SetFloatingBaseStateFromIMU(IMUData);
 	SetJointsStateFromSensors(jointStateData);
+
+	Vec3<T> q = Vec3<T>(state.q[0], state.q[1], state.q[2]);
+
+	Vec3<T> p1 = legController.ForwardKinematics(q, 0);
 }
 
 template<typename T>

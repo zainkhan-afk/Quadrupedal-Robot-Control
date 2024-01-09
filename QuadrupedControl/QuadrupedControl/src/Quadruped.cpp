@@ -1,19 +1,27 @@
 #include "Quadruped.h"
 
-
 template<typename T>
 Quadruped<T>::Quadruped()
 {
-
+	 //legController = LegController<T>(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
 }
 
 template<typename T>
 Quadruped<T>::~Quadruped()
 {
-
 }
 
+template<typename T>
+void Quadruped<T>::Initialize()
+{
+	//legController = LegController<T>(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
+}
 
+template<typename T>
+void Quadruped<T>::Stand()
+{
+
+}
 
 
 template<typename T>

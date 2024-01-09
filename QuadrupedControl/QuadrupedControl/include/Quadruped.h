@@ -4,8 +4,6 @@
 #include "State.h"
 #include "LegController.h"
 
-
-
 /*
 * The quadruped has 4 legs, the legs are arranged in the follwing way when viewed from top.
 * 
@@ -54,20 +52,14 @@ private:
 	{
 		int numDoF{ 18 }, numActuatedDoF{ 12 }, numUnActuatedDoF{ 6 };
 
-		T bodyLength, bodyWidth, bodyHeight;
-		T abdGearRatio, hipGearRatio, kneeGearRatio;
+		T bodyLength{ 0.38 }, bodyWidth{ 0.098 }, bodyHeight{ 0.1 };
+		T abdGearRatio{ 6 }, hipGearRatio{ 6 }, kneeGearRatio{ 9.33 };
 		
-		T abdLinkLength, hipLinkLength, kneeLinkLength, kneeLinkYOffset, maxLegLength;
+		T abdLinkLength{ 0.062 }, hipLinkLength{ 0.209 }, kneeLinkLength{ 0.195 }, kneeLinkYOffset{ 0.004 }, maxLegLength{ 0.409 };
 
-		T bodyMass;
+		T bodyMass{ 3.3 };
 
 	} robotParameters;
-
-	/*SpatialInertia<T> _abadInertia, _hipInertia, _kneeInertia, _abadRotorInertia,
-		_hipRotorInertia, _kneeRotorInertia, _bodyInertia;*/
-	Vec3<T> _abadLocation, _abadRotorLocation, _hipLocation, _hipRotorLocation,
-		_kneeLocation, _kneeRotorLocation;
-
 
 	State<T> state;
 	StateDot<T> stateDot;

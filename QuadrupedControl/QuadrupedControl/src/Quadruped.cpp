@@ -65,9 +65,11 @@ void Quadruped<T>::SetState(double IMUData[], double jointStateData[])
 	SetFloatingBaseStateFromIMU(IMUData);
 	SetJointsStateFromSensors(jointStateData);
 
-	Vec3<T> q = Vec3<T>(state.q[0], state.q[1], state.q[2]);
-
-	Vec3<T> p1 = legController.ForwardKinematics(q, 0);
+	for (int i = 0; i < 4; i++)
+	{
+		Vec3<T> q = Vec3<T>(state.q[i * 3 + 0], state.q[i * 3 + 1], state.q[i * 3 + 2]);
+		Vec3<T> p = legController.ForwardKinematics(q, i);
+	}
 }
 
 template<typename T>
@@ -75,6 +77,29 @@ State<T> Quadruped<T>::GetState()
 {
 	return state;
 }
+
+template<typename T>
+Vec12<T> Quadruped<T>::LegPositionForState()
+{
+	Vec12<T> q = Vec12<T>::Zero();
+	Vec3<T> p = Vec3<T>::Zero();
+
+	p[0] = 0;
+	p[1] = -robotParameters.abdLinkLength;
+	p[2] = 0.3f;
+
+	for (int i = 0; i < 4; i++)
+	{
+		Vec3<T> motorPos = legController.InverseKinematics(p, i);
+
+		q[i * 3 + 0] = motorPos[0];
+		q[i * 3 + 1] = motorPos[1];
+		q[i * 3 + 2] = motorPos[2];
+	}
+
+	return q;
+}
+
 
 template class Quadruped<double>;
 template class Quadruped<float>;

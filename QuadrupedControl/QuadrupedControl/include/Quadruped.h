@@ -46,6 +46,7 @@ public:
 	void SetState(double IMUData[], double jointStateData[]);
 
 	State<T> GetState();
+	Vec12<T> LegPositionForState();
 
 private:
 	struct 

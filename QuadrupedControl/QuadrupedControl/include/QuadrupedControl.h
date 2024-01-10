@@ -14,6 +14,7 @@ public:
 	void Initialize();
 
 	void GetTorques(double imuData[], double motorData[], double* torques);
+	void MoveLegsTo(double imuData[], double motorData[], double* q);
 private:
 	Quadruped<float> robot;
 };
@@ -40,6 +41,14 @@ extern "C"
 		controller->GetTorques(imuData, motorData, eff);
 
 		return eff;
+	}
+
+	__declspec(dllexport) double* GetAnglesForPosition(double imuData[], double motorData[])
+	{
+		double q[12] = { 0.0f };
+		controller->MoveLegsTo(imuData, motorData, q);
+
+		return q;
 	}
 }
 

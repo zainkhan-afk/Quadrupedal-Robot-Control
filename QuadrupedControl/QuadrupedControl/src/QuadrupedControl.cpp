@@ -24,3 +24,14 @@ void QuadrupedControl::GetTorques(double imuData[], double motorData[], double* 
 		torques[i] = 0;
 	}
 }
+
+void QuadrupedControl::MoveLegsTo(double imuData[], double motorData[], double* q)
+{
+	robot.SetState(imuData, motorData);
+	Vec12<float> motorPositions = robot.LegPositionForState();
+
+	for (int i = 0; i < 12; i++)
+	{
+		q[i] = motorPositions[i];
+	}
+}

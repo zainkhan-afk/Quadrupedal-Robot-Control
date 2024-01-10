@@ -11,6 +11,7 @@ class Simulation:
 		self.cpp_gait_ctrller = ctypes.cdll.LoadLibrary(dll_filename)
 		self.cpp_gait_ctrller.Init()
 		self.cpp_gait_ctrller.GetTorques.restype = ctypes.POINTER(ctypes.c_double * 12)
+		self.cpp_gait_ctrller.GetAnglesForPosition.restype = ctypes.POINTER(ctypes.c_double * 12)
 
 		physicsClient = p.connect(p.GUI)
 		p.setAdditionalSearchPath(pybullet_data.getDataPath()) #Loads the plane urdf file
@@ -21,7 +22,7 @@ class Simulation:
 		p.setTimeStep(1/500) #THe lower this is, more accurate the simulation 
 		p.setRealTimeSimulation(0)  # we want to be faster than real time :
 
-		self.robot = Robot("urdf/mini_cheetah/mini_cheetah.urdf.xacro", [1,0,0.5], [0,0,0])
+		self.robot = Robot("urdf/mini_cheetah/mini_cheetah.urdf.xacro", [1,0,0.6], [0,0,0])
 
 	def ConvertType(self, input):
 		ctypes_map = {
@@ -55,7 +56,8 @@ class Simulation:
 		get_invert = p.invertTransform(base_pose[0], base_pose[1]) 
 		get_matrix = p.getMatrixFromQuaternion(get_invert[1])
 
-		# print(base_pose[0])
+		joint_states = p.getJointStates(self.robot.robot, list(self.robot.joint_dict.keys()))
+
 		body_pose = [0]*7
 		motor_data = [0]*24
 
@@ -68,14 +70,28 @@ class Simulation:
 		body_pose[5] = base_pose[1][2]
 		body_pose[6] = base_pose[1][3]
 
-		torques = self.cpp_gait_ctrller.GetTorques(self.ConvertType(body_pose), self.ConvertType(motor_data))
 
-		# set tau to simulator
+		for i in range(12):
+			motor_data[i] = joint_states[i][0]
+			motor_data[12+i] = joint_states[i][1]
+
+		# print(body_pose)
+		# print(motor_data)
+		# print(joint_states)
+
+		# torques = self.cpp_gait_ctrller.GetTorques(self.ConvertType(body_pose), self.ConvertType(motor_data))
+		q = self.cpp_gait_ctrller.GetAnglesForPosition(self.ConvertType(body_pose), self.ConvertType(motor_data))
+		
+		# p.setJointMotorControlArray(bodyUniqueId=self.robot.robot,
+		# 							jointIndices=list(self.robot.joint_dict.keys()),
+		# 							controlMode=p.TORQUE_CONTROL,
+		# 							forces=list(torques.contents))
+
 		p.setJointMotorControlArray(bodyUniqueId=self.robot.robot,
 									jointIndices=list(self.robot.joint_dict.keys()),
-									controlMode=p.TORQUE_CONTROL,
-									forces=list(torques.contents))
-
+									controlMode=p.POSITION_CONTROL,
+									targetPositions=q.contents)
+		
 		# print(torques.contents)
 		# print(torques.contents[0])
 		# print(list(torques.contents))
@@ -84,7 +100,7 @@ class Simulation:
 
 		p.stepSimulation()
 
-		time.sleep(1 / 500)
+		time.sleep(1 / 10000)
 
 	def Simulate(self):
 		while True:

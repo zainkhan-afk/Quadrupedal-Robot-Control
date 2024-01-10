@@ -75,17 +75,56 @@ Vec3<T> LegController<T>::InverseKinematics(Vec3<T> pos, int leg)
     }
 
     T t1 = atan2(-sqrt(1 - D * D), D);
-    T t2 = -atan2(pos[2], pos[1]) - atan2(sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l1 * l1), sideSign * l1);
+    T t2 = -atan2(pos[2], pos[1]) - atan2(sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14), sideSign * l14);
     T t3 = atan2(-pos[0], sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14)) - atan2(l3 * sin(t1), l2 + l3 * cos(t1));
 
     Vec3<T> q = Vec3<T>::Zero();
 
-    q[0] = -t1;
-    q[1] = t2;
-    q[2] = t3;
+    q[0] = -t2;
+    q[1] = t3;
+    q[2] = t1;
 
     return q;
 }
+
+//template<typename T>
+//Vec3<T> LegController<T>::InverseKinematics(Vec3<T> pos, int leg)
+//{
+//    int sideSign = GetLegSign(leg);
+//    pos[1] *= -1;
+//    Vec3<T> q = Vec3<T>::Zero();
+//    T l14 = l1 + l4;
+//
+//    T R = sqrt(pos[2] * pos[2] + pos[1] * pos[1]);
+//
+//    T alpha = acos(abs(pos[1]) / R);
+//    T beta = acos(l14 / R);
+//
+//    if (pos[1] >= 0) { q[0] = alpha - beta; }
+//    else { q[0] = PI - alpha - beta; }
+//
+//    T _x = pos[0];
+//    T _z = -sqrt(pos[1] * pos[1] + pos[2] * pos[2] + l14 * l14);
+//
+//
+//    T D = (_x*_x + _z*_z - l2 * l2 - l3 * l3) / (2 * l2 * l3);
+//
+//    if (D > 1)
+//    {
+//        D = 1;
+//    }
+//
+//    else if (D < -1)
+//    {
+//        D = -1;
+//    }
+//
+//    q[2] = acos(D);
+//
+//    q[1] = PI / 2 + (atan2(_z, _x) - atan2(l3 * sin(q[2]), l2 + l3 * cos(q[2])));
+//
+//    return q;
+//}
 
 template<typename T>
 Mat3<T> LegController<T>::GetLegJacobian(Vec3<T> q, int leg)

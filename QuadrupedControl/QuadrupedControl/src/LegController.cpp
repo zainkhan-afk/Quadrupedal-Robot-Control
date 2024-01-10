@@ -1,5 +1,6 @@
 #include "LegController.h"
 #include "Utilities.h"
+#include<iostream>
 
 
 
@@ -47,8 +48,9 @@ Vec3<T> LegController<T>::ForwardKinematics(Vec3<T> q, int leg)
 
     P[0] = l3 * s23 + l2 * s2;
     P[1]  = (l1 + l4) * sideSign * c1 + l3 * (s1 * c23) + l2 * c2 * s1;
-    P[3] = (l1 + l4) * sideSign * s1 - l3 * (c1 * c23) - l2 * c1 * c2;
+    P[2] = (l1 + l4) * sideSign * s1 - l3 * (c1 * c23) - l2 * c1 * c2;
 
+    std::cout << "Leg: " << leg << " Position: " << P[0] << ", " << P[1] << ", " << P[2] << "\n";
 
     return P;
 }

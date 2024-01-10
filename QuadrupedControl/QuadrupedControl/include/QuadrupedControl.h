@@ -11,6 +11,7 @@ class QuadrupedControl
 {
 public:
 	QuadrupedControl();
+	void Initialize();
 
 	void GetTorques(double imuData[], double motorData[], double* torques);
 private:
@@ -30,6 +31,7 @@ extern "C"
 			delete controller;
 		}
 		controller = new QuadrupedControl();
+		controller->Initialize();
 	}
 
 	__declspec(dllexport) double* GetTorques(double imuData[], double motorData[])

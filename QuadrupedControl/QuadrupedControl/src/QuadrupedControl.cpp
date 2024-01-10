@@ -8,6 +8,11 @@ QuadrupedControl::QuadrupedControl()
 {
 }
 
+void QuadrupedControl::Initialize()
+{
+	robot.Initialize();
+}
+
 void QuadrupedControl::GetTorques(double imuData[], double motorData[], double* torques)
 {
 	robot.SetState(imuData, motorData);

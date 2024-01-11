@@ -52,6 +52,7 @@ Vec3<T> LegController<T>::ForwardKinematics(Vec3<T> q, int leg)
 
     std::cout << "Leg: " << leg << " Position: " << P[0] << ", " << P[1] << ", " << P[2] << "\n";
 
+
     return P;
 }
 

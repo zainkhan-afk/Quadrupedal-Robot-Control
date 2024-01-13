@@ -85,8 +85,8 @@ Vec12<T> Quadruped<T>::LegPositionForState()
 	Vec3<T> p = Vec3<T>::Zero();
 
 	p[0] = 0;
-	p[1] = -robotParameters.abdLinkLength;
-	p[2] = 0.3f;
+	p[1] = robotParameters.abdLinkLength + robotParameters.kneeLinkYOffset;
+	p[2] = -0.3f;
 
 	for (int i = 0; i < 4; i++)
 	{

@@ -26,11 +26,17 @@ LegController<T>::LegController(T abdLinkLength, T hipLinkLength, T kneeLinkLeng
 	this->l2 = hipLinkLength;
 	this->l3 = kneeLinkLength;
 	this->l4 = kneeLinkYOffset;
+
+    this->l14 = this->l1 + this->l4;
 }
 
 template<typename T>
 Vec3<T> LegController<T>::ForwardKinematics(Vec3<T> q, int leg)
 {
+    // X : -1.0 * c2 * l3 * s3 - 1.0 * c3 * l3 * s2 - 1.0 * l2 * s2
+    // Y : 1.0 * c1 * l1 + s1 * (c2 * c3 * l3 + c2 * l2 - 1.0 * l3 * s2 * s3)
+    // Z : -1.0 * c1 * (c2 * c3 * l3 + c2 * l2 - 1.0 * l3 * s2 * s3) + 1.0 * l1 * s1
+
     Vec3<T> P = Vec3<T>::Zero();
 
     int sideSign = GetLegSign(leg);
@@ -46,9 +52,9 @@ Vec3<T> LegController<T>::ForwardKinematics(Vec3<T> q, int leg)
     T c23 = c2 * c3 - s2 * s3;
     T s23 = s2 * c3 + c2 * s3;
 
-    P[0] = l3 * s23 + l2 * s2;
-    P[1]  = (l1 + l4) * sideSign * c1 + l3 * (s1 * c23) + l2 * c2 * s1;
-    P[2] = (l1 + l4) * sideSign * s1 - l3 * (c1 * c23) - l2 * c1 * c2;
+    P[0] = -this->l3 * c2 * s3 - this->l3 * s2 * c3 - this->l2 * s2;
+    P[1]  = this->l14 * c1 + s1 * (this->l3 * c2 * c3 + this->l2 * c2 - this->l3 * s2 * s3);
+    P[2] =  this->l14 * s1 - c1 * (this->l3 * c2 * c3 + this->l2 * c2 - this->l3 * s2 * s3);
 
     std::cout << "Leg: " << leg << " Position: " << P[0] << ", " << P[1] << ", " << P[2] << "\n";
 

@@ -17,7 +17,7 @@ public:
 	Mat3<T> GetLegJacobian(Vec3<T> q, int leg);
 
 private:
-	T l1, l2, l3, l4;
+	T l1, l2, l3, l4, l14;
 };
 
 #endif

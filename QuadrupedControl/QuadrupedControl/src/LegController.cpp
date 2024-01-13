@@ -65,31 +65,33 @@ Vec3<T> LegController<T>::ForwardKinematics(Vec3<T> q, int leg)
 template<typename T>
 Vec3<T> LegController<T>::InverseKinematics(Vec3<T> pos, int leg)
 {
-    T l14 = l1 + l4;
-
     int sideSign = GetLegSign(leg);
-
-    T D = (pos[0] * pos[0] + pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14 - l2 * l2 - l3 * l3) / (2 * l2 * l3);
-
-    if (D > 1)
-    {
-        D = 1;
-    }
-
-    else if (D < -1)
-    {
-        D = -1;
-    }
-
-    T t1 = atan2(-sqrt(1 - D * D), D);
-    T t2 = -atan2(pos[2], pos[1]) - atan2(sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14), sideSign * l14);
-    T t3 = atan2(-pos[0], sqrt(pos[1] * pos[1] + pos[2] * pos[2] - l14 * l14)) - atan2(l3 * sin(t1), l2 + l3 * cos(t1));
-
     Vec3<T> q = Vec3<T>::Zero();
+    T R = sqrt(pos[2] * pos[2] + pos[1] * pos[1]);
 
-    q[0] = -t2;
-    q[1] = t3;
-    q[2] = t1;
+    T beta = acos(pos[1] / R);
+    T alpha = acos(this->l14 / R);
+
+    T theta1 = alpha - beta;
+
+    T x_ = -pos[2];
+    T y_ = -pos[1] + this->l14;
+    T z_ = -pos[0];
+
+
+    T temp = (x_ * x_ + z_ * z_ - this->l2 * this->l2 - this->l3 * this->l3) / (2 * this->l2 * this->l3);
+
+    if (temp > 1)
+        temp = 1;
+    else if (temp < -1)
+        temp = -1;
+
+    T theta3 = acos(temp);
+    T theta2 = (atan2(z_, x_) - atan2(this->l3 * sin(theta3), (this->l2 + this->l3 * cos(theta3))));
+
+    q[0] = theta1;
+    q[1] = theta2;
+    q[2] = theta3;
 
     return q;
 }

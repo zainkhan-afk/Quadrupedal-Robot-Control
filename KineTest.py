@@ -137,8 +137,8 @@ if __name__ == "__main__":
 	y_vals = np.arange(-0.05, 0.05, 0.05)
 	z_vals = np.arange(-0.2, -0.1, 0.05)
 
-	y = 0.066
-	z = -0.2
+	# y = 0.066
+	# z = -0.2
 	# for x in x_vals:
 	# 	for y in y_vals:
 	# 		for z in z_vals:
@@ -150,4 +150,4 @@ if __name__ == "__main__":
 
 	# 			print(almost_equal, p_target, p_FK)
 
-		# print(almost_equal)
+	# 	print(almost_equal)

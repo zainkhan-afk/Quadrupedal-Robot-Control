@@ -24,6 +24,7 @@
     <ClInclude Include="include\Quadruped.h" />
     <ClInclude Include="include\QuadrupedControl.h" />
     <ClInclude Include="include\Spatial.h" />
+    <ClInclude Include="include\SpatialInertia.h" />
     <ClInclude Include="include\State.h" />
     <ClInclude Include="include\Types.h" />
     <ClInclude Include="include\Utilities.h" />
@@ -33,6 +34,7 @@
     <ClCompile Include="src\MPC.cpp" />
     <ClCompile Include="src\Quadruped.cpp" />
     <ClCompile Include="src\QuadrupedControl.cpp" />
+    <ClCompile Include="src\SpatialInertia.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

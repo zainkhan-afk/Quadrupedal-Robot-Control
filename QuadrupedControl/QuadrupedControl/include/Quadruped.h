@@ -3,6 +3,7 @@
 
 #include "State.h"
 #include "LegController.h"
+#include "SpatialInertia.h"
 
 /*
 * The quadruped has 4 legs, the legs are arranged in the follwing way when viewed from top.
@@ -61,6 +62,13 @@ private:
 		T bodyMass{ 3.3 };
 
 	} robotParameters;
+
+	struct
+	{
+		SpatialInertia<T> floatingBodyInertia, abdInertia, hipInertia, kneeInertia;
+		SpatialInertia<T> abdRotorInertia, hipRotorInertia, kneeRotorInertia;
+		Vec3<T> abdLocation, abdRotorLocation, hipLocation, hipRotorLocation, kneeLocation, kneeRotorLocation;
+	} bodyInertiaParams;
 
 	State<T> state;
 	StateDot<T> stateDot;

@@ -1,4 +1,5 @@
 #include "Quadruped.h"
+#include "Utilities.h"
 
 template<typename T>
 Quadruped<T>::Quadruped()
@@ -15,6 +16,19 @@ template<typename T>
 void Quadruped<T>::Initialize()
 {
 	legController = LegController<T>(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
+
+
+	Mat3<T> rotorRotationalInertiaZ;
+	rotorRotationalInertiaZ << 33, 0, 0, 0, 33, 0, 0, 0, 63;
+	rotorRotationalInertiaZ = 1e-6 * rotorRotationalInertiaZ;
+
+	Mat3<T> RY = GetRotationMatrix(PI / 2, 1);
+	Mat3<T> RX = GetRotationMatrix(PI / 2, 0);
+
+	Mat3<T> rotorRotationalInertiaX = RY * rotorRotationalInertiaZ * RY.transpose();
+	Mat3<T> rotorRotationalInertiaY = RX * rotorRotationalInertiaZ * RX.transpose();
+
+	bodyInertiaParams
 }
 
 template<typename T>

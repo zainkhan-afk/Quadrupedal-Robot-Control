@@ -6,6 +6,7 @@
 template<typename T>
 class SpatialInertia
 {
+public:
 	SpatialInertia();
 	SpatialInertia(T mass, const Vec3<T>& com, const Mat3<T>& inertia);
 	~SpatialInertia();
@@ -14,7 +15,7 @@ class SpatialInertia
 	void SetInertia(MatSp<T> otherInertia);
 	MatSp<T> GetInertia();
 private:
-	MatSp<T> intertia;
+	MatSp<T> inertia;
 
 };
 

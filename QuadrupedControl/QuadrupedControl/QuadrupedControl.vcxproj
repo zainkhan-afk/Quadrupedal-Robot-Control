@@ -35,6 +35,7 @@
     <ClCompile Include="src\Quadruped.cpp" />
     <ClCompile Include="src\QuadrupedControl.cpp" />
     <ClCompile Include="src\SpatialInertia.cpp" />
+    <ClCompile Include="src\Utilities.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

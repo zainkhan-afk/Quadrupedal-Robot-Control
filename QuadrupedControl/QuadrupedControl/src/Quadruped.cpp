@@ -17,18 +17,47 @@ void Quadruped<T>::Initialize()
 {
 	legController = LegController<T>(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
 
-
+	
 	Mat3<T> rotorRotationalInertiaZ;
 	rotorRotationalInertiaZ << 33, 0, 0, 0, 33, 0, 0, 0, 63;
 	rotorRotationalInertiaZ = 1e-6 * rotorRotationalInertiaZ;
 
-	Mat3<T> RY = GetRotationMatrix(PI / 2, 1);
-	Mat3<T> RX = GetRotationMatrix(PI / 2, 0);
+	Mat3<T> RY = GetRotationMatrix<T>(PI / 2.0f, 1);
+	Mat3<T> RX = GetRotationMatrix<T>(PI / 2.0f, 0);
 
 	Mat3<T> rotorRotationalInertiaX = RY * rotorRotationalInertiaZ * RY.transpose();
 	Mat3<T> rotorRotationalInertiaY = RX * rotorRotationalInertiaZ * RX.transpose();
 
-	bodyInertiaParams
+	// spatial inertias
+	/*Mat3<T> abadRotationalInertia;
+	abadRotationalInertia << 381, 58, 0.45, 58, 560, 0.95, 0.45, 0.95, 444;
+	abadRotationalInertia = abadRotationalInertia * 1e-6;
+	Vec3<T> abadCOM(0, 0.036, 0); 
+	bodyInertiaParams.abdInertia = SpatialInertia<T>(0.54, abadCOM, abadRotationalInertia);
+
+	Mat3<T> hipRotationalInertia;
+	hipRotationalInertia << 1983, 245, 13, 245, 2103, 1.5, 13, 1.5, 408;
+	hipRotationalInertia = hipRotationalInertia * 1e-6;
+	Vec3<T> hipCOM(0, 0.016, -0.02);
+	bodyInertiaParams.hipInertia = SpatialInertia<T>(0.634, hipCOM, hipRotationalInertia);
+
+	Mat3<T> kneeRotationalInertia, kneeRotationalInertiaRotated;
+	kneeRotationalInertiaRotated << 6, 0, 0, 0, 248, 0, 0, 0, 245;
+	kneeRotationalInertiaRotated = kneeRotationalInertiaRotated * 1e-6;
+	kneeRotationalInertia = RY * kneeRotationalInertiaRotated * RY.transpose();
+	Vec3<T> kneeCOM(0, 0, -0.061);
+	bodyInertiaParams.kneeInertia = SpatialInertia<T>(0.064, kneeCOM, kneeRotationalInertia);
+
+	Vec3<T> rotorCOM(0, 0, 0);
+	SpatialInertia<T> rotorInertiaX(0.055, rotorCOM, rotorRotationalInertiaX);
+	SpatialInertia<T> rotorInertiaY(0.055, rotorCOM, rotorRotationalInertiaY);
+
+	Mat3<T> bodyRotationalInertia;
+	bodyRotationalInertia << 11253, 0, 0, 0, 36203, 0, 0, 0, 42673;
+	bodyRotationalInertia = bodyRotationalInertia * 1e-6;
+	Vec3<T> bodyCOM(0, 0, 0);
+	bodyInertiaParams.floatingBodyInertia = SpatialInertia<T>(robotParameters.bodyMass, bodyCOM, bodyRotationalInertia);
+	*/
 }
 
 template<typename T>

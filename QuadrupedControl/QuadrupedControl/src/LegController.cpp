@@ -39,7 +39,7 @@ Vec3<T> LegController<T>::ForwardKinematics(Vec3<T> q, int leg)
 
     Vec3<T> P = Vec3<T>::Zero();
 
-    int sideSign = GetLegSign(leg);
+    //int sideSign = GetLegSign(leg);
 
     T s1 = std::sin(q[0]);
     T s2 = std::sin(q[1]);
@@ -65,7 +65,7 @@ Vec3<T> LegController<T>::ForwardKinematics(Vec3<T> q, int leg)
 template<typename T>
 Vec3<T> LegController<T>::InverseKinematics(Vec3<T> pos, int leg)
 {
-    int sideSign = GetLegSign(leg);
+    //int sideSign = GetLegSign(leg);
     Vec3<T> q = Vec3<T>::Zero();
     T R = sqrt(pos[2] * pos[2] + pos[1] * pos[1]);
 
@@ -139,7 +139,7 @@ template<typename T>
 Mat3<T> LegController<T>::GetLegJacobian(Vec3<T> q, int leg)
 {
     Mat3<T> J = Mat3<T>::Zero();
-    int sideSign = GetLegSign(leg);
+    /*int sideSign = GetLegSign(leg);
 
     T s1 = std::sin(q[0]);
     T s2 = std::sin(q[1]);
@@ -160,7 +160,7 @@ Mat3<T> LegController<T>::GetLegJacobian(Vec3<T> q, int leg)
     J(1, 2) = -l3 * s1 * s23;
     J(2, 0) = l3 * s1 * c23 + l2 * c2 * s1 + (l1 + l4) * sideSign * c1;
     J(2, 1) = l3 * c1 * s23 + l2 * c1 * s2;
-    J(2, 2) = l3 * c1 * s23;
+    J(2, 2) = l3 * c1 * s23;*/
 
     return J;
 }

@@ -1,6 +1,7 @@
+#include<iostream>
+
 #include "LegController.h"
 #include "Utilities.h"
-#include<iostream>
 
 
 

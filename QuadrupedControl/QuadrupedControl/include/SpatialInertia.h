@@ -7,6 +7,7 @@ template<typename T>
 class SpatialInertia
 {
 public:
+	//EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	SpatialInertia();
 	SpatialInertia(T mass, const Vec3<T>& com, const Mat3<T>& inertia);
 	~SpatialInertia();

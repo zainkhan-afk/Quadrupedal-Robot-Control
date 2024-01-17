@@ -65,11 +65,11 @@ private:
 	} robotParameters;
 
 	struct
-	/*{
+	{
 		SpatialInertia<T> floatingBodyInertia, abdInertia, hipInertia, kneeInertia;
 		SpatialInertia<T> abdRotorInertia, hipRotorInertia, kneeRotorInertia;
 		Vec3<T> abdLocation, abdRotorLocation, hipLocation, hipRotorLocation, kneeLocation, kneeRotorLocation;
-	} bodyInertiaParams;*/
+	} bodyInertiaParams;
 
 	State<T> state;
 	StateDot<T> stateDot;

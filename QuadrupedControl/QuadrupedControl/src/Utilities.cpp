@@ -1,19 +1,19 @@
 #include "Utilities.h"
 
 
-int GetLegSign(int leg)
-{
-	if (leg == 0 || leg == 2)
-	{
-		return -1;
-	}
-	else
-	{
-		return 1;
-	}
-}
+//int GetLegSign(int leg)
+//{
+//	if (leg == 0 || leg == 2)
+//	{
+//		return -1;
+//	}
+//	else
+//	{
+//		return 1;
+//	}
+//}
 
-//
+
 //template <typename T>
 //Mat3<T> vectorToSkewMat(const Vec3<T>& v) {
 //	Mat3<T> m;

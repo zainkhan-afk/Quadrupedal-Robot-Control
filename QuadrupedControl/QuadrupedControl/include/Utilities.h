@@ -4,7 +4,17 @@
 #include "Types.h"
 #define PI 3.1415926535
 
-int GetLegSign(int leg);
+//int GetLegSign(int leg)
+//{
+//	if (leg == 0 || leg == 2)
+//	{
+//		return -1;
+//	}
+//	else
+//	{
+//		return 1;
+//	}
+//}
 
 template <typename T>
 Mat3<T> vectorToSkewMat(const Vec3<T>& v) {

@@ -3,6 +3,13 @@
 template<typename T>
 RobotDynamics<T>::RobotDynamics()
 {
+	Mat6<T> eye6 = Mat6<T>::Identity();
+	VecSP<T> zero6 = VecSP<T>::Zero();
+	SpatialInertia<T> zeroInertia;
+	for (int i = 0; i < 13; i++)
+	{
+		compositeInertia.push_back(zeroInertia)
+	}
 }
 
 template<typename T>

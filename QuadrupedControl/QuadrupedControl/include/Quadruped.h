@@ -4,7 +4,7 @@
 #include "State.h"
 #include "LegController.h"
 #include "SpatialInertia.h"
-
+#include "RobotDynamics.h"
 /*
 * The quadruped has 4 legs, the legs are arranged in the follwing way when viewed from top.
 * 
@@ -58,6 +58,7 @@ private:
 private:
 	struct 
 	{
+		std::vector<SpatialInertia<T>> I;
 		int numDoF{ 18 }, numActuatedDoF{ 12 }, numUnActuatedDoF{ 6 };
 
 		T bodyLength{ 0.38 }, bodyWidth{ 0.098 }, bodyHeight{ 0.1 };
@@ -79,6 +80,8 @@ private:
 	State<T> state;
 	StateDot<T> stateDot;
 	LegController<T> legController;
+	RobotDynamics<T> dynamics;
+
 };
 
 

@@ -152,5 +152,27 @@ Vec12<T> Quadruped<T>::LegPositionForState()
 }
 
 
+template<typename T>
+Vec18<T> Quadruped<T>::GetGravityVector()
+{
+	Vec18<T> G = Vec18<T>::Zero();
+	return G;
+}
+
+template<typename T>
+Mat18<T> Quadruped<T>::GetCoriolisMatrix()
+{
+	Mat18<T> C = Mat18<T>::Zero();
+	return C;
+}
+
+template<typename T>
+Mat18<T> Quadruped<T>::GetMassMatrix()
+{
+	Mat18<T> M = Mat18<T>::Zero();
+	return M;
+}
+
+
 template class Quadruped<double>;
 template class Quadruped<float>;

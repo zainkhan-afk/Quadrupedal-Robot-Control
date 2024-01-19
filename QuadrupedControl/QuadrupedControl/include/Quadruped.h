@@ -51,6 +51,11 @@ public:
 	Vec12<T> LegPositionForState();
 
 private:
+	Vec18<T> GetGravityVector();
+	Mat18<T> GetCoriolisMatrix();
+	Mat18<T> GetMassMatrix();
+
+private:
 	struct 
 	{
 		int numDoF{ 18 }, numActuatedDoF{ 12 }, numUnActuatedDoF{ 6 };

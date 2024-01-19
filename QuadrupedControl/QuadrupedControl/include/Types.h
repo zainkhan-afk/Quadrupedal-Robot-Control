@@ -36,6 +36,15 @@ template <typename T>
 using Mat3 = typename Eigen::Matrix<T, 3, 3>;
 
 template <typename T>
+using Mat6 = typename Eigen::Matrix<T, 6, 6>;
+
+template <typename T>
+using Mat12 = typename Eigen::Matrix<T, 12, 12>;
+
+template <typename T>
+using Mat18 = typename Eigen::Matrix<T, 18, 18>;
+
+template <typename T>
 using MatSp = typename Eigen::Matrix<T, 6, 6>;
 
 #endif

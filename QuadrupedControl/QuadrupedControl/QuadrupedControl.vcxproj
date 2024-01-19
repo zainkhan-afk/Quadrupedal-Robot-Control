@@ -23,6 +23,7 @@
     <ClInclude Include="include\MPC.h" />
     <ClInclude Include="include\Quadruped.h" />
     <ClInclude Include="include\QuadrupedControl.h" />
+    <ClInclude Include="include\RobotDynamics.h" />
     <ClInclude Include="include\Spatial.h" />
     <ClInclude Include="include\SpatialInertia.h" />
     <ClInclude Include="include\State.h" />
@@ -34,6 +35,7 @@
     <ClCompile Include="src\MPC.cpp" />
     <ClCompile Include="src\Quadruped.cpp" />
     <ClCompile Include="src\QuadrupedControl.cpp" />
+    <ClCompile Include="src\RobotDynamics.cpp" />
     <ClCompile Include="src\SpatialInertia.cpp" />
     <ClCompile Include="src\Utilities.cpp" />
   </ItemGroup>

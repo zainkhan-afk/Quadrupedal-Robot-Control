@@ -1,14 +1,16 @@
-#include "RobotDynamics.h"
+#include "pch.h"
+
+#include "Quadruped/RobotDynamics.h"
 
 template<typename T>
 RobotDynamics<T>::RobotDynamics()
 {
 	Mat6<T> eye6 = Mat6<T>::Identity();
-	VecSP<T> zero6 = VecSP<T>::Zero();
+	VecSp<T> zero6 = VecSp<T>::Zero();
 	SpatialInertia<T> zeroInertia;
 	for (int i = 0; i < 13; i++)
 	{
-		compositeInertia.push_back(zeroInertia)
+		compositeInertia.push_back(zeroInertia);
 	}
 }
 
@@ -34,7 +36,7 @@ void RobotDynamics<T>::CalculateCompositeInertia()
 template<typename T>
 void RobotDynamics<T>::CalculateLinkTreePositions()
 {
-}
+} 
 
 template class RobotDynamics<double>;
 template class RobotDynamics<float>;

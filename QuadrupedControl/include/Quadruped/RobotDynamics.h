@@ -1,8 +1,8 @@
 #ifndef ROBOTDYNAMICS_H 
 #define ROBOTDYNAMICS_H
 
-#include "Types.h"
-#include "SpatialInertia.h"
+#include "Quadruped/Types.h"
+#include "Quadruped/SpatialInertia.h"
 
 #include <eigen3/Eigen/StdVector>
 

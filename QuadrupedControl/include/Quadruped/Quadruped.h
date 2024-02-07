@@ -1,10 +1,11 @@
 #ifndef QUARDUPED_H
 #define QUARDUPED_H
 
-#include "State.h"
-#include "LegController.h"
-#include "SpatialInertia.h"
-#include "RobotDynamics.h"
+#include "Quadruped/State.h"
+#include "Quadruped/LegController.h"
+#include "Quadruped/SpatialInertia.h"
+#include "Quadruped/RobotDynamics.h"
+
 /*
 * The quadruped has 4 legs, the legs are arranged in the follwing way when viewed from top.
 * 
@@ -26,12 +27,13 @@
 * 
 * 
 * 
+* 
 *						Back
 */
 
 
 template <typename T>
-class Quadruped
+class __declspec(dllexport) Quadruped
 {
 public:
 	//EIGEN_MAKE_ALIGNED_OPERATOR_NEW

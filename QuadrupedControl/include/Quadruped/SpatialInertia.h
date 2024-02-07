@@ -1,7 +1,7 @@
 #ifndef SPATIALINERTIA_H
 #define SPATIALINERTIA_H
 
-#include "Types.h"
+#include "Quadruped/Types.h"
 
 template<typename T>
 class SpatialInertia

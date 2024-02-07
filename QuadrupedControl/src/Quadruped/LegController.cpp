@@ -1,9 +1,7 @@
+#include "pch.h"
 #include<iostream>
-
-#include "LegController.h"
-#include "Utilities.h"
-
-
+#include "Quadruped/LegController.h"
+#include "Quadruped/Utilities.h"
 
 template<typename T>
 LegController<T>::LegController()

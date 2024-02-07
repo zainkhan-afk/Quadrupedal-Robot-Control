@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include\Quadruped">
+      <UniqueIdentifier>{308b5ba1-384e-4fda-a7ad-1717beac3a23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Quadruped">
+      <UniqueIdentifier>{825faa62-9dcb-4056-8f37-f046fff4e5f8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\LegController.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\MPC.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\Quadruped.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\QuadrupedControl.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\RobotDynamics.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\Spatial.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\SpatialInertia.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\State.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\Types.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\Utilities.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\LegController.cpp">
+      <Filter>src\Quadruped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\MPC.cpp">
+      <Filter>src\Quadruped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\Quadruped.cpp">
+      <Filter>src\Quadruped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\QuadrupedControl.cpp">
+      <Filter>src\Quadruped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\RobotDynamics.cpp">
+      <Filter>src\Quadruped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\SpatialInertia.cpp">
+      <Filter>src\Quadruped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\Utilities.cpp">
+      <Filter>src\Quadruped</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

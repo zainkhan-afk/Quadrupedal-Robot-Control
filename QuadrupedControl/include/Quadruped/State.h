@@ -1,7 +1,7 @@
 #ifndef STATE_H
 #define STATE_H
 
-#include "Types.h"
+#include "Quadruped/Types.h"
 #include <iostream>
 
 template <typename T>

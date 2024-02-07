@@ -1,5 +1,6 @@
-#include "Quadruped.h"
-#include "Utilities.h"
+#include "pch.h"
+#include "Quadruped/Quadruped.h"
+#include "Quadruped/Utilities.h"
 
 template<typename T>
 Quadruped<T>::Quadruped()

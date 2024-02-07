@@ -2,7 +2,7 @@
 #define LEGCONTROLLER_H
 
 
-#include "Types.h"
+#include "Quadruped/Types.h"
 
 template<typename T>
 class LegController

@@ -1,5 +1,7 @@
-#include "SpatialInertia.h"
-#include "Utilities.h"
+#include "pch.h"
+
+#include "Quadruped/SpatialInertia.h"
+#include "Quadruped/Utilities.h"
 
 template<typename T>
 SpatialInertia<T>::SpatialInertia()
@@ -35,7 +37,6 @@ void SpatialInertia<T>::SetInertia(MatSp<T> otherInertia)
 {
     this->inertia = otherInertia;
 }
-
 
 template<typename T>
 MatSp<T> SpatialInertia<T>::GetInertia()

@@ -1,7 +1,7 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-#include "Types.h"
+#include "Quadruped/Types.h"
 #define PI 3.1415926535
 
 //int GetLegSign(int leg)

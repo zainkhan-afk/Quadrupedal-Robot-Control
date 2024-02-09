@@ -33,7 +33,7 @@
 
 
 template <typename T>
-class __declspec(dllexport) Quadruped
+class Quadruped
 {
 public:
 	//EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -83,7 +83,6 @@ private:
 	StateDot<T> stateDot;
 	LegController<T> legController;
 	RobotDynamics<T> dynamics;
-
 };
 
 

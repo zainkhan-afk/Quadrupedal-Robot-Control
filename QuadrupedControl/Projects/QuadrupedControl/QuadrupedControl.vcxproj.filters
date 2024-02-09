@@ -57,6 +57,9 @@
     <ClInclude Include="..\..\include\Quadruped\Utilities.h">
       <Filter>include\Quadruped</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\TestClass.h">
+      <Filter>include\Quadruped</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -84,6 +87,9 @@
       <Filter>src\Quadruped</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Quadruped\Utilities.cpp">
+      <Filter>src\Quadruped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\TestClass.cpp">
       <Filter>src\Quadruped</Filter>
     </ClCompile>
   </ItemGroup>

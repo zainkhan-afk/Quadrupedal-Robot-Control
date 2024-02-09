@@ -175,5 +175,5 @@ Mat18<T> Quadruped<T>::GetMassMatrix()
 }
 
 
-template class Quadruped<double>;
-template class Quadruped<float>;
+template class __declspec(dllexport) Quadruped<double>;
+template class __declspec(dllexport) Quadruped<float>;

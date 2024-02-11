@@ -16,6 +16,7 @@ Quadruped<T>::~Quadruped()
 template<typename T>
 void Quadruped<T>::Initialize()
 {
+	std::cout << "Initializing Quadruped." << std::endl;
 	legController = LegController<T>(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
 
 	

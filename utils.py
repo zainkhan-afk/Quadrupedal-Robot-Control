@@ -1,4 +1,5 @@
 import numpy as np
+from spatial import SpatialTransformation
 
 def get_rot_mat( x, y, z):
 	R_x = np.array([
@@ -52,3 +53,14 @@ def Vector2SkewMat(V):
 				 ])
 
 	return M
+
+
+def GetJointTransformationMatrix(axis, q):
+	if axis == 0:
+		R = get_rot_mat(x = q, y = 0, z = 0)
+	elif axis == 1:
+		R = get_rot_mat(x = 0, y = q, z = 0)
+	else:
+		R = get_rot_mat(x = 0, y = 0, z = q)
+
+	return SpatialTransformation(R, np.zeros((3, 1)))

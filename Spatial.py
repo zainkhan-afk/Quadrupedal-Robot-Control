@@ -1,11 +1,15 @@
 import numpy as np
 from utils import Vector2SkewMat
 
-def SpatialInertia(mass, inertia, COM):
-	I = np.zeros((6, 6))
-	I
+def SpatialInertia(mass, I, COM):
+	inertia = np.zeros((6, 6))
+	COM_skew = Vector2SkewMat(COM)
+	inertia[:3, :3] = I + (mass * (COM_skew @ COM_skew.T))
+	inertia[:3, 3:] = mass*COM_skew
+	inertia[3:, :3] = mass*COM_skew.T
+	inertia[3:, 3:] = mass*np.eye(3)
 
-	return I
+	return inertia
 
 
 def SpatialTransformation(R, T):

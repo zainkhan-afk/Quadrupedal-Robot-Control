@@ -1,6 +1,32 @@
 import numpy as np
 from spatial import SpatialTransformation
 
+
+def GetRotMat(q, axis):
+	if axis == 0:
+		R = np.array([
+						[1, 		0, 			0], 
+						[0, np.cos(q), -np.sin(q)], 
+						[0, np.sin(q), 	np.cos(q)]
+					])
+
+	elif axis == 1:
+		R = np.array([
+							[ np.cos(q), 0, np.sin(q)], 
+							[ 		  0, 1, 		0], 
+							[-np.sin(q), 0, np.cos(q)]
+					])
+
+	else:
+		R = np.array([
+							[np.cos(q), -np.sin(q), 0], 
+							[np.sin(q),  np.cos(q), 0], 
+							[		 0, 		 0, 1]
+						])
+
+
+	return R
+
 def get_rot_mat( x, y, z):
 	R_x = np.array([
 		[1, 0, 0], [0, np.cos(x), -np.sin(x)], [0, np.sin(x), np.cos(x)]
@@ -45,6 +71,23 @@ def trig_solve(chain, angle_list):
 	return product
 
 
+def GetLegSignedVector(V, leg_i):
+	if leg_i == 0:
+		V[1] *= -1
+
+	elif leg_i == 1:
+		V = V
+	
+	elif leg_i == 2:
+		V[0] *= -1
+		V[1] *= -1
+	
+	elif leg_i == 3:
+		V[0] *= -1
+
+	return V
+
+
 def Vector2SkewMat(V):
 	M = np.array([
 					[       0, -V[2, 0],  V[1, 0]],
@@ -55,12 +98,11 @@ def Vector2SkewMat(V):
 	return M
 
 
-def GetJointTransformationMatrix(axis, q):
-	if axis == 0:
-		R = get_rot_mat(x = q, y = 0, z = 0)
-	elif axis == 1:
-		R = get_rot_mat(x = 0, y = q, z = 0)
-	else:
-		R = get_rot_mat(x = 0, y = 0, z = q)
+def Mat2SkewVec(M):
+	V = np.array([
+					[M[2, 1] - M[1, 2]],
+					[M[0, 2] - M[2, 0]],
+					[M[1, 0] - M[0, 1]]
+				]) * 0.5
 
-	return SpatialTransformation(R, np.zeros((3, 1)))
+	return V

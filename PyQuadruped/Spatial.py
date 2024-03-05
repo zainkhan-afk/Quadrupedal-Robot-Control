@@ -18,7 +18,7 @@ def SpatialInertiaFromHomog(P_inertia):
 
 	mass = P_inertia[-1, -1]
 	
-	skew_vec = P_inertia[:3, -1]
+	skew_vec = P_inertia[:3, -1].reshape(3, 1)
 	mat = P_inertia[:3, :3]
 
 	I_b = np.trace(mat) * np.eye(3) - mat
@@ -43,8 +43,8 @@ def GetPseudoInertia(inertia):
 	P_inertia = np.zeros((4, 4))
 
 	P_inertia[:3, :3] = 0.5 * np.trace(I_b) * np.eye(3) - I_b
-	P_inertia[:3, -1] = skew_vec
-	P_inertia[-1, :3] = skew_vec.T
+	P_inertia[:3, -1] = skew_vec.ravel()
+	P_inertia[-1, :3] = skew_vec.T.ravel()
 
 	P_inertia[-1, -1] = mass
 
@@ -52,7 +52,7 @@ def GetPseudoInertia(inertia):
 
 def FlipSpatialInertia(inertia, axis):
 	P_inertia = GetPseudoInertia(inertia)
-	T = np.zeros(4, 4)
+	T = np.eye(4)
 
 	if axis == 0:
 		T[0, 0] = -1
@@ -63,10 +63,8 @@ def FlipSpatialInertia(inertia, axis):
 	elif axis == 2:
 		T[2, 2] = -1
 
-	P_inertia = X@P_inertia@X
+	P_inertia = T@P_inertia@T
 	return SpatialInertiaFromHomog(P_inertia)
-
-
 
 def SpatialTransformation(R, T):
 	X = np.zeros((6, 6))
@@ -74,11 +72,31 @@ def SpatialTransformation(R, T):
 	X[:3, :3] = R
 	X[3:, 3:] = R
 
-	X[3:, :3] = -R @ Vector2SkewMat(T)
-
-	print(X)
+	X[3:, :3] = R @ Vector2SkewMat(T)
 
 	return X
 
-if __name__ == "__main__":
-	SpatialTransformation(np.random.random((3, 3)), np.array([[1],[2],[3]]))
+def SpatialToHomog(X):
+	T = np.zeros((4, 4))
+	R = X[:3, :3]
+	R_skew = X[3:, :3]
+
+	T[:3, :3] = R
+	T[-1, -1] = 1
+
+	T[:3, -1] = Mat2SkewVec(R_skew @ R.T).ravel()
+
+	return T
+
+# if __name__ == "__main__":
+# 	np.random.seed(1)
+# 	I = SpatialInertia(1, np.random.random((3, 3)), np.zeros((3, 1)))
+# 	print(I)
+# 	print()
+# 	I_flipped = FlipSpatialInertia(I, 1)
+# 	print(I_flipped)
+# 	print()
+# 	I_flipped = FlipSpatialInertia(I_flipped, 1)
+# 	print(I_flipped)
+# 	print()
+

@@ -1,14 +1,13 @@
 import numpy as np
-from spatial import SpatialTransformation
 
 
 def GetRotMat(q, axis):
 	if axis == 0:
 		R = np.array([
-						[1, 		0, 			0], 
-						[0, np.cos(q), -np.sin(q)], 
-						[0, np.sin(q), 	np.cos(q)]
-					])
+							[1, 		0, 			0], 
+							[0, np.cos(q), -np.sin(q)], 
+							[0, np.sin(q), 	np.cos(q)],
+					 ])
 
 	elif axis == 1:
 		R = np.array([
@@ -71,12 +70,13 @@ def trig_solve(chain, angle_list):
 	return product
 
 
-def GetLegSignedVector(V, leg_i):
+def GetLegSignedVector(v, leg_i):
+	V = v.copy()
 	if leg_i == 0:
 		V[1] *= -1
 
 	elif leg_i == 1:
-		V = V
+		V = v.copy()
 	
 	elif leg_i == 2:
 		V[0] *= -1

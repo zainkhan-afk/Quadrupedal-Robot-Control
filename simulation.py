@@ -5,6 +5,7 @@ import numpy as np
 
 from robot import Robot
 import ctypes
+from cvVisualizer import CVVisualizer
 
 class Simulation:
 	def __init__(self, dll_filename, robot_filename):
@@ -12,6 +13,8 @@ class Simulation:
 		self.cpp_gait_ctrller.Init()
 		self.cpp_gait_ctrller.GetTorques.restype = ctypes.POINTER(ctypes.c_double * 12)
 		self.cpp_gait_ctrller.GetAnglesForPosition.restype = ctypes.POINTER(ctypes.c_double * 12)
+
+		self.visualizer = CVVisualizer(800, 800)
 
 		physicsClient = p.connect(p.GUI)
 		p.setAdditionalSearchPath(pybullet_data.getDataPath()) #Loads the plane urdf file
@@ -96,6 +99,8 @@ class Simulation:
 		# print(torques.contents[0])
 		# print(list(torques.contents))
 
+
+		self.visualizer.Render()
 
 
 		p.stepSimulation()

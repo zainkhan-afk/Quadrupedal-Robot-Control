@@ -42,3 +42,13 @@ def trig_solve(chain, angle_list):
 		i += 1
 
 	return product
+
+
+def Vector2SkewMat(V):
+	M = np.array([
+					[       0, -V[2, 0],  V[1, 0]],
+					[ V[2, 0],        0, -V[0, 0]],
+					[-V[1, 0],  V[0, 0],       0]
+				 ])
+
+	return M

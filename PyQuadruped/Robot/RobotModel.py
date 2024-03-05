@@ -1,19 +1,17 @@
 import numpy as np
 from utils import GetRotMat
 from Spatial import SpatialTransformation, SpatialToHomog
+from PyQuadruped.Robot import Joint, Link
 
 class RobotModel:
 	def __init__(self, base_transformation):
-		self.parents = []
-		self.inertias = []
-		self.local_transformations = []
-		self.after_rotation_transformations = []
-		self.global_transformations = []
-		self.joint_axis_with_parent_list = []
+		self.joints = []
 
-		self.base_transformation = base_transformation
+	def AddJoint(self, joint):
+		self.joints.append(joint)
 
 	def AddBody(self, inertia, T, parent_id, joint_axis_with_parent):
+
 		self.inertias.append(inertia)
 		self.local_transformations.append(T)
 		self.parents.append(parent_id)

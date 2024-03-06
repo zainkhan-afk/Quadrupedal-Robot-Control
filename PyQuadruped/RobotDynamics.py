@@ -1,24 +1,28 @@
 import numpy as np
-from RobotModel import RobotModel
-from RobotParams import floating_body_spatial_inertia as FB_I
-from RobotParams import abd_spatial_inertia as A_I
-from RobotParams import hip_spatial_inertia as H_I
-from RobotParams import knee_spatial_inertia as K_I
+from PyQuadruped.Robot.RobotModel import RobotModel
+from PyQuadruped.RobotParams import floating_body_spatial_inertia as FB_I
+from PyQuadruped.RobotParams import abd_spatial_inertia as A_I
+from PyQuadruped.RobotParams import hip_spatial_inertia as H_I
+from PyQuadruped.RobotParams import knee_spatial_inertia as K_I
 
-from RobotParams import abd_location, knee_location, hip_location
+from PyQuadruped.RobotParams import abd_location, knee_location, hip_location
 
 
-from Spatial import SpatialTransformation, FlipSpatialInertia
+from PyQuadruped.Spatial import SpatialTransformation, FlipSpatialInertia
 from utils import GetRotMat, GetLegSignedVector
 
-from State import State
+from PyQuadruped.State import State
 
-from PyQuadruped.Robot import Link, RobotModel
+from PyQuadruped.Robot.Link import Link
+from PyQuadruped.Robot.Joint import Joint
+from PyQuadruped.Robot.RobotModel import RobotModel
 
 class RobotDynamics:
 	def __init__(self, base_transformation):
 		self.model = RobotModel(base_transformation)
-		floating_body_link = Link(FB_I, np.zeros(6, 6))
+		floating_body_link = Link(FB_I, np.zeros((6, 6)))
+		floating_body_link.joint_rotated_T = np.eye(6)
+		floating_body_link.global_T = np.eye(6)
 		# self.model.AddBody(inertia = FB_I, T = np.zeros((6, 6)), parent_id = 0, joint_axis_with_parent = None)
 
 		# parent_id = 0
@@ -39,6 +43,8 @@ class RobotDynamics:
 				# 					joint_axis_with_parent = 0)
 
 			# parent_id += 1
+			abd_joint = Joint(q = 0, axis = 0, parent = floating_body_link, child = abd_link)
+			self.model.AddJoint(abd_joint)
 
 			hip_T = SpatialTransformation(GetRotMat(np.pi, 2), GetLegSignedVector(hip_location, leg_i))
 			if side < 0:
@@ -54,6 +60,8 @@ class RobotDynamics:
 				# 					joint_axis_with_parent = 1)	
 
 			# parent_id += 1
+			hip_joint = Joint(q = 0, axis = 1, parent = abd_link, child = thigh_link)
+			self.model.AddJoint(hip_joint)
 
 			knee_T = SpatialTransformation(R_ident, GetLegSignedVector(knee_location, leg_i))
 			if side < 0:
@@ -69,7 +77,8 @@ class RobotDynamics:
 				# 					joint_axis_with_parent = 1)	
 
 
-
+			knee_joint = Joint(q = 0, axis = 1, parent = thigh_link, child = shin_link)
+			self.model.AddJoint(hip_joint)
 
 			side *= -1
 

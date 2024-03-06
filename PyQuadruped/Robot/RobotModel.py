@@ -1,6 +1,6 @@
 import numpy as np
 from utils import GetRotMat
-from Spatial import SpatialTransformation, SpatialToHomog
+from PyQuadruped.Spatial import SpatialTransformation, SpatialToHomog
 from PyQuadruped.Robot import Joint, Link
 
 class RobotModel:
@@ -20,11 +20,14 @@ class RobotModel:
 		self.global_transformations.append(np.eye(6))
 
 	def ForwardKinematics(self, state):
-		for i in range(1, len(self.parents)):
-			R_joint = GetRotMat(state.q[i - 1, 0], self.joint_axis_with_parent_list[i])
-			T_joint = SpatialTransformation(R_joint, np.zeros((3, 1)))
+		# for i in range(1, len(self.parents)):
+		# 	R_joint = GetRotMat(state.q[i - 1, 0], self.joint_axis_with_parent_list[i])
+		# 	T_joint = SpatialTransformation(R_joint, np.zeros((3, 1)))
 
-			self.after_rotation_transformations[i] = T_joint@self.local_transformations[i]
+		# 	self.after_rotation_transformations[i] = T_joint@self.local_transformations[i]
 
-			print(SpatialToHomog(self.after_rotation_transformations[i])[:3, -1].ravel())
-			print()
+		# 	print(SpatialToHomog(self.after_rotation_transformations[i])[:3, -1].ravel())
+		# 	print()
+
+		for i in range(len(self.joints)):
+			self.joints[i].Update(state.q[i, 0])

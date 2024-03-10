@@ -1,17 +1,21 @@
 import numpy as np
-from utils import GetRotMat
+from PyQuadruped.utils import GetRotMat
 from PyQuadruped.Spatial import SpatialTransformation, SpatialToHomog
 from PyQuadruped.Robot import Joint, Link
 
 class RobotModel:
 	def __init__(self, base_transformation):
 		self.joints = []
+		self.kinematic_tree = None
+		self.base_transformation = base_transformation
+
+	def AssignKinematicTree(self, kinematic_tree):
+		self.kinematic_tree = kinematic_tree
 
 	def AddJoint(self, joint):
 		self.joints.append(joint)
 
 	def AddBody(self, inertia, T, parent_id, joint_axis_with_parent):
-
 		self.inertias.append(inertia)
 		self.local_transformations.append(T)
 		self.parents.append(parent_id)
@@ -30,4 +34,8 @@ class RobotModel:
 		# 	print()
 
 		for i in range(len(self.joints)):
-			self.joints[i].Update(state.q[i, 0])
+			self.joints[i].SetAngle(state.q[i, 0])
+			# if (i + 1) % 3 == 0:
+			# 	print(SpatialToHomog(self.joints[i].child.global_T)[:3, -1].ravel())
+			# 	print()
+		self.kinematic_tree.Update(np.eye(6))	

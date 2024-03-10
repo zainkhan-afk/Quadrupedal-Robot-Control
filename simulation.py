@@ -5,16 +5,16 @@ import numpy as np
 
 from robot import Robot
 import ctypes
-from cvVisualizer import CVVisualizer
+# from cvVisualizer import CVVisualizer
 
 class Simulation:
 	def __init__(self, dll_filename, robot_filename):
-		self.cpp_gait_ctrller = ctypes.cdll.LoadLibrary(dll_filename)
-		self.cpp_gait_ctrller.Init()
-		self.cpp_gait_ctrller.GetTorques.restype = ctypes.POINTER(ctypes.c_double * 12)
-		self.cpp_gait_ctrller.GetAnglesForPosition.restype = ctypes.POINTER(ctypes.c_double * 12)
+		# self.cpp_gait_ctrller = ctypes.cdll.LoadLibrary(dll_filename)
+		# self.cpp_gait_ctrller.Init()
+		# self.cpp_gait_ctrller.GetTorques.restype = ctypes.POINTER(ctypes.c_double * 12)
+		# self.cpp_gait_ctrller.GetAnglesForPosition.restype = ctypes.POINTER(ctypes.c_double * 12)
 
-		self.visualizer = CVVisualizer(800, 800)
+		# self.visualizer = CVVisualizer(800, 800)
 
 		physicsClient = p.connect(p.GUI)
 		p.setAdditionalSearchPath(pybullet_data.getDataPath()) #Loads the plane urdf file
@@ -83,24 +83,24 @@ class Simulation:
 		# print(joint_states)
 
 		# torques = self.cpp_gait_ctrller.GetTorques(self.ConvertType(body_pose), self.ConvertType(motor_data))
-		q = self.cpp_gait_ctrller.GetAnglesForPosition(self.ConvertType(body_pose), self.ConvertType(motor_data))
+		# q = self.cpp_gait_ctrller.GetAnglesForPosition(self.ConvertType(body_pose), self.ConvertType(motor_data))
 		
 		# p.setJointMotorControlArray(bodyUniqueId=self.robot.robot,
 		# 							jointIndices=list(self.robot.joint_dict.keys()),
 		# 							controlMode=p.TORQUE_CONTROL,
 		# 							forces=list(torques.contents))
 
-		p.setJointMotorControlArray(bodyUniqueId=self.robot.robot,
-									jointIndices=list(self.robot.joint_dict.keys()),
-									controlMode=p.POSITION_CONTROL,
-									targetPositions=q.contents)
+		# p.setJointMotorControlArray(bodyUniqueId=self.robot.robot,
+		# 							jointIndices=list(self.robot.joint_dict.keys()),
+		# 							controlMode=p.POSITION_CONTROL,
+		# 							targetPositions=q.contents)
 		
 		# print(torques.contents)
 		# print(torques.contents[0])
 		# print(list(torques.contents))
 
 
-		self.visualizer.Render()
+		# self.visualizer.Render()
 
 
 		p.stepSimulation()

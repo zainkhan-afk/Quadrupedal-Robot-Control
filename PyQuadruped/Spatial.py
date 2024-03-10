@@ -1,5 +1,5 @@
 import numpy as np
-from utils import Vector2SkewMat, Mat2SkewVec
+from PyQuadruped.utils import Vector2SkewMat, Mat2SkewVec, GetRotMat
 
 
 
@@ -72,7 +72,11 @@ def SpatialTransformation(R, T):
 	X[:3, :3] = R
 	X[3:, 3:] = R
 
-	X[3:, :3] = R @ Vector2SkewMat(T)
+	T_skew = Vector2SkewMat(T)
+	R_skew = -T_skew@R
+	
+	X[3:, :3] = R_skew
+
 
 	return X
 
@@ -84,19 +88,46 @@ def SpatialToHomog(X):
 	T[:3, :3] = R
 	T[-1, -1] = 1
 
-	T[:3, -1] = Mat2SkewVec(R_skew @ R.T).ravel()
+	T_skew = -R_skew@R.T
+
+	T[:3, -1] = Mat2SkewVec(T_skew).ravel()
 
 	return T
 
-# if __name__ == "__main__":
-# 	np.random.seed(1)
-# 	I = SpatialInertia(1, np.random.random((3, 3)), np.zeros((3, 1)))
-# 	print(I)
-# 	print()
-# 	I_flipped = FlipSpatialInertia(I, 1)
-# 	print(I_flipped)
-# 	print()
-# 	I_flipped = FlipSpatialInertia(I_flipped, 1)
-# 	print(I_flipped)
-# 	print()
+def HomogForm(R, P):
+	T = np.zeros((4, 4))
+	
+	T[:3, :3] = R
+	T[:3, -1] = P.ravel()
 
+	T[-1, -1] = 1
+
+	return T
+
+
+
+if __name__ == "__main__":
+	np.random.seed(1)
+	R1 = GetRotMat(0.1, 0)
+	P1 = np.random.random((3, 1))
+	b_T_f1 = HomogForm(R1, P1)
+
+	R2 = GetRotMat(0.1, 0)
+	P2 = np.random.random((3, 1))
+	f1_T_f2 = HomogForm(R2, P2)
+
+	b_T_f2 = b_T_f1 @ f1_T_f2
+	print(b_T_f2)
+	print()
+
+
+	b_T_f1 = SpatialTransformation(R1, P1)
+	f1_T_f2 = SpatialTransformation(R2, P2)
+
+	b_T_f2 = b_T_f1 @ f1_T_f2
+	print(SpatialToHomog(b_T_f2))
+
+	T = SpatialTransformation(R1, P1)
+	print()
+	print(P1.ravel())
+	print(SpatialToHomog(T)[:3, -1].ravel())

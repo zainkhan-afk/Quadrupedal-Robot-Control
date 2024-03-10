@@ -53,6 +53,7 @@ knee_spatial_inertia = SpatialInertia(knee_mass, knee_inertia, knee_COM)
 abd_location = np.array([[body_length, body_width, 0]]).T * 0.5
 hip_location = np.array([[0, abd_link_len, 0]]).T
 knee_location = np.array([[0, 0, -hip_link_len]]).T
+foot_location = np.array([[0, 0, -knee_link_length]]).T
 
 
 abd_joint_location = np.array([[body_length, body_width, 0]]).T * 0.5

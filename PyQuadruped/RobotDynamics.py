@@ -5,7 +5,7 @@ from PyQuadruped.RobotParams import abd_spatial_inertia as A_I
 from PyQuadruped.RobotParams import hip_spatial_inertia as H_I
 from PyQuadruped.RobotParams import knee_spatial_inertia as K_I
 
-from PyQuadruped.RobotParams import abd_location, knee_location, hip_location
+from PyQuadruped.RobotParams import abd_location, knee_location, hip_location, foot_location
 
 
 from PyQuadruped.Spatial import SpatialTransformation, FlipSpatialInertia, SpatialToHomog
@@ -24,8 +24,8 @@ class RobotDynamics:
 	def __init__(self, base_transformation):
 		self.model = RobotModel(base_transformation)
 		
-		self.xz_vis = CVVisualizer(700, 700, title = "xz", scaler = 1000)
-		self.yz_vis = CVVisualizer(700, 700, title = "yz", scaler = 1000)
+		self.xz_vis = CVVisualizer(700, 700, title = "xz", scaler = 500)
+		self.yz_vis = CVVisualizer(700, 700, title = "yz", scaler = 500)
 		
 		floating_body_link = Link(FB_I, np.eye(6))
 		floating_body_link.global_T = np.eye(6)
@@ -70,35 +70,55 @@ class RobotDynamics:
 			
 			self.model.AddJoint(abd_joint)
 			self.model.AddJoint(hip_joint)
-			self.model.AddJoint(hip_joint)
+			self.model.AddJoint(knee_joint)
 
 			side *= -1
 
-	def Step(self, state):
-		self.xz_vis.Clear()
-		self.yz_vis.Clear()
-		self.model.ForwardKinematics(state)
-
-
+	def DebugVisualization(self):
 		xz_lines = []
 		yz_lines = []
 
 		all_T = []
 		self.model.kinematic_tree.GetTransformationMatrices(all_T)
-		print()
-		for i in range(7 - 1):
-			x1 = SpatialToHomog(all_T[i])[:3, -1].ravel()[0]
-			y1 = SpatialToHomog(all_T[i])[:3, -1].ravel()[1]
-			z1 = SpatialToHomog(all_T[i])[:3, -1].ravel()[2]
 
-			x2 = SpatialToHomog(all_T[i + 1])[:3, -1].ravel()[0]
-			y2 = SpatialToHomog(all_T[i + 1])[:3, -1].ravel()[1]
-			z2 = SpatialToHomog(all_T[i + 1])[:3, -1].ravel()[2]
+		x0 = SpatialToHomog(all_T[0])[:3, -1].ravel()[0]
+		y0 = SpatialToHomog(all_T[0])[:3, -1].ravel()[1]
+		z0 = SpatialToHomog(all_T[0])[:3, -1].ravel()[2]
+		
+		for leg in [0, 1, 2]:
+			for i in range(0, 4 - 1):
+				index = leg*3 + i
+				if i == 0:
+					x1 = x0
+					y1 = y0
+					z1 = z0
 
-			xz_lines.append([x1, z1, x2, z2])
-			yz_lines.append([y1, z1, y2, z2])
-			print([x1, z1, x2, z2])
+				else:
+					x1 = SpatialToHomog(all_T[index])[:3, -1].ravel()[0]
+					y1 = SpatialToHomog(all_T[index])[:3, -1].ravel()[1]
+					z1 = SpatialToHomog(all_T[index])[:3, -1].ravel()[2]
 
+				x2 = SpatialToHomog(all_T[index + 1])[:3, -1].ravel()[0]
+				y2 = SpatialToHomog(all_T[index + 1])[:3, -1].ravel()[1]
+				z2 = SpatialToHomog(all_T[index + 1])[:3, -1].ravel()[2]
+
+				if i == 2:
+					parent_T_ee = SpatialTransformation(np.eye(3), GetLegSignedVector(foot_location, leg))
+
+					x_ee = SpatialToHomog(all_T[index + 1]@parent_T_ee)[:3, -1].ravel()[0]
+					y_ee = SpatialToHomog(all_T[index + 1]@parent_T_ee)[:3, -1].ravel()[1]
+					z_ee = SpatialToHomog(all_T[index + 1]@parent_T_ee)[:3, -1].ravel()[2]
+				
+				if leg in [0, 1]:
+					yz_lines.append([y1, z1, y2, z2])
+					if i == 2:
+						yz_lines.append([y2, z2, y_ee, z_ee])
+
+
+				if leg in [0, 2]:
+					xz_lines.append([x1, z1, x2, z2])
+					if i == 2:
+						xz_lines.append([x2, z2, x_ee, z_ee])
 
 
 		self.xz_vis.Draw(xz_lines)
@@ -111,6 +131,13 @@ class RobotDynamics:
 		k = self.yz_vis.Render()
 		if k == ord("q"):
 			exit()
+
+	def Step(self, state):
+		self.xz_vis.Clear()
+		self.yz_vis.Clear()
+		self.model.ForwardKinematics(state)
+
+		self.DebugVisualization()
 
 
 

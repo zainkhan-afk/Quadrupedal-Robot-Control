@@ -11,7 +11,7 @@ class Joint:
 		self.child = child
 
 	def GetTransformationMatrices(self, all_T):
-		all_T.append(self.global_T)
+		# all_T.append(self.global_T)
 		self.child.GetTransformationMatrices(all_T)
 
 	def SetAngle(self, q):

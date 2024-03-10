@@ -1,6 +1,6 @@
 import pybullet as p
 import numpy as np
-from utils import *
+# from utils import *
 
 class Robot:
 	def __init__(self, urdf_path, start_pos, start_orientation):

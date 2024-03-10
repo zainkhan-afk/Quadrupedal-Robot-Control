@@ -61,10 +61,10 @@ class RobotDynamics:
 			abd_joint = Joint(q = 0, T = FB_T_abd, axis = 0, child = abd_link)
 			floating_body_link.AddJoint(abd_joint)
 			
-			hip_joint = Joint(q = 0, T = abd_T_hip, axis = 1, child = thigh_link)
+			hip_joint = Joint(q = 0, T = abd_T_hip, axis = 1, child = thigh_link, joint_reversed = True)
 			abd_link.AddJoint(hip_joint)
 			
-			knee_joint = Joint(q = 0, T = hip_T_knee, axis = 1, child = shin_link)
+			knee_joint = Joint(q = 0, T = hip_T_knee, axis = 1, child = shin_link, joint_reversed = True)
 			thigh_link.AddJoint(knee_joint)
 
 			

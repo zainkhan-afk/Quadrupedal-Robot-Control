@@ -85,10 +85,11 @@ class RobotDynamics:
 		y0 = SpatialToHomog(all_T[0])[:3, -1].ravel()[1]
 		z0 = SpatialToHomog(all_T[0])[:3, -1].ravel()[2]
 		
-		for leg in [0, 1, 2]:
-			for i in range(0, 4 - 1):
+		for leg in [0, 1, 2, 3]:
+			for i in range(1, 4 - 1):
 				index = leg*3 + i
-				if i == 0:
+				print(leg, i, index, len(all_T))
+				if i == 1:
 					x1 = x0
 					y1 = y0
 					z1 = z0
@@ -115,7 +116,7 @@ class RobotDynamics:
 						yz_lines.append([y2, z2, y_ee, z_ee])
 
 
-				if leg in [0, 2]:
+				if leg in [1, 3]:
 					xz_lines.append([x1, z1, x2, z2])
 					if i == 2:
 						xz_lines.append([x2, z2, x_ee, z_ee])

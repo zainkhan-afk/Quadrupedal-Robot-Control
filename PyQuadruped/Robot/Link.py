@@ -4,6 +4,7 @@ import cv2
 class Link:
 	def __init__(self, inertia, T):
 		self.inertia = inertia
+		self.articulated_inertia = inertia.copy()
 		self.local_T = T
 		self.global_T = np.eye(6)
 

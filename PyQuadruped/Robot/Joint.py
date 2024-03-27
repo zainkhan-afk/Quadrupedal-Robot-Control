@@ -3,11 +3,13 @@ from PyQuadruped.utils import GetRotMat
 import numpy as np
 
 class Joint:
-	def __init__(self, q, T, axis, child, joint_reversed = False):
+	def __init__(self, q, T, axis, parent, child, joint_reversed = False):
 		self.q = q
 		self.local_T = T
 		self.global_T = T
+		self.J_T = T
 		self.axis = axis
+		self.parent = parent
 		self.child = child
 		self.joint_reversed = joint_reversed
 
@@ -23,11 +25,11 @@ class Joint:
 			R_joint = GetRotMat(-self.q, self.axis)
 		else:
 			R_joint = GetRotMat(self.q, self.axis)
-		joint_T_rotated_joint = SpatialTransformation(R_joint, np.zeros((3, 1)))
+		self.J_T = SpatialTransformation(R_joint, np.zeros((3, 1)))
 
 		self.global_T = parent_T_joint@self.local_T
 
-		self.child.Update(self.global_T@joint_T_rotated_joint)
+		self.child.Update(self.global_T@self.J_T)
 
 	# def Update(self, q):
 	# 	self.q = q

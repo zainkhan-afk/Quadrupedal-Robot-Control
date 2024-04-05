@@ -106,3 +106,11 @@ def Mat2SkewVec(M):
 				]) * 0.5
 
 	return V
+
+
+def GetJointSubspace(axis):
+	S = np.zeros((6, 1))
+
+	S[axis] = 1
+
+	return S

@@ -11,6 +11,7 @@ class Joint:
 		self.axis = axis
 		self.parent = parent
 		self.child = child
+		self.child.parent_joint = self
 		self.joint_reversed = joint_reversed
 
 	def GetTransformationMatrices(self, all_T):

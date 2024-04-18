@@ -27,7 +27,7 @@ class RobotDynamics:
 		self.xz_vis = CVVisualizer(700, 700, title = "xz", scaler = 500)
 		self.yz_vis = CVVisualizer(700, 700, title = "yz", scaler = 500)
 		
-		floating_body_link = Link(FB_I, np.eye(6))
+		floating_body_link = Link(FB_I, np.eye(6), name = "floating base")
 		floating_body_link.global_T = np.eye(6)
 
 		self.model.AssignKinematicTree(floating_body_link)
@@ -41,30 +41,32 @@ class RobotDynamics:
 			abd_T_hip = SpatialTransformation(R_ident, GetLegSignedVector(hip_location, leg_i))
 			hip_T_knee = SpatialTransformation(R_ident, GetLegSignedVector(knee_location, leg_i))
 
-			if side < 0:
-				abd_link = Link(FlipSpatialInertia(A_I, axis = 1), np.eye(6))
-			else:
-				abd_link = Link(A_I, np.eye(6))
-
 
 			if side < 0:
-				thigh_link = Link(FlipSpatialInertia(H_I, axis = 1), np.eye(6))
+				abd_link = Link(FlipSpatialInertia(A_I, axis = 1), np.eye(6), name = "abd")
 			else:
-				thigh_link = Link(H_I, np.eye(6))
+				abd_link = Link(A_I, np.eye(6), name = "abd")
+
 
 			if side < 0:
-				shin_link = Link(FlipSpatialInertia(K_I, axis = 1), np.eye(6))
+				thigh_link = Link(FlipSpatialInertia(H_I, axis = 1), np.eye(6), name = "thigh")
 			else:
-				shin_link = Link(K_I, np.eye(6))
+				thigh_link = Link(H_I, np.eye(6), name = "thigh")
+
+			if side < 0:
+				shin_link = Link(FlipSpatialInertia(K_I, axis = 1), np.eye(6), name = "shin")
+			else:
+				shin_link = Link(K_I, np.eye(6), name = "shin")
 
 
-			abd_joint = Joint(q = 0, T = FB_T_abd, axis = 0, parent = floating_body_link, child = abd_link)
+			print("Here", floating_body_link, abd_link, thigh_link, shin_link)
+			abd_joint = Joint(q = 0, T = FB_T_abd, axis = 0, parent = floating_body_link, child = abd_link, name = "abd")
 			floating_body_link.AddJoint(abd_joint)
 			
-			hip_joint = Joint(q = 0, T = abd_T_hip, axis = 1, parent = abd_joint, child = thigh_link, joint_reversed = True)
+			hip_joint = Joint(q = 0, T = abd_T_hip, axis = 1, parent = abd_link, child = thigh_link, joint_reversed = True, name = "hip")
 			abd_link.AddJoint(hip_joint)
 			
-			knee_joint = Joint(q = 0, T = hip_T_knee, axis = 1, parent = abd_link, child = shin_link, joint_reversed = True)
+			knee_joint = Joint(q = 0, T = hip_T_knee, axis = 1, parent = thigh_link, child = shin_link, joint_reversed = True, name = "knee")
 			thigh_link.AddJoint(knee_joint)
 
 			
@@ -88,7 +90,7 @@ class RobotDynamics:
 		for leg in [0, 1, 2, 3]:
 			for i in range(1, 4 - 1):
 				index = leg*3 + i
-				print(leg, i, index, len(all_T))
+				# print(leg, i, index, len(all_T))
 				if i == 1:
 					x1 = x0
 					y1 = y0

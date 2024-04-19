@@ -26,10 +26,15 @@ class Link:
 		if self.parent_joint is not None:
 			self.parent_T_child = self.parent_joint.J_T@self.local_T
 			self.v = self.parent_T_child @ self.parent_joint.parent.v + self.parent_joint.joint_vel_spatial;
+		
+		self.articulated_inertia = inertia.copy()
 
 		self.global_T = T@self.local_T
 		for joint in self.childred_joints:
 			joint.Update(self.global_T)
+
+	def UpdateABA(self):
+		pass
 
 
 	def __repr__(self):

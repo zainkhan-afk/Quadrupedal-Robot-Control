@@ -7,10 +7,14 @@ class RobotModel:
 	def __init__(self, base_transformation):
 		self.joints = []
 		self.kinematic_tree = None
+		self.kinematic_tree_legs = None
 		self.base_transformation = base_transformation
 
 	def AssignKinematicTree(self, kinematic_tree):
 		self.kinematic_tree = kinematic_tree
+
+	def AssignKinematicTreeLegs(self, kinematic_tree_legs):
+		self.kinematic_tree_legs = kinematic_tree_legs
 
 	def AddJoint(self, joint):
 		self.joints.append(joint)
@@ -23,19 +27,14 @@ class RobotModel:
 		self.after_rotation_transformations.append(np.eye(6))
 		self.global_transformations.append(np.eye(6))
 
+	def RunABA(self):
+		pass
+
+
 	def ForwardKinematics(self, state):
-		# for i in range(1, len(self.parents)):
-		# 	R_joint = GetRotMat(state.q[i - 1, 0], self.joint_axis_with_parent_list[i])
-		# 	T_joint = SpatialTransformation(R_joint, np.zeros((3, 1)))
-
-		# 	self.after_rotation_transformations[i] = T_joint@self.local_transformations[i]
-
-		# 	print(SpatialToHomog(self.after_rotation_transformations[i])[:3, -1].ravel())
-		# 	print()
-
 		for i in range(len(self.joints)):
 			self.joints[i].SetAngle(state.q[i, 0])
 			# if (i + 1) % 3 == 0:
 			# 	print(SpatialToHomog(self.joints[i].child.global_T)[:3, -1].ravel())
 			# 	print()
-		self.kinematic_tree.Update(np.eye(6))	
+		self.kinematic_tree.Update(np.eye(6))

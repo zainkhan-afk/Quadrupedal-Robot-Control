@@ -52,6 +52,9 @@ public:
 	State<T> GetState();
 	Vec12<T> LegPositionForState();
 
+
+	void CustomTests();
+
 private:
 	Vec18<T> GetGravityVector();
 	Mat18<T> GetCoriolisMatrix();

@@ -13,6 +13,7 @@ class Link:
 		self.parent_T_child = None
 
 		self.childred_joints = []
+		self.U  = None
 
 	def GetTransformationMatrices(self, all_T):
 		all_T.append(self.global_T)
@@ -27,14 +28,17 @@ class Link:
 			self.parent_T_child = self.parent_joint.J_T@self.local_T
 			self.v = self.parent_T_child @ self.parent_joint.parent.v + self.parent_joint.joint_vel_spatial;
 		
-		self.articulated_inertia = inertia.copy()
+		self.articulated_inertia = self.inertia.copy()
 
 		self.global_T = T@self.local_T
 		for joint in self.childred_joints:
 			joint.Update(self.global_T)
 
 	def UpdateABA(self):
-		pass
+		if self.parent_joint is not None:
+			self.U = self.articulated_inertia@self.parent_joint.S
+
+			self.d = self.parent_joint.S.T@self.U
 
 
 	def __repr__(self):

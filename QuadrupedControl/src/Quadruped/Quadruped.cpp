@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Quadruped/Quadruped.h"
 #include "Quadruped/Utilities.h"
-#include "Spatial.h"
+#include "Quadruped/Spatial.h"
 
 template<typename T>
 Quadruped<T>::Quadruped()
@@ -71,8 +71,8 @@ void Quadruped<T>::Initialize()
 	bodyInertiaParams.kneeRotorLocation = Vec3<T>(0, 0, 0);
 
 
-	Mat6<T> abdPosition = 
-	dynamics.AddBody()
+	/*Mat6<T> abdPosition = 
+	dynamics.AddBody()*/
 }
 
 template<typename T>
@@ -156,6 +156,18 @@ Vec12<T> Quadruped<T>::LegPositionForState()
 	}
 
 	return q;
+}
+
+
+template<typename T>
+void Quadruped<T>::CustomTests()
+{
+	MatSp<float> m1; 
+	m1 << 6, 1, 33, 3, 248, 2, 11, 0, 245, 2, 22, 44, 55, 66, 77, 8, 1, 55, 3, 8, 2, 6, 7, 8, 3, 5, 6, 78, 1, 1, 123, 42, 53, 7, 9, 9;
+	VecSp<float> v1;
+	v1 << 1, 1, 1, 2, 2, 2;
+
+	VecSp<float> v2 = m1 * v1;
 }
 
 

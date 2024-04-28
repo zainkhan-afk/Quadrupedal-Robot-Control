@@ -7,14 +7,14 @@ class RobotModel:
 	def __init__(self, base_transformation):
 		self.joints = []
 		self.kinematic_tree = None
-		self.kinematic_tree_legs = None
+		self.kinematic_tree_feet = None
 		self.base_transformation = base_transformation
 
 	def AssignKinematicTree(self, kinematic_tree):
 		self.kinematic_tree = kinematic_tree
 
-	def AssignKinematicTreeLegs(self, kinematic_tree_legs):
-		self.kinematic_tree_legs = kinematic_tree_legs
+	def AssignKinematicTreeFeet(self, kinematic_tree_feet):
+		self.kinematic_tree_feet = kinematic_tree_feet
 
 	def AddJoint(self, joint):
 		self.joints.append(joint)
@@ -28,7 +28,15 @@ class RobotModel:
 		self.global_transformations.append(np.eye(6))
 
 	def RunABA(self):
-		pass
+		idx = 0
+		# self.kinematic_tree.ABAPass1()
+		for leg in self.kinematic_tree_feet:
+			leg.UpdateABA()
+			idx += 1
+		# self.kinematic_tree.ABAPass3()
+
+
+		print("\n\n\n")
 
 
 	def ForwardKinematics(self, state):

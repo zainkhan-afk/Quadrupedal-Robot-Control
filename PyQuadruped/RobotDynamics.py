@@ -34,6 +34,7 @@ class RobotDynamics:
 		# self.model.AddBody(inertia = FB_I, T = np.zeros((6, 6)), parent_id = 0, joint_axis_with_parent = None)
 
 		# parent_id = 0
+		feet = []
 		side = -1
 		R_ident = np.eye(3)
 		for leg_i in range(4):
@@ -58,8 +59,6 @@ class RobotDynamics:
 			else:
 				shin_link = Link(K_I, np.eye(6), name = "shin")
 
-
-			print("Here", floating_body_link, abd_link, thigh_link, shin_link)
 			abd_joint = Joint(q = 0, T = FB_T_abd, axis = 0, parent = floating_body_link, child = abd_link, name = "abd")
 			floating_body_link.AddJoint(abd_joint)
 			
@@ -74,7 +73,11 @@ class RobotDynamics:
 			self.model.AddJoint(hip_joint)
 			self.model.AddJoint(knee_joint)
 
+			feet.append(shin_link)
+
 			side *= -1
+
+		self.model.AssignKinematicTreeFeet(feet)
 
 	def DebugVisualization(self):
 		xz_lines = []
@@ -139,6 +142,7 @@ class RobotDynamics:
 		self.xz_vis.Clear()
 		self.yz_vis.Clear()
 		self.model.ForwardKinematics(state)
+		self.model.RunABA()
 
 		self.DebugVisualization()
 

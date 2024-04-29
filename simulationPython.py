@@ -28,7 +28,7 @@ class Simulation:
 	def Step(self):
 		base_pose = p.getBasePositionAndOrientation(self.robot.robot) # returns base position [x, y, z] and angular pose in quat
 
-		get_velocity = p.getBaseVelocity(self.robot.robot) # returns linear velocity [x, y, z] and angular velocity [wx, wy, wz]
+		base_velocity = p.getBaseVelocity(self.robot.robot) # returns linear velocity [x, y, z] and angular velocity [wx, wy, wz]
 		get_invert = p.invertTransform(base_pose[0], base_pose[1]) 
 		get_matrix = p.getMatrixFromQuaternion(get_invert[1])
 
@@ -52,6 +52,14 @@ class Simulation:
 		current_state.body_orientation[1, 0] = base_pose[1][1]
 		current_state.body_orientation[2, 0] = base_pose[1][2]
 		current_state.body_orientation[3, 0] = base_pose[1][3]
+
+		current_state.body_velocity[0, 0] = base_velocity[0][0]
+		current_state.body_velocity[1, 0] = base_velocity[0][1]
+		current_state.body_velocity[2, 0] = base_velocity[0][2]
+
+		current_state.body_velocity[3, 0] = base_velocity[1][0]
+		current_state.body_velocity[4, 0] = base_velocity[1][1]
+		current_state.body_velocity[5, 0] = base_velocity[1][2]
 
 		current_taus = np.zeros((12, 1))
 

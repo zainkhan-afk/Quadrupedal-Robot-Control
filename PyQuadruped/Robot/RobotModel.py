@@ -1,5 +1,5 @@
 import numpy as np
-from PyQuadruped.utils import GetRotMat
+from PyQuadruped.utils import GetRotMat, QuatToEulerRot
 from PyQuadruped.Spatial import SpatialTransformation, SpatialToHomog
 from PyQuadruped.Robot import Joint, Link
 from PyQuadruped.State import StateDot
@@ -41,4 +41,4 @@ class RobotModel:
 
 	def ForwardKinematics(self, state, current_taus):
 		self.kinematic_tree.SetAngle(0, state, current_taus)
-		self.kinematic_tree.Update(np.eye(6))
+		self.kinematic_tree.Update(SpatialTransformation(QuatToEulerRot(state.body_orientation), state.body_position))

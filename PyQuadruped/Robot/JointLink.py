@@ -52,6 +52,7 @@ class JointLink:
 			for child in self.children:
 				child.SetAngle(i, state, tau)
 		else:
+			self.v = state.body_velocity
 			leg = 0
 			for child in self.children:
 				child.SetAngle(leg*3 + i, state, tau)
@@ -83,7 +84,7 @@ class JointLink:
 
 			self.J_T = SpatialTransformation(R_joint, np.zeros((3, 1)))
 
-		self.i_T_parent = self.local_T@self.J_T # Consider changing positiong of J_T and local_T as shown in the document
+		self.i_T_parent = self.J_T@self.local_T # Consider changing positiong of J_T and local_T as shown in the document
 		self.i_T_0 = P_T_0@self.i_T_parent
 
 		if self.parent is not None:

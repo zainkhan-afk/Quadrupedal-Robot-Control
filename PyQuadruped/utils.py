@@ -114,3 +114,18 @@ def GetJointSubspace(axis):
 	S[axis] = 1
 
 	return S
+
+
+def QuatToEulerRot(q):
+	e0 = q[0, 0]
+	e1 = q[1, 0]
+	e2 = q[2, 0]
+	e3 = q[3, 0]
+
+	R = np.array([
+					[1 - 2 * (e2 * e2 + e3 * e3), 2 * (e1 * e2 - e0 * e3), 2 * (e1 * e3 + e0 * e2)], 
+					[2 * (e1 * e2 + e0 * e3), 1 - 2 * (e1 * e1 + e3 * e3), 2 * (e2 * e3 - e0 * e1)],
+				    [2 * (e1 * e3 - e0 * e2), 2 * (e2 * e3 + e0 * e1), 1 - 2 * (e1 * e1 + e2 * e2)]
+				]).T
+
+	return R

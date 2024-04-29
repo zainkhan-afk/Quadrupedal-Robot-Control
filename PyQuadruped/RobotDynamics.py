@@ -75,20 +75,6 @@ class RobotDynamics:
 			abd_link.AddChild(thigh_link)
 			thigh_link.AddChild(shin_link)
 
-			# abd_joint = Joint(q = 0, T = FB_T_abd, axis = 0, parent = floating_body_link, child = abd_link, name = "abd")
-			# floating_body_link.AddJoint(abd_joint)
-			
-			# hip_joint = Joint(q = 0, T = abd_T_hip, axis = 1, parent = abd_link, child = thigh_link, joint_reversed = True, name = "hip")
-			# abd_link.AddJoint(hip_joint)
-			
-			# knee_joint = Joint(q = 0, T = hip_T_knee, axis = 1, parent = thigh_link, child = shin_link, joint_reversed = True, name = "knee")
-			# thigh_link.AddJoint(knee_joint)
-
-			
-			# self.model.AddJoint(abd_joint)
-			# self.model.AddJoint(hip_joint)
-			# self.model.AddJoint(knee_joint)
-
 			feet.append(shin_link)
 
 			side *= -1
@@ -156,10 +142,10 @@ class RobotDynamics:
 		if k == ord("q"):
 			exit()
 
-	def Step(self, state):
+	def Step(self, state, current_taus):
 		self.xz_vis.Clear()
 		self.yz_vis.Clear()
-		self.model.ForwardKinematics(state)
+		self.model.ForwardKinematics(state, current_taus)
 		self.model.RunABA()
 
 		self.DebugVisualization()

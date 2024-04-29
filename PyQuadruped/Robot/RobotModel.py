@@ -29,17 +29,10 @@ class RobotModel:
 
 	def RunABA(self):
 		idx = 0
-		# self.kinematic_tree.ABAPass1()
 		for leg in self.kinematic_tree_feet:
-			# leg.UpdateABA()
+			leg.UpdateBottomUp()
 			idx += 1
-		# self.kinematic_tree.ABAPass3()
 
-
-		# print("\n\n\n")
-
-
-	def ForwardKinematics(self, state):
-		print()
-		self.kinematic_tree.SetAngle(0, state)
+	def ForwardKinematics(self, state, current_taus):
+		self.kinematic_tree.SetAngle(0, state, current_taus)
 		self.kinematic_tree.Update(np.eye(6))

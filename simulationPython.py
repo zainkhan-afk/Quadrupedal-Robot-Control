@@ -51,11 +51,14 @@ class Simulation:
 		current_state.body_orientation[2, 0] = base_pose[1][2]
 		current_state.body_orientation[3, 0] = base_pose[1][3]
 
+		current_taus = np.zeros((12, 1))
+
 		for i in range(12):
 			current_state.q[i, 0] = joint_states[i][0]
 			current_state.q_dot[i, 0] = joint_states[i][1]
+			current_taus[i, 0] = joint_states[i][3]
 
-		self.dynamics.Step(current_state)
+		self.dynamics.Step(current_state, current_taus)
 
 		desired = []
 

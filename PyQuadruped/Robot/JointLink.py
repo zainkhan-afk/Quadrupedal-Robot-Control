@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from PyQuadruped.Spatial import ForceCrossProduct, SpatialTransformation
+from PyQuadruped.Spatial import ForceCrossProduct, SpatialTransformation, MotionCrossProduct
 from PyQuadruped.utils import GetRotMat, GetJointSubspace
 
 class JointLink:
@@ -20,11 +20,14 @@ class JointLink:
 		self.i_T_0 = np.eye(6)
 		self.i_T_parent = None
 
-		self.q_dot = np.zeros((6, 1))
+		self.q_dot = 0
+		self.tau = 0
 
-		self.v = np.eye(6)
+		self.c = np.zeros((6, 1))
+		self.v = np.zeros((6, 1))
 		self.pa = np.zeros((6, 1))
 		self.U  = None
+		self.D = None
 		
 		self.S = GetJointSubspace(self.joint_axis)
 		self.joint_vel_spatial = self.S*self.q_dot
@@ -37,19 +40,19 @@ class JointLink:
 		for child in self.children:
 			child.GetTransformationMatrices(all_T)
 
-	def SetAngle(self, i, state):
+	def SetAngle(self, i, state, tau):
 		if self.parent is not None:
 			self.q = state.q[i, 0]
-			self.q_dot = np.zeros((6, 1))
-			self.joint_vel_spatial = self.S*self.q_dot
-			print(self, self.q, i)
+			self.q_dot = state.q_dot[i, 0]
+			self.tau = tau[i, 0]
+			
 			i += 1
 			for child in self.children:
-				child.SetAngle(i, state)
+				child.SetAngle(i, state, tau)
 		else:
 			leg = 0
 			for child in self.children:
-				child.SetAngle(leg*3 + i, state)
+				child.SetAngle(leg*3 + i, state, tau)
 				leg += 1
 
 	# def Update(self, P_T_0): # Transformations according to the book
@@ -80,9 +83,37 @@ class JointLink:
 
 		self.i_T_parent = self.local_T@self.J_T
 		self.i_T_0 = P_T_0@self.i_T_parent
+
+		if self.parent is not None:
+			# Do this for all the links other than the floating base
+			vj = self.S*self.q_dot
+			self.v = self.i_T_parent@self.parent.v + vj
+			self.c = MotionCrossProduct(self.v, vj)
 		
+		self.articulated_inertia = self.inertia.copy()
+
+
+		inertia_vel_product = self.inertia @ self.v
+		self.pa = ForceCrossProduct(self.v, inertia_vel_product)
+
+
 		for child in self.children:
 			child.Update(self.i_T_0)
+
+
+	def UpdateBottomUp(self):
+		self.U = self.articulated_inertia@self.S
+		self.D = self.S.T @ self.U
+
+		Ia = self.i_T_parent.T @ self.articulated_inertia @ self.i_T_parent - self.U @ self.U.T / self.D
+		self.parent.articulated_inertia += Ia
+
+		u = self.tau - self.S.T @ self.pa - self.U.T @ self.c
+		_pa = self.i_T_parent.T @ (self.pa + self.articulated_inertia @ self.c) + self.U @ u / self.D
+		self.parent.pa += _pa
+		
+		if self.parent.parent is not None:
+			self.parent.UpdateBottomUp()
 
 	def __repr__(self):
 		return "JointLink " + self.name

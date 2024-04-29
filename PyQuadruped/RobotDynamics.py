@@ -14,8 +14,7 @@ from PyQuadruped.utils import GetRotMat, GetLegSignedVector
 
 from PyQuadruped.State import State
 
-from PyQuadruped.Robot.Link import Link
-from PyQuadruped.Robot.Joint import Joint
+from PyQuadruped.Robot.JointLink import JointLink
 from PyQuadruped.Robot.RobotModel import RobotModel
 
 from PyQuadruped.cvVisualizer import CVVisualizer
@@ -27,8 +26,9 @@ class RobotDynamics:
 		self.xz_vis = CVVisualizer(700, 700, title = "xz", scaler = 500)
 		self.yz_vis = CVVisualizer(700, 700, title = "yz", scaler = 500)
 		
-		floating_body_link = Link(FB_I, np.eye(6), name = "floating base")
-		floating_body_link.global_T = np.eye(6)
+		floating_body_link = JointLink(FB_I, np.eye(6), 0, -1, False, parent = None, children = [], name = "Floating Base")
+		# floating_body_link = Link(FB_I, np.eye(6), name = "floating base")
+		# floating_body_link.global_T = np.eye(6)
 
 		self.model.AssignKinematicTree(floating_body_link)
 		# self.model.AddBody(inertia = FB_I, T = np.zeros((6, 6)), parent_id = 0, joint_axis_with_parent = None)
@@ -42,36 +42,52 @@ class RobotDynamics:
 			abd_T_hip = SpatialTransformation(R_ident, GetLegSignedVector(hip_location, leg_i))
 			hip_T_knee = SpatialTransformation(R_ident, GetLegSignedVector(knee_location, leg_i))
 
+			if side < 0:
+				abd_link = JointLink(FlipSpatialInertia(A_I, axis = 1), T = FB_T_abd, 
+								q = 0, joint_axis = 0, joint_reversed = False, parent = floating_body_link, 
+								children = [], name = "Abduction Link")
+
+			else:
+				abd_link = JointLink(A_I, T = FB_T_abd, q = 0, joint_axis = 0, 
+								joint_reversed = False, parent = floating_body_link, 
+								children = [], name = "Abduction Link")
+				
 
 			if side < 0:
-				abd_link = Link(FlipSpatialInertia(A_I, axis = 1), np.eye(6), name = "abd")
+				thigh_link = JointLink(FlipSpatialInertia(H_I, axis = 1), T = abd_T_hip, 
+								q = 0, joint_axis = 1, joint_reversed = True, parent = abd_link, 
+								children = [], name = "Thigh Link")
 			else:
-				abd_link = Link(A_I, np.eye(6), name = "abd")
-
-
+				thigh_link = JointLink(H_I, T = abd_T_hip, q = 0, 
+								joint_axis = 1, joint_reversed = True, parent = abd_link, 
+								children = [], name = "Thigh Link")
+				
 			if side < 0:
-				thigh_link = Link(FlipSpatialInertia(H_I, axis = 1), np.eye(6), name = "thigh")
+				shin_link = JointLink(FlipSpatialInertia(K_I, axis = 1), T = hip_T_knee, 
+								q = 0, joint_axis = 1, joint_reversed = True, parent = thigh_link, 
+								children = [], name = "Shin Link")
 			else:
-				thigh_link = Link(H_I, np.eye(6), name = "thigh")
+				shin_link = JointLink(K_I, T = hip_T_knee, q = 0, 
+								joint_axis = 1, joint_reversed = True, parent = thigh_link, 
+								children = [], name = "Shin Link")
 
-			if side < 0:
-				shin_link = Link(FlipSpatialInertia(K_I, axis = 1), np.eye(6), name = "shin")
-			else:
-				shin_link = Link(K_I, np.eye(6), name = "shin")
+			floating_body_link.AddChild(abd_link)
+			abd_link.AddChild(thigh_link)
+			thigh_link.AddChild(shin_link)
 
-			abd_joint = Joint(q = 0, T = FB_T_abd, axis = 0, parent = floating_body_link, child = abd_link, name = "abd")
-			floating_body_link.AddJoint(abd_joint)
+			# abd_joint = Joint(q = 0, T = FB_T_abd, axis = 0, parent = floating_body_link, child = abd_link, name = "abd")
+			# floating_body_link.AddJoint(abd_joint)
 			
-			hip_joint = Joint(q = 0, T = abd_T_hip, axis = 1, parent = abd_link, child = thigh_link, joint_reversed = True, name = "hip")
-			abd_link.AddJoint(hip_joint)
+			# hip_joint = Joint(q = 0, T = abd_T_hip, axis = 1, parent = abd_link, child = thigh_link, joint_reversed = True, name = "hip")
+			# abd_link.AddJoint(hip_joint)
 			
-			knee_joint = Joint(q = 0, T = hip_T_knee, axis = 1, parent = thigh_link, child = shin_link, joint_reversed = True, name = "knee")
-			thigh_link.AddJoint(knee_joint)
+			# knee_joint = Joint(q = 0, T = hip_T_knee, axis = 1, parent = thigh_link, child = shin_link, joint_reversed = True, name = "knee")
+			# thigh_link.AddJoint(knee_joint)
 
 			
-			self.model.AddJoint(abd_joint)
-			self.model.AddJoint(hip_joint)
-			self.model.AddJoint(knee_joint)
+			# self.model.AddJoint(abd_joint)
+			# self.model.AddJoint(hip_joint)
+			# self.model.AddJoint(knee_joint)
 
 			feet.append(shin_link)
 
@@ -86,12 +102,14 @@ class RobotDynamics:
 		all_T = []
 		self.model.kinematic_tree.GetTransformationMatrices(all_T)
 
-		x0 = SpatialToHomog(all_T[0])[:3, -1].ravel()[0]
-		y0 = SpatialToHomog(all_T[0])[:3, -1].ravel()[1]
-		z0 = SpatialToHomog(all_T[0])[:3, -1].ravel()[2]
+		body = SpatialToHomog(all_T[0])[:3, -1].ravel()
+
+		x0 = body[0]
+		y0 = body[1]
+		z0 = body[2]
 		
 		for leg in [0, 1, 2, 3]:
-			for i in range(1, 4 - 1):
+			for i in range(1, 3):
 				index = leg*3 + i
 				# print(leg, i, index, len(all_T))
 				if i == 1:
@@ -121,7 +139,7 @@ class RobotDynamics:
 						yz_lines.append([y2, z2, y_ee, z_ee])
 
 
-				if leg in [1, 3]:
+				if leg in [0, 2]:
 					xz_lines.append([x1, z1, x2, z2])
 					if i == 2:
 						xz_lines.append([x2, z2, x_ee, z_ee])

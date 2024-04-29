@@ -31,18 +31,15 @@ class RobotModel:
 		idx = 0
 		# self.kinematic_tree.ABAPass1()
 		for leg in self.kinematic_tree_feet:
-			leg.UpdateABA()
+			# leg.UpdateABA()
 			idx += 1
 		# self.kinematic_tree.ABAPass3()
 
 
-		print("\n\n\n")
+		# print("\n\n\n")
 
 
 	def ForwardKinematics(self, state):
-		for i in range(len(self.joints)):
-			self.joints[i].SetAngle(state.q[i, 0])
-			# if (i + 1) % 3 == 0:
-			# 	print(SpatialToHomog(self.joints[i].child.global_T)[:3, -1].ravel())
-			# 	print()
+		print()
+		self.kinematic_tree.SetAngle(0, state)
 		self.kinematic_tree.Update(np.eye(6))

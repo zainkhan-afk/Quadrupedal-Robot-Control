@@ -61,7 +61,7 @@ class Simulation:
 
 		for i in range(4):
 			if i == 0:
-				desired += [0.5, 0.5, 0.3]
+				desired += [0.75, 0.5, 1]
 			else:
 				desired += [0, 0, 0]
 

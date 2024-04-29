@@ -60,8 +60,8 @@ class Simulation:
 		desired = []
 
 		for i in range(4):
-			if i == 0:
-				desired += [0.75, 0.5, 1]
+			if i == 1:
+				desired += [0.5, 0.5, 0.5]
 			else:
 				desired += [0, 0, 0]
 

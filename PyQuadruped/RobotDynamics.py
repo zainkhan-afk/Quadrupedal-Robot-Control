@@ -139,7 +139,7 @@ class RobotDynamics:
 						yz_lines.append([y2, z2, y_ee, z_ee])
 
 
-				if leg in [0, 2]:
+				if leg in [1, 3]:
 					xz_lines.append([x1, z1, x2, z2])
 					if i == 2:
 						xz_lines.append([x2, z2, x_ee, z_ee])

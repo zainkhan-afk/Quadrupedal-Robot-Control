@@ -2,6 +2,7 @@ import numpy as np
 from PyQuadruped.utils import GetRotMat
 from PyQuadruped.Spatial import SpatialTransformation, SpatialToHomog
 from PyQuadruped.Robot import Joint, Link
+from PyQuadruped.State import StateDot
 
 class RobotModel:
 	def __init__(self, base_transformation):
@@ -9,6 +10,8 @@ class RobotModel:
 		self.kinematic_tree = None
 		self.kinematic_tree_feet = None
 		self.base_transformation = base_transformation
+
+		self.g = np.array([[0, 0, 0, 0, 0, -9.81]]).T
 
 	def AssignKinematicTree(self, kinematic_tree):
 		self.kinematic_tree = kinematic_tree
@@ -32,6 +35,9 @@ class RobotModel:
 		for leg in self.kinematic_tree_feet:
 			leg.UpdateBottomUp()
 			idx += 1
+
+		stateDot = StateDot() 
+		self.kinematic_tree.UpdateTopDown(0, stateDot, g = self.g)
 
 	def ForwardKinematics(self, state, current_taus):
 		self.kinematic_tree.SetAngle(0, state, current_taus)

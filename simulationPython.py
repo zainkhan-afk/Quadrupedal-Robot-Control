@@ -23,6 +23,8 @@ class Simulation:
 		self.robot = Robot("urdf/mini_cheetah/mini_cheetah.urdf.xacro", [0,0,0.6], [0,0,0])
 		self.dynamics = RobotDynamics(np.eye(6))
 
+		self.step_num = 0
+
 	def Step(self):
 		base_pose = p.getBasePositionAndOrientation(self.robot.robot) # returns base position [x, y, z] and angular pose in quat
 
@@ -51,17 +53,21 @@ class Simulation:
 		current_state.body_orientation[2, 0] = base_pose[1][2]
 		current_state.body_orientation[3, 0] = base_pose[1][3]
 
+		current_taus = np.zeros((12, 1))
+
 		for i in range(12):
 			current_state.q[i, 0] = joint_states[i][0]
 			current_state.q_dot[i, 0] = joint_states[i][1]
+			current_taus[i, 0] = joint_states[i][3]
 
-		self.dynamics.Step(current_state)
+		if self.step_num % 50 == 0:
+			self.dynamics.Step(current_state, current_taus)
 
 		desired = []
 
 		for i in range(4):
-			if i == 0:
-				desired += [0.5, 0.5, 0.3]
+			if i == 1:
+				desired += [0, 0, 0]
 			else:
 				desired += [0, 0, 0]
 
@@ -69,7 +75,9 @@ class Simulation:
 
 		p.stepSimulation()
 
-		time.sleep(1 / 10000)
+		time.sleep(1 / 100)
+
+		self.step_num += 1
 
 	def Simulate(self):
 		while True:

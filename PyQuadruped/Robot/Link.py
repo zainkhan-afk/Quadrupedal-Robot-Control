@@ -38,7 +38,7 @@ class Link:
 		self.articulated_inertia = self.inertia.copy()
 
 		inertia_vel_product = self.inertia @ self.v;
-		self.pa = ForceCrossProduct(self.v, inertia_vel_product);
+		self.pa = ForceCrossProduct(self.v, inertia_vel_product)
 
 	def ABAPass1(self):
 		pass

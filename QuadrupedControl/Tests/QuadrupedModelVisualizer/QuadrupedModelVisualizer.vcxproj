@@ -175,10 +175,31 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Cube.h" />
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Entity.h" />
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Plane.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\QuadrupedVisualizer.h" />
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Resources.h" />
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Robot.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Cube.cpp" />
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Entity.cpp" />
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Plane.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\QuadrupedVisualizer.cpp" />
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Robot.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\shaders\fragment.glsl" />
+    <None Include="..\..\shaders\vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)include;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)include;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)include;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)include;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

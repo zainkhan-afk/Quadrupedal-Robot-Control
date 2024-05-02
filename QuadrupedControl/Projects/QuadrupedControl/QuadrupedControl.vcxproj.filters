@@ -86,10 +86,10 @@
     <ClCompile Include="..\..\src\Quadruped\SpatialInertia.cpp">
       <Filter>src\Quadruped</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Quadruped\Utilities.cpp">
+    <ClCompile Include="..\..\src\Quadruped\TestClass.cpp">
       <Filter>src\Quadruped</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Quadruped\TestClass.cpp">
+    <ClCompile Include="..\..\src\Quadruped\Utilities.cpp">
       <Filter>src\Quadruped</Filter>
     </ClCompile>
   </ItemGroup>

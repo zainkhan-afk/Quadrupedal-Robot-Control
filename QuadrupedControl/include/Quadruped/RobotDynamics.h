@@ -2,6 +2,7 @@
 #define ROBOTDYNAMICS_H
 
 #include "Quadruped/Types.h"
+#include "Quadruped/State.h"
 #include "Quadruped/SpatialInertia.h"
 
 #include <eigen3/Eigen/StdVector>
@@ -29,27 +30,32 @@
 *
 */
 
-template<typename T>
+
 class RobotDynamics
 {
 public:
 	RobotDynamics();
 	~RobotDynamics();
 
-	void AddBody(SpatialInertia<T> I, Mat6<T> pos, int parent);
+	void AddBody(SpatialInertia I, dtypes::Mat6 pos, int axis, int parent);
 
 
 private:
-	void CalculateCompositeInertia();
-	void CalculateLinkTreePositions();
+	void RunArticulatedBodyAlgorithm(const State& state, StateDot& dState);
 
 private:
-	std::vector<SpatialInertia<T>> robotInertias;
-	std::vector<Mat6<T>> linkPositions;
-	std::vector<int> parents;
+	int numLinks = 13;
+	int currentIndex = 0;
+	std::vector<SpatialInertia> linkInertias;
+	std::vector<SpatialInertia> articulatedInertias;
+
+	std::vector<int> axis;
 	
-	std::vector<SpatialInertia<T>> compositeInertia;
-	std::vector<Mat6<T>> linkTreePositions;
+	std::vector<dtypes::Mat6> Xl;
+	std::vector<dtypes::Mat6> Xp;
+	std::vector<dtypes::Mat6> Xb;
+
+	std::vector<int> parents;
 };
 
 

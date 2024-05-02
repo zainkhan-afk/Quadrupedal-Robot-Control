@@ -4,16 +4,16 @@
 #include "Quadruped/Types.h"
 #include <iostream>
 
-template <typename T>
+
 struct State
 {
-	Vec3<T> bodyPosition;
-	Quat<T> bodyOrientation;
+	dtypes::Vec3 bodyPosition;
+	dtypes::Quat bodyOrientation;
 
-	VecSp<T> bodyVelocity;
+	dtypes::VecSp bodyVelocity;
 
-	Vec12<T> q;
-	Vec12<T> qDot;
+	dtypes::Vec12 q;
+	dtypes::Vec12 qDot;
 
 	void PrintState()
 	{
@@ -21,13 +21,13 @@ struct State
 	}
 };
 
-template <typename T>
+
 struct StateDot
 {
-	Vec3<T> bodyPositionDot;
-	VecSp<T> bodyVelocityDDot;
+	dtypes::Vec3 bodyPositionDot;
+	dtypes::VecSp bodyVelocityDDot;
 
-	Vec12<T> qDDot;
+	dtypes::Vec12 qDDot;
 };
 
 #endif

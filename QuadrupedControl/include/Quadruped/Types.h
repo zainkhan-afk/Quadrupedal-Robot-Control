@@ -5,46 +5,49 @@
 #include <eigen3/Eigen/Dense>
 
 
-// Vectors
-template <typename T>
-using Vec2 = typename Eigen::Matrix<T, 2, 1>;
+namespace dtypes {
+	// Vectors
+	using Vec2 = typename Eigen::Matrix<float, 2, 1>;
 
-template <typename T>
-using Vec3 = typename Eigen::Matrix<T, 3, 1>;
 
-template <typename T>
-using Vec4 = typename Eigen::Matrix<T, 4, 1>;
+	using Vec3 = typename Eigen::Matrix<float, 3, 1>;
 
-template <typename T>
-using Vec6 = typename Eigen::Matrix<T, 6, 1>;
 
-template <typename T>
-using Vec12 = typename Eigen::Matrix<T, 12, 1>;
+	using Vec4 = typename Eigen::Matrix<float, 4, 1>;
 
-template <typename T>
-using Vec18 = typename Eigen::Matrix<T, 18, 1>;
 
-// Special Purpose Vectors
-template <typename T>
-using VecSp = typename Eigen::Matrix<T, 6, 1>;
+	using Vec6 = typename Eigen::Matrix<float, 6, 1>;
 
-template <typename T>
-using Quat = typename Eigen::Matrix<T, 4, 1>;
 
-// Matrices
-template <typename T>
-using Mat3 = typename Eigen::Matrix<T, 3, 3>;
+	using Vec12 = typename Eigen::Matrix<float, 12, 1>;
 
-template <typename T>
-using Mat6 = typename Eigen::Matrix<T, 6, 6>;
 
-template <typename T>
-using Mat12 = typename Eigen::Matrix<T, 12, 12>;
+	using Vec18 = typename Eigen::Matrix<float, 18, 1>;
 
-template <typename T>
-using Mat18 = typename Eigen::Matrix<T, 18, 18>;
+	// Special Purpose Vectors
 
-template <typename T>
-using MatSp = typename Eigen::Matrix<T, 6, 6>;
+	using VecSp = typename Eigen::Matrix<float, 6, 1>;
 
+
+	using Quat = typename Eigen::Matrix<float, 4, 1>;
+
+	// Matrices
+
+	using Mat3 = typename Eigen::Matrix<float, 3, 3>;
+
+
+	using Mat4 = typename Eigen::Matrix<float, 4, 4>;
+
+
+	using Mat6 = typename Eigen::Matrix<float, 6, 6>;
+
+
+	using Mat12 = typename Eigen::Matrix<float, 12, 12>;
+
+
+	using Mat18 = typename Eigen::Matrix<float, 18, 18>;
+
+
+	using MatSp = typename Eigen::Matrix<float, 6, 6>;
+}
 #endif

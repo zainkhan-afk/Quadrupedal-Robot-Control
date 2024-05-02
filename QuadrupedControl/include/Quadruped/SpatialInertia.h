@@ -3,20 +3,24 @@
 
 #include "Quadruped/Types.h"
 
-template<typename T>
+
 class SpatialInertia
 {
 public:
 	//EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	SpatialInertia();
-	SpatialInertia(T mass, const Vec3<T>& com, const Mat3<T>& inertia);
+	SpatialInertia(float mass, const dtypes::Vec3& com, const dtypes::Mat3& inertia);
+	SpatialInertia(const dtypes::Mat4&);
 	~SpatialInertia();
 
-	void AddInertia(MatSp<T> otherInertia);
-	void SetInertia(MatSp<T> otherInertia);
-	MatSp<T> GetInertia();
+	dtypes::Mat4 GetPseudoInertia();
+	SpatialInertia FlipAlongAxis(int axis);
+
+	void AddInertia(dtypes::MatSp otherInertia);
+	void SetInertia(dtypes::MatSp otherInertia);
+	dtypes::MatSp GetInertia();
 private:
-	MatSp<T> inertia;
+	dtypes::MatSp inertia;
 
 };
 

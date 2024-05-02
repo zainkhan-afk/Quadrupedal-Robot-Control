@@ -2,88 +2,118 @@
 #include "Quadruped/Quadruped.h"
 #include "Quadruped/Utilities.h"
 #include "Quadruped/Spatial.h"
+#include <math.h>
 
-template<typename T>
-Quadruped<T>::Quadruped()
+
+
+Quadruped::Quadruped()
 {
-	 //legController = LegController<T>(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
+	 //legController = LegController(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
 }
 
-template<typename T>
-Quadruped<T>::~Quadruped()
+
+Quadruped::~Quadruped()
 {
 }
 
-template<typename T>
-void Quadruped<T>::Initialize()
+
+void Quadruped::Initialize()
 {
 	std::cout << "Initializing Quadruped." << std::endl;
-	legController = LegController<T>(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
+	legController = LegController(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
 
 	
-	Mat3<T> rotorRotationalInertiaZ;
-	rotorRotationalInertiaZ << 33, 0, 0, 0, 33, 0, 0, 0, 63;
-	rotorRotationalInertiaZ = 1e-6 * rotorRotationalInertiaZ;
+	dtypes::Mat3 rotorRotationalInertiaZ;
 
-	Mat3<T> RY = GetRotationMatrix<T>(PI / 2.0f, 1);
-	Mat3<T> RX = GetRotationMatrix<T>(PI / 2.0f, 0);
-
-	Mat3<T> rotorRotationalInertiaX = RY * rotorRotationalInertiaZ * RY.transpose();
-	Mat3<T> rotorRotationalInertiaY = RX * rotorRotationalInertiaZ * RX.transpose();
+	dtypes::Mat3 RY = GetRotationMatrix(PI / 2.0f, 1);
+	dtypes::Mat3 RX = GetRotationMatrix(PI / 2.0f, 0);
 
 	// spatial inertias
-	Mat3<T> abadRotationalInertia;
+	dtypes::Mat3 abadRotationalInertia;
 	abadRotationalInertia << 381, 58, 0.45, 58, 560, 0.95, 0.45, 0.95, 444;
 	abadRotationalInertia = abadRotationalInertia * 1e-6;
-	Vec3<T> abadCOM(0, 0.036, 0); 
-	bodyInertiaParams.abdInertia = SpatialInertia<T>(0.54f, abadCOM, abadRotationalInertia);
+	dtypes::Vec3 abadCOM(0, 0.036, 0);
+	bodyInertiaParams.abdInertia = SpatialInertia(0.54f, abadCOM, abadRotationalInertia);
 
-	Mat3<T> hipRotationalInertia;
+	dtypes::Mat3 hipRotationalInertia;
 	hipRotationalInertia << 1983, 245, 13, 245, 2103, 1.5, 13, 1.5, 408;
 	hipRotationalInertia = hipRotationalInertia * 1e-6;
-	Vec3<T> hipCOM(0, 0.016, -0.02);
-	bodyInertiaParams.hipInertia = SpatialInertia<T>(0.634f, hipCOM, hipRotationalInertia);
+	dtypes::Vec3 hipCOM(0, 0.016, -0.02);
+	bodyInertiaParams.hipInertia = SpatialInertia(0.634f, hipCOM, hipRotationalInertia);
 
-	Mat3<T> kneeRotationalInertia, kneeRotationalInertiaRotated;
+	dtypes::Mat3 kneeRotationalInertia, kneeRotationalInertiaRotated;
 	kneeRotationalInertiaRotated << 6, 0, 0, 0, 248, 0, 0, 0, 245;
 	kneeRotationalInertiaRotated = kneeRotationalInertiaRotated * 1e-6;
 	kneeRotationalInertia = RY * kneeRotationalInertiaRotated * RY.transpose();
-	Vec3<T> kneeCOM(0, 0, -0.061);
-	bodyInertiaParams.kneeInertia = SpatialInertia<T>(0.064f, kneeCOM, kneeRotationalInertia);
+	dtypes::Vec3 kneeCOM(0, 0, -0.061);
+	bodyInertiaParams.kneeInertia = SpatialInertia(0.064f, kneeCOM, kneeRotationalInertia);
 
-	Vec3<T> rotorCOM(0, 0, 0);
-	SpatialInertia<T> rotorInertiaX(0.055, rotorCOM, rotorRotationalInertiaX);
-	SpatialInertia<T> rotorInertiaY(0.055, rotorCOM, rotorRotationalInertiaY);
-
-	Mat3<T> bodyRotationalInertia;
+	dtypes::Mat3 bodyRotationalInertia;
 	bodyRotationalInertia << 11253, 0, 0, 0, 36203, 0, 0, 0, 42673;
 	bodyRotationalInertia = bodyRotationalInertia * 1e-6;
-	Vec3<T> bodyCOM(0, 0, 0);
-	bodyInertiaParams.floatingBodyInertia = SpatialInertia<T>(robotParameters.bodyMass, bodyCOM, bodyRotationalInertia);
+	dtypes::Vec3 bodyCOM(0, 0, 0);
+	bodyInertiaParams.floatingBodyInertia = SpatialInertia(robotParameters.bodyMass, bodyCOM, bodyRotationalInertia);
 
 
 	// locations
-	bodyInertiaParams.abdRotorLocation = Vec3<T>(0.125, 0.049, 0);
-	bodyInertiaParams.abdLocation = Vec3<T>(robotParameters.bodyLength, robotParameters.bodyWidth, 0) * 0.5;
-	bodyInertiaParams.hipLocation = Vec3<T>(0, robotParameters.abdLinkLength, 0);
-	bodyInertiaParams.hipRotorLocation = Vec3<T>(0, 0.04, 0);
-	bodyInertiaParams.kneeLocation = Vec3<T>(0, 0, -robotParameters.hipLinkLength);
-	bodyInertiaParams.kneeRotorLocation = Vec3<T>(0, 0, 0);
+	bodyInertiaParams.abdLocation = dtypes::Vec3(robotParameters.bodyLength, robotParameters.bodyWidth, 0) * 0.5;
+	bodyInertiaParams.hipLocation = dtypes::Vec3(0, robotParameters.abdLinkLength, 0);
+	bodyInertiaParams.kneeLocation = dtypes::Vec3(0, 0, -robotParameters.hipLinkLength);
 
+	int baseID = 0;
+	int bodyID = 0;
+	int parentID = -1;
+	// Floating Base
+	dynamics.AddBody(bodyInertiaParams.floatingBodyInertia, dtypes::Mat6::Identity(), -1, parentID);
+	bodyID++;
+	parentID++;
 
-	/*Mat6<T> abdPosition = 
-	dynamics.AddBody()*/
+	dtypes::Mat6 X;
+
+	// Legs
+	int side = -1;
+	for (int leg = 0; leg < 4; leg++)
+	{
+		X = CreateSpatialForm(dtypes::Mat3::Identity(), GetLegSignedVector(bodyInertiaParams.abdLocation, leg));
+		// Abd
+		if (side < 0) {
+			dynamics.AddBody(bodyInertiaParams.abdInertia.FlipAlongAxis(1), X, 0, baseID);
+		}
+		else {
+			dynamics.AddBody(bodyInertiaParams.abdInertia, X, 0, baseID);
+		}
+		bodyID++;
+		parentID++;
+
+		// Hip
+		X = CreateSpatialForm(GetRotationMatrix(2, M_PI), GetLegSignedVector(bodyInertiaParams.hipLocation, leg));
+		if (side < 0) {
+			dynamics.AddBody(bodyInertiaParams.hipInertia.FlipAlongAxis(1), X, 1, parentID);
+		}
+		else {
+			dynamics.AddBody(bodyInertiaParams.hipInertia, X, 1, parentID);
+		}
+		bodyID++;
+		parentID++;
+
+		// Knee
+		X = CreateSpatialForm(dtypes::Mat3::Identity(), bodyInertiaParams.kneeLocation);
+		if (side < 0) {
+			dynamics.AddBody(bodyInertiaParams.kneeInertia.FlipAlongAxis(1), X, 1, parentID);
+		}
+		else {
+			dynamics.AddBody(bodyInertiaParams.kneeInertia, X, 1, parentID);
+		}
+		bodyID++;
+		parentID++;
+
+		side *= -1;
+	}
 }
 
-template<typename T>
-void Quadruped<T>::Stand()
-{
-
-}
 
 
-template<typename T>
-void Quadruped<T>::SetFloatingBaseStateFromIMU(double IMUData[])
+void Quadruped::SetFloatingBaseStateFromIMU(float IMUData[])
 {
 
 	state.bodyPosition[0] = IMUData[0];
@@ -97,8 +127,8 @@ void Quadruped<T>::SetFloatingBaseStateFromIMU(double IMUData[])
 }
 
 
-template<typename T>
-void Quadruped<T>::SetJointsStateFromSensors(double jointStateData[])
+
+void Quadruped::SetJointsStateFromSensors(float jointStateData[])
 {
 	for (int i = 0; i < robotParameters.numActuatedDoF; i++)
 	{
@@ -111,36 +141,36 @@ void Quadruped<T>::SetJointsStateFromSensors(double jointStateData[])
 	}
 }
 
-template<typename T>
-void Quadruped<T>::SetState(State<T>& newState)
+
+void Quadruped::SetState(State& newState)
 {
 	state = newState;
 }
 
-template<typename T>
-void Quadruped<T>::SetState(double IMUData[], double jointStateData[])
+
+void Quadruped::SetState(float IMUData[], float jointStateData[])
 {
 	SetFloatingBaseStateFromIMU(IMUData);
 	SetJointsStateFromSensors(jointStateData);
 
 	for (int i = 0; i < 4; i++)
 	{
-		Vec3<T> q = Vec3<T>(state.q[i * 3 + 0], state.q[i * 3 + 1], state.q[i * 3 + 2]);
-		Vec3<T> p = legController.ForwardKinematics(q, i);
+		dtypes::Vec3 q = dtypes::Vec3(state.q[i * 3 + 0], state.q[i * 3 + 1], state.q[i * 3 + 2]);
+		dtypes::Vec3 p = legController.ForwardKinematics(q, i);
 	}
 }
 
-template<typename T>
-State<T> Quadruped<T>::GetState()
+
+State Quadruped::GetState()
 {
 	return state;
 }
 
-template<typename T>
-Vec12<T> Quadruped<T>::LegPositionForState()
+
+dtypes::Vec12 Quadruped::LegPositionForState()
 {
-	Vec12<T> q = Vec12<T>::Zero();
-	Vec3<T> p = Vec3<T>::Zero();
+	dtypes::Vec12 q = dtypes::Vec12::Zero();
+	dtypes::Vec3 p = dtypes::Vec3::Zero();
 
 	p[0] = 0;
 	p[1] = robotParameters.abdLinkLength + robotParameters.kneeLinkYOffset;
@@ -148,7 +178,7 @@ Vec12<T> Quadruped<T>::LegPositionForState()
 
 	for (int i = 0; i < 4; i++)
 	{
-		Vec3<T> motorPos = legController.InverseKinematics(p, i);
+		dtypes::Vec3 motorPos = legController.InverseKinematics(p, i);
 
 		q[i * 3 + 0] = motorPos[0];
 		q[i * 3 + 1] = motorPos[1];
@@ -157,41 +187,3 @@ Vec12<T> Quadruped<T>::LegPositionForState()
 
 	return q;
 }
-
-
-template<typename T>
-void Quadruped<T>::CustomTests()
-{
-	MatSp<float> m1; 
-	m1 << 6, 1, 33, 3, 248, 2, 11, 0, 245, 2, 22, 44, 55, 66, 77, 8, 1, 55, 3, 8, 2, 6, 7, 8, 3, 5, 6, 78, 1, 1, 123, 42, 53, 7, 9, 9;
-	VecSp<float> v1;
-	v1 << 1, 1, 1, 2, 2, 2;
-
-	VecSp<float> v2 = m1 * v1;
-}
-
-
-template<typename T>
-Vec18<T> Quadruped<T>::GetGravityVector()
-{
-	Vec18<T> G = Vec18<T>::Zero();
-	return G;
-}
-
-template<typename T>
-Mat18<T> Quadruped<T>::GetCoriolisMatrix()
-{
-	Mat18<T> C = Mat18<T>::Zero();
-	return C;
-}
-
-template<typename T>
-Mat18<T> Quadruped<T>::GetMassMatrix()
-{
-	Mat18<T> M = Mat18<T>::Zero();
-	return M;
-}
-
-
-template class __declspec(dllexport) Quadruped<double>;
-template class __declspec(dllexport) Quadruped<float>;

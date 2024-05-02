@@ -1,4 +1,6 @@
 #include "QuadrupedVisualizer/QuadrupedVisualizer.h"
+#include "QuadrupedVisualizer/Resources.h"
+#include "cinder/Log.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -8,14 +10,23 @@ void QuadrupedVisualizer::setup() {
     gl::enableDepthWrite();
     gl::enableDepthRead();
 
-    // Create cube batch
-    mCubeBatch = gl::Batch::create(geom::Cube().size(vec3(1, 1, 1)), gl::getStockShader(gl::ShaderDef().color()));
+    try {
+        mGlsl = gl::GlslProg::create(loadResource(RES_VERT_SHADER), loadResource(RES_FRAG_SHADER));
+        CI_LOG_I("Loaded shader");
+    }
+    catch (const std::exception& e) {
+        CI_LOG_E("Shader Error: " << e.what());
+    }
+
+
+    //
+    plane = new myprimitives::Plane(mGlsl);
+    myRobot = new Robot(mGlsl);
 }
 
 void QuadrupedVisualizer::resize()
 {
-    mCam.setPerspective(60, getWindowAspectRatio(), 1, 1000);
-    mCam.lookAt(vec3(7, 7, 5), vec3(0), vec3(0, 0, 1));
+    mCam.setPerspective(30, getWindowAspectRatio(), 1, 1000);
     gl::setMatrices(mCam);
 }
 
@@ -24,15 +35,22 @@ void QuadrupedVisualizer::update() {
 }
 
 void QuadrupedVisualizer::draw() {
+    mCam.lookAt(vec3(2.0 * sin(ang), 2.0 * cos(ang), 2.0), vec3(0, 0, 1), vec3(0, 0, 1));
+
     gl::clear();
     gl::setMatrices(mCam);
 
-    //gl::clear(Color(1, 0, 0));
-    gl::color(Color(1, 0, 0));
-    gl::rotate(ang, vec3(0.5f, 1.0f, 0.0f));
-    mCubeBatch->draw();
+
+    plane->Draw();
+    myRobot->Draw();
 
     ang += 0.01;
+}
+
+
+void QuadrupedVisualizer::cleanup() {
+    delete plane;
+    delete myRobot;
 }
 
 CINDER_APP(QuadrupedVisualizer, RendererGl(RendererGl::Options().msaa(16)))

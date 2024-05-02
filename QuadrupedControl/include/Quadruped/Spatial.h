@@ -5,19 +5,30 @@
 #include "Utilities.h"
 #include <eigen3/Eigen/Dense>
 
-template<typename T>
-VecSp<T> GetSpatialInertia()
-{
 
+
+
+auto CreateSpatialForm(const dtypes::Mat3& R, const dtypes::Vec3& r) {
+
+	dtypes::Mat6 X = dtypes::Mat6::Zero();
+	X.template topLeftCorner<3, 3>() = R;
+	X.template bottomRightCorner<3, 3>() = R;
+	X.template bottomLeftCorner<3, 3>() = -R * VectorToSkewMat(r);
+
+	return X;
 }
 
+dtypes::Mat6 SpatialRotation(float q, int axis) {
+	dtypes::Mat3 R = GetRotationMatrix(q, axis);
+	dtypes::Mat6 X = dtypes::Mat6::Zero();
+	X.template topLeftCorner<3, 3>() = R;
+	X.template bottomRightCorner<3, 3>() = R;
+	return X;
+}
 
-template <typename T>
-MatSp<T> createSpatialForm(const Mat3<T>& R, const Vec3<T>& r) {
-    Mat6<typename T::Scalar> X = Mat6<typename T::Scalar>::Zero();
-    X.template topLeftCorner<3, 3>() = R;
-    X.template bottomRightCorner<3, 3>() = R;
-    X.template bottomLeftCorner<3, 3>() = -R * vectorToSkewMat(r);
+dtypes::Mat6 JointRotationMatrix(float q, int axis) {
+    dtypes::Mat6 X = dtypes::Mat6::Zero();
+    X = SpatialRotation(axis, q);
     return X;
 }
 

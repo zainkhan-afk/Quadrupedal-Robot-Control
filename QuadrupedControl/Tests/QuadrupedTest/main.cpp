@@ -4,11 +4,8 @@
 int main()
 {
 	std::cout << "Starting Quadruped Test." << std::endl;
-	Quadruped<float> robot;
+	Quadruped robot;
 	robot.Initialize();
-
-
-	robot.CustomTests();
 
 	//robotVis.f1();
 

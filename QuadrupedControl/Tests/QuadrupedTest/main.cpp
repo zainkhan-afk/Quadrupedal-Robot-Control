@@ -10,5 +10,7 @@ int main()
 
 	robot.CustomTests();
 
+	//robotVis.f1();
+
 	return 0;
 }

@@ -125,7 +125,35 @@ def QuatToEulerRot(q):
 	R = np.array([
 					[1 - 2 * (e2 * e2 + e3 * e3), 2 * (e1 * e2 - e0 * e3), 2 * (e1 * e3 + e0 * e2)], 
 					[2 * (e1 * e2 + e0 * e3), 1 - 2 * (e1 * e1 + e3 * e3), 2 * (e2 * e3 - e0 * e1)],
-				    [2 * (e1 * e3 - e0 * e2), 2 * (e2 * e3 + e0 * e1), 1 - 2 * (e1 * e1 + e2 * e2)]
+					[2 * (e1 * e3 - e0 * e2), 2 * (e2 * e3 + e0 * e1), 1 - 2 * (e1 * e1 + e2 * e2)]
 				]).T
 
 	return R
+
+def IntegrateQuatImplicit(body_orientation, omega_body, dt):
+	ang = np.linalg.norm(omega_body)
+	if ang > 0:
+		axis = omega_body / ang
+	
+	else:
+		axis = np.array([[1, 0, 0]]).T
+
+	ang *= dt
+	ee = np.sin(ang / 2) * axis
+	quat_d = np.array([[np.cos(ang / 2), ee[0, 0], ee[1, 0], ee[2, 0]]]).T
+
+	quat_new = QuatProduct(body_orientation, quat_d)
+	quat_new = quat_new / np.linalg.norm(quat_new)
+	return quat_new;
+
+def QuatProduct(q1, q2):
+	r1 = q1[0, 0]
+	r2 = q2[0, 0]
+	v1 = np.array([[q1[1, 0], q1[2, 0], q1[3, 0]]]).T
+	v2 = np.array([[q2[1, 0], q2[2, 0], q2[3, 0]]]).T
+
+	r = r1 * r2 - v1.T.dot(v2)
+	v = r1 * v2 + r2 * v1 + np.cross(v1.ravel(), v2.ravel()).reshape(3, 1)
+
+	q = np.array([[r[0, 0], v[0, 0], v[1, 0], v[2, 0]]]).T
+	return q

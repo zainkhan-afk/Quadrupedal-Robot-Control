@@ -62,6 +62,7 @@ class Simulation:
 		current_state.body_velocity[5, 0] = base_velocity[1][2]
 
 		current_taus = np.zeros((12, 1))
+		external_forces = np.zeros((6, 13))
 
 		for i in range(12):
 			current_state.q[i, 0] = joint_states[i][0]
@@ -69,7 +70,7 @@ class Simulation:
 			current_taus[i, 0] = joint_states[i][3]
 
 		if self.step_num % 50 == 0:
-			self.dynamics.Step(current_state, current_taus)
+			self.dynamics.Step(current_state, current_taus, external_forces)
 
 		desired = []
 

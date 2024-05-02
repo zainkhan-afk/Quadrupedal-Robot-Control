@@ -28,11 +28,13 @@ class JointLink:
 		self.a = np.zeros((6, 1))
 		self.u = np.zeros((6, 1))
 		self.pa = np.zeros((6, 1))
+		self.external_force = np.zeros((6, 1))
 		self.U  = None
 		self.D = None
 		
 		self.S = GetJointSubspace(self.joint_axis)
 		self.joint_vel_spatial = self.S*self.q_dot
+
 
 	def AddChild(self, child):
 		self.children.append(child)
@@ -42,35 +44,23 @@ class JointLink:
 		for child in self.children:
 			child.GetTransformationMatrices(all_T)
 
-	def SetAngle(self, i, state, tau):
+	def SetAngle(self, i, state, tau, external_forces):
 		if self.parent is not None:
 			self.q = state.q[i, 0]
 			self.q_dot = state.q_dot[i, 0]
 			self.tau = tau[i, 0]
+			self.external_force = external_forces[:, i + 1].reshape(6, 1)
 			
 			i += 1
 			for child in self.children:
-				child.SetAngle(i, state, tau)
+				child.SetAngle(i, state, tau, external_forces)
 		else:
+			self.external_force = external_forces[:, 0].reshape(6, 1)
 			self.v = state.body_velocity
 			leg = 0
 			for child in self.children:
-				child.SetAngle(leg*3 + i, state, tau)
+				child.SetAngle(leg*3 + i, state, tau, external_forces)
 				leg += 1
-
-	# def Update(self, P_T_0): # Transformations according to the book
-	# 	if self.joint_reversed:
-	# 		R_joint = GetRotMat(-self.q, self.joint_axis)
-	# 	else:
-	# 		R_joint = GetRotMat(self.q, self.joint_axis)
-
-	# 	self.J_T = SpatialTransformation(R_joint, np.zeros((3, 1)))
-
-	# 	self.i_T_parent = self.J_T@self.local_T
-	# 	self.i_T_0 = self.i_T_parent@P_T_0
-		
-	# 	for child in self.children:
-	# 		child.Update(self.i_T_0)
 
 	def Update(self, P_T_0):
 		if self.parent is None:
@@ -95,9 +85,14 @@ class JointLink:
 		
 		self.articulated_inertia = self.inertia.copy()
 
+		i_T_0_homog = SpatialToHomog(self.i_T_0)
+		R = i_T_0_homog[:3, :3]
+		p = i_T_0_homog[:3, -1].reshape(3, 1)
+
+		O_T_i = SpatialTransformation(R.T, -R @ p);
 
 		inertia_vel_product = self.inertia @ self.v
-		self.pa = ForceCrossProduct(self.v, inertia_vel_product)
+		self.pa = ForceCrossProduct(self.v, inertia_vel_product) - O_T_i@self.external_force
 
 
 		for child in self.children:

@@ -4,21 +4,31 @@ from PyQuadruped.RobotDynamics import RobotDynamics
 import time
 
 
+TOTAL_TIMESTEPS = 1000
+DT = 0.01
+
 np.random.seed(1)
 
-zero_state = State()
+state = State()
 
-RD = RobotDynamics(np.random.random((6, 6)))
+state.body_position[0, 0] = 0
+state.body_position[1, 0] = 0
+state.body_position[2, 0] = 0
 
+state.body_orientation[-1, 0] = 1
 
+RD = RobotDynamics(np.eye(6))
 
-ang = 0.0
-while True:
-	zero_state.q[1, 0] = np.cos(ang)
-	zero_state.q[2, 0] = np.sin(ang)
-	# zero_state.q[3, 0] = np.pi / 6
-	# zero_state.q[6, 0] = np.pi / 6
-	# zero_state.q[9, 0] = np.pi / 6
-	RD.Step(zero_state)
-	time.sleep(0.1)
-	ang += 0.1
+current_taus = np.zeros((12, 1))
+external_forces = np.zeros((6, 13))
+
+external_forces[0, 0] = 1
+
+for time_step in range(TOTAL_TIMESTEPS):
+	print(time_step)
+	state_dot = RD.Step(state, current_taus, external_forces)
+	RD.Integrate(state, state_dot, DT)
+
+	RD.
+
+	time.sleep(0.05)

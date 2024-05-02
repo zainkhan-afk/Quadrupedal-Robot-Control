@@ -11,7 +11,7 @@ class RobotModel:
 		self.kinematic_tree_feet = None
 		self.base_transformation = base_transformation
 
-		self.g = np.array([[0, 0, 0, 0, 0, -9.81]]).T
+		self.g = np.array([[0, 0, 0, 0, 0, 0]]).T
 
 	def AssignKinematicTree(self, kinematic_tree):
 		self.kinematic_tree = kinematic_tree
@@ -36,9 +36,11 @@ class RobotModel:
 			leg.UpdateBottomUp()
 			idx += 1
 
-		stateDot = StateDot() 
-		self.kinematic_tree.UpdateTopDown(0, stateDot, g = self.g)
+		state_dot = StateDot() 
+		self.kinematic_tree.UpdateTopDown(0, state_dot, g = self.g)
 
-	def ForwardKinematics(self, state, current_taus):
-		self.kinematic_tree.SetAngle(0, state, current_taus)
+		return state_dot
+
+	def ForwardKinematics(self, state, current_taus, external_forces):
+		self.kinematic_tree.SetAngle(0, state, current_taus, external_forces)
 		self.kinematic_tree.Update(SpatialTransformation(QuatToEulerRot(state.body_orientation), state.body_position))

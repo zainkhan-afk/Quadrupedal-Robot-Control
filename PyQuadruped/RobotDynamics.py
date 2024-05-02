@@ -10,7 +10,7 @@ from PyQuadruped.RobotParams import abd_location, knee_location, hip_location, f
 
 from PyQuadruped.Spatial import SpatialTransformation, FlipSpatialInertia, SpatialToHomog
 
-from PyQuadruped.utils import GetRotMat, GetLegSignedVector
+from PyQuadruped.utils import GetRotMat, GetLegSignedVector, QuatToEulerRot, IntegrateQuatImplicit
 
 from PyQuadruped.State import State
 
@@ -80,6 +80,7 @@ class RobotDynamics:
 			side *= -1
 
 		self.model.AssignKinematicTreeFeet(feet)
+		self.last_body_velocity = np.zeros((6, 1))
 
 	def DebugVisualization(self):
 		xz_lines = []
@@ -142,13 +143,38 @@ class RobotDynamics:
 		if k == ord("q"):
 			exit()
 
-	def Step(self, state, current_taus):
+	def Step(self, state, current_taus, external_forces):
 		self.xz_vis.Clear()
 		self.yz_vis.Clear()
-		self.model.ForwardKinematics(state, current_taus)
-		self.model.RunABA()
+		self.model.ForwardKinematics(state, current_taus, external_forces)
+		state_dot = self.model.RunABA()
 
 		self.DebugVisualization()
+
+		return state_dot
+
+	def Integrate(self, state, state_dot, dt):
+		state.q_dot += state_dot.q_ddot * dt
+		state.body_velocity += state_dot.body_veloctiy_dot * dt
+
+
+		# Contact Constraint Velocity Updated
+		# _contact_constr->UpdateQdot(_state);
+
+		# Prepare body velocity integration
+		R_body = QuatToEulerRot(state.body_orientation);
+
+		state_dot.body_position_dot = R_body.T @ state.body_velocity[3:, 0].reshape((3, 1))
+		omega_body = state.body_velocity[:3, 0].reshape((3, 1))
+
+		# Position Update
+		state.q += state.q_dot * dt;
+		state.body_position += state_dot.body_position_dot * dt;
+		state.body_orientation = IntegrateQuatImplicit(state.body_orientation, omega_body, dt)
+		state_dot.body_veloctiy_dot = (state.body_velocity - self.last_body_velocity) / dt;
+		self.last_body_velocity = state.body_velocity;
+
+		return state
 
 
 

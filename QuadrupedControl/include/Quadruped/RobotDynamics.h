@@ -37,7 +37,7 @@ public:
 	RobotDynamics();
 	~RobotDynamics();
 
-	void AddBody(SpatialInertia I, dtypes::Mat6 pos, int axis, int parent);
+	void AddBody(SpatialInertia I, MathTypes::Mat6 pos, COORD_AXIS axis, int parent);
 
 	StateDot Step(const State& state);
 
@@ -51,13 +51,17 @@ private:
 	std::vector<SpatialInertia> linkInertias;
 	std::vector<SpatialInertia> articulatedInertias;
 
-	std::vector<int> axis;
-	
-	std::vector<dtypes::Mat6> Xl;
-	std::vector<dtypes::Mat6> Xp;
-	std::vector<dtypes::Mat6> Xb;
+
+	std::vector<MathTypes::Vec6> v;
+	std::vector<MathTypes::Vec6> S;
+
+	std::vector<MathTypes::Mat6> Xl;
+	std::vector<MathTypes::Mat6> Xp;
+	std::vector<MathTypes::Mat6> Xb;
 
 	std::vector<int> parents;
+	std::vector<COORD_AXIS> axis;
+
 };
 
 

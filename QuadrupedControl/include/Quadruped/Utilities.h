@@ -17,16 +17,16 @@
 //}
 
 
-dtypes::Mat3 VectorToSkewMat(const dtypes::Vec3& v);
+MathTypes::Mat3 VectorToSkewMat(const MathTypes::Vec3& v);
 
 
-dtypes::Mat3 GetRotationMatrix(float angle, int axis);
+MathTypes::Mat3 GetRotationMatrix(float angle, int axis);
 
 
-dtypes::Vec3 MatToSkewVec(const dtypes::Mat3& m);
+MathTypes::Vec3 MatToSkewVec(const MathTypes::Mat3& m);
 
 
-dtypes::Vec3 GetLegSignedVector(const dtypes::Vec3& v, int legID);
+MathTypes::Vec3 GetLegSignedVector(const MathTypes::Vec3& v, int legID);
 
 
 #endif

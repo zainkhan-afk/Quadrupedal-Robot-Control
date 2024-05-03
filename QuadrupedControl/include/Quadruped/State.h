@@ -8,13 +8,13 @@
 
 struct QUADRUPED_API State
 {
-	dtypes::Vec3 bodyPosition = dtypes::Vec3::Zero();
-	dtypes::Vec4 bodyOrientation = dtypes::Vec4::Zero();
+	MathTypes::Vec3 bodyPosition = MathTypes::Vec3::Zero();
+	MathTypes::Vec4 bodyOrientation = MathTypes::Vec4::Zero();
 
-	dtypes::Vec6 bodyVelocity = dtypes::Vec6::Zero();
+	MathTypes::Vec6 bodyVelocity = MathTypes::Vec6::Zero();
 
-	dtypes::Vec12 q = dtypes::Vec12::Zero();;
-	dtypes::Vec12 qDot = dtypes::Vec12::Zero();
+	MathTypes::Vec12 q = MathTypes::Vec12::Zero();;
+	MathTypes::Vec12 qDot = MathTypes::Vec12::Zero();
 
 	void PrintState()
 	{
@@ -25,10 +25,10 @@ struct QUADRUPED_API State
 
 struct QUADRUPED_API StateDot
 {
-	dtypes::Vec3 bodyPositionDot = dtypes::Vec3::Zero();;
-	dtypes::Vec6 bodyVelocityDDot = dtypes::Vec6::Zero();;
+	MathTypes::Vec3 bodyPositionDot = MathTypes::Vec3::Zero();;
+	MathTypes::Vec6 bodyVelocityDDot = MathTypes::Vec6::Zero();;
 
-	dtypes::Vec12 qDDot = dtypes::Vec12::Zero();;
+	MathTypes::Vec12 qDDot = MathTypes::Vec12::Zero();;
 };
 
 #endif

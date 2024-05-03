@@ -70,7 +70,7 @@ private:
 	struct
 	{
 		SpatialInertia floatingBodyInertia, abdInertia, hipInertia, kneeInertia;
-		dtypes::Vec3 abdLocation, hipLocation, kneeLocation;
+		MathTypes::Vec3 abdLocation, hipLocation, kneeLocation;
 	} bodyInertiaParams;
 
 	State state;

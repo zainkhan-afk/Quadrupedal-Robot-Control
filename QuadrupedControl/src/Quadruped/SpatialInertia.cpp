@@ -6,32 +6,32 @@
 
 SpatialInertia::SpatialInertia()
 {
-    this->inertia = dtypes::Mat6::Zero();
+    this->inertia = MathTypes::Mat6::Zero();
 }
 
 
-SpatialInertia::SpatialInertia(float mass, const dtypes::Vec3& com, const dtypes::Mat3& inertiaMatrix)
+SpatialInertia::SpatialInertia(float mass, const MathTypes::Vec3& com, const MathTypes::Mat3& inertiaMatrix)
 {
-    dtypes::Mat3 cSkew = VectorToSkewMat(com);
+    MathTypes::Mat3 cSkew = VectorToSkewMat(com);
     this->inertia.template topLeftCorner<3, 3>() = inertiaMatrix + mass * cSkew * cSkew.transpose();
     this->inertia.template topRightCorner<3, 3>() = mass * cSkew;
     this->inertia.template bottomLeftCorner<3, 3>() = mass * cSkew.transpose();
-    this->inertia.template bottomRightCorner<3, 3>() = mass * dtypes::Mat3::Identity();
+    this->inertia.template bottomRightCorner<3, 3>() = mass * MathTypes::Mat3::Identity();
 }
 
 
-SpatialInertia::SpatialInertia(const dtypes::Mat4& P) {
-    dtypes::Mat6 I;
+SpatialInertia::SpatialInertia(const MathTypes::Mat4& P) {
+    MathTypes::Mat6 I;
     float m = P(3, 3);
-    dtypes::Vec3 h = P.template topRightCorner<3, 1>();
-    dtypes::Mat3 E = P.template topLeftCorner<3, 3>();
+    MathTypes::Vec3 h = P.template topRightCorner<3, 1>();
+    MathTypes::Mat3 E = P.template topLeftCorner<3, 3>();
     
-    dtypes::Mat3 Ibar = E.trace() * dtypes::Mat3::Identity() - E;
+    MathTypes::Mat3 Ibar = E.trace() * MathTypes::Mat3::Identity() - E;
     
     I.template topLeftCorner<3, 3>() = Ibar;
     I.template topRightCorner<3, 3>() = VectorToSkewMat(h);
     I.template bottomLeftCorner<3, 3>() = VectorToSkewMat(h).transpose();
-    I.template bottomRightCorner<3, 3>() = m * dtypes::Mat3::Identity();
+    I.template bottomRightCorner<3, 3>() = m * MathTypes::Mat3::Identity();
     
     this->inertia = I;
 }
@@ -44,13 +44,13 @@ SpatialInertia::~SpatialInertia()
 }
 
 
-dtypes::Mat4 SpatialInertia::GetPseudoInertia() {
-    dtypes::Vec3 h = MatToSkewVec(this->inertia.template topRightCorner<3, 3>());
-    dtypes::Mat3 Ibar = this->inertia.template topLeftCorner<3, 3>();
+MathTypes::Mat4 SpatialInertia::GetPseudoInertia() {
+    MathTypes::Vec3 h = MatToSkewVec(this->inertia.template topRightCorner<3, 3>());
+    MathTypes::Mat3 Ibar = this->inertia.template topLeftCorner<3, 3>();
     float m = this->inertia(5, 5);
     
-    dtypes::Mat4 P;
-    P.template topLeftCorner<3, 3>() = 0.5 * Ibar.trace() * dtypes::Mat3::Identity() - Ibar;
+    MathTypes::Mat4 P;
+    P.template topLeftCorner<3, 3>() = 0.5 * Ibar.trace() * MathTypes::Mat3::Identity() - Ibar;
     P.template topRightCorner<3, 1>() = h;
     P.template bottomLeftCorner<1, 3>() = h.transpose();
     
@@ -62,8 +62,8 @@ dtypes::Mat4 SpatialInertia::GetPseudoInertia() {
 
 SpatialInertia SpatialInertia::FlipAlongAxis(int axis)
 {
-    dtypes::Mat4 P = GetPseudoInertia();
-    dtypes::Mat4 X = dtypes::Mat4::Identity();
+    MathTypes::Mat4 P = GetPseudoInertia();
+    MathTypes::Mat4 X = MathTypes::Mat4::Identity();
     if (axis == 0)
         X(0, 0) = -1;
     
@@ -81,19 +81,19 @@ SpatialInertia SpatialInertia::FlipAlongAxis(int axis)
 
 
 
-void SpatialInertia::AddInertia(dtypes::Mat6 otherInertia)
+void SpatialInertia::AddInertia(MathTypes::Mat6 otherInertia)
 {
     this->inertia += otherInertia;
 }
 
 
-void SpatialInertia::SetInertia(dtypes::Mat6 otherInertia)
+void SpatialInertia::SetInertia(MathTypes::Mat6 otherInertia)
 {
     this->inertia = otherInertia;
 }
 
 
-dtypes::Mat6 SpatialInertia::GetInertia()
+MathTypes::Mat6 SpatialInertia::GetInertia()
 {
     return this->inertia;
 }

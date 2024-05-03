@@ -10,7 +10,15 @@ int main()
 
 	State state;
 
-	state = robot.StepDynamicsModel(state);
+	std::cout << "Initial State: \n";
+	state.PrintState();
+
+	for (int i = 0; i < 10; i++) {
+		std::cout << "\nTimestep: " << i << std::endl;
+		state = robot.StepDynamicsModel(state);
+		state.PrintState();
+	}
+
 
 	//robotVis.f1();
 

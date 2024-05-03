@@ -30,13 +30,13 @@ LegController::LegController(float abdLinkLength, float hipLinkLength, float kne
 }
 
 
-dtypes::Vec3 LegController::ForwardKinematics(dtypes::Vec3 q, int leg)
+MathTypes::Vec3 LegController::ForwardKinematics(MathTypes::Vec3 q, int leg)
 {
     // X : -1.0 * c2 * l3 * s3 - 1.0 * c3 * l3 * s2 - 1.0 * l2 * s2
     // Y : 1.0 * c1 * l1 + s1 * (c2 * c3 * l3 + c2 * l2 - 1.0 * l3 * s2 * s3)
     // Z : -1.0 * c1 * (c2 * c3 * l3 + c2 * l2 - 1.0 * l3 * s2 * s3) + 1.0 * l1 * s1
 
-    dtypes::Vec3 P = dtypes::Vec3::Zero();
+    MathTypes::Vec3 P = MathTypes::Vec3::Zero();
 
     //int sideSign = GetLegSign(leg);
 
@@ -62,10 +62,10 @@ dtypes::Vec3 LegController::ForwardKinematics(dtypes::Vec3 q, int leg)
 }
 
 
-dtypes::Vec3 LegController::InverseKinematics(dtypes::Vec3 pos, int leg)
+MathTypes::Vec3 LegController::InverseKinematics(MathTypes::Vec3 pos, int leg)
 {
     //int sideSign = GetLegSign(leg);
-    dtypes::Vec3 q = dtypes::Vec3::Zero();
+    MathTypes::Vec3 q = MathTypes::Vec3::Zero();
     float R = sqrt(pos[2] * pos[2] + pos[1] * pos[1]);
 
     float beta = acos(pos[1] / R);
@@ -135,9 +135,9 @@ dtypes::Vec3 LegController::InverseKinematics(dtypes::Vec3 pos, int leg)
 //}
 
 
-dtypes::Mat3 LegController::GetLegJacobian(dtypes::Vec3 q, int leg)
+MathTypes::Mat3 LegController::GetLegJacobian(MathTypes::Vec3 q, int leg)
 {
-    dtypes::Mat3 J = dtypes::Mat3::Zero();
+    MathTypes::Mat3 J = MathTypes::Mat3::Zero();
     /*int sideSign = GetLegSign(leg);
 
     float s1 = std::sin(q[0]);

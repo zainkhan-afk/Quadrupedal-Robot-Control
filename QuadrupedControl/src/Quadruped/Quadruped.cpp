@@ -25,8 +25,8 @@ void Quadruped::Initialize()
 	
 	MathTypes::Mat3 rotorRotationalInertiaZ;
 
-	MathTypes::Mat3 RY = GetRotationMatrix(PI / 2.0f, 1);
-	MathTypes::Mat3 RX = GetRotationMatrix(PI / 2.0f, 0);
+	MathTypes::Mat3 RY = GetRotationMatrix(M_PI / 2, COORD_AXIS::Y);
+	MathTypes::Mat3 RX = GetRotationMatrix(M_PI / 2, COORD_AXIS::X);
 
 	// spatial inertias
 	MathTypes::Mat3 abadRotationalInertia;
@@ -77,7 +77,7 @@ void Quadruped::Initialize()
 		X = CreateSpatialForm(MathTypes::Mat3::Identity(), GetLegSignedVector(bodyInertiaParams.abdLocation, leg));
 		// Abd
 		if (side < 0) {
-			dynamics.AddBody(bodyInertiaParams.abdInertia.FlipAlongAxis(1), X, 0, baseID);
+			dynamics.AddBody(bodyInertiaParams.abdInertia.FlipAlongAxis(1), X, COORD_AXIS::X, baseID);
 		}
 		else {
 			dynamics.AddBody(bodyInertiaParams.abdInertia, X, COORD_AXIS::X, baseID);
@@ -86,12 +86,12 @@ void Quadruped::Initialize()
 		parentID++;
 
 		// Hip
-		X = CreateSpatialForm(GetRotationMatrix(COORD_AXIS::Z, M_PI), GetLegSignedVector(bodyInertiaParams.hipLocation, leg));
+		X = CreateSpatialForm(GetRotationMatrix(M_PI, COORD_AXIS::Z), GetLegSignedVector(bodyInertiaParams.hipLocation, leg));
 		if (side < 0) {
 			dynamics.AddBody(bodyInertiaParams.hipInertia.FlipAlongAxis(1), X, COORD_AXIS::Y, parentID);
 		}
 		else {
-			dynamics.AddBody(bodyInertiaParams.hipInertia, X, 1, parentID);
+			dynamics.AddBody(bodyInertiaParams.hipInertia, X, COORD_AXIS::Y, parentID);
 		}
 		bodyID++;
 		parentID++;
@@ -102,7 +102,7 @@ void Quadruped::Initialize()
 			dynamics.AddBody(bodyInertiaParams.kneeInertia.FlipAlongAxis(1), X, COORD_AXIS::Y, parentID);
 		}
 		else {
-			dynamics.AddBody(bodyInertiaParams.kneeInertia, X, 1, parentID);
+			dynamics.AddBody(bodyInertiaParams.kneeInertia, X, COORD_AXIS::Y, parentID);
 		}
 		bodyID++;
 		parentID++;

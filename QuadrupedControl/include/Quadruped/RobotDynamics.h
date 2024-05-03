@@ -45,6 +45,9 @@ public:
 private:
 	StateDot RunArticulatedBodyAlgorithm(const State& state);
 
+public:
+	std::vector<MathTypes::Mat6> Xb;
+
 private:
 	int numLinks = 13;
 	int currentIndex = 0;
@@ -54,10 +57,11 @@ private:
 
 	std::vector<MathTypes::Vec6> v;
 	std::vector<MathTypes::Vec6> S;
+	std::vector<MathTypes::Vec6> c;
 
 	std::vector<MathTypes::Mat6> Xl;
 	std::vector<MathTypes::Mat6> Xp;
-	std::vector<MathTypes::Mat6> Xb;
+	//std::vector<MathTypes::Mat6> Xb;
 
 	std::vector<int> parents;
 	std::vector<COORD_AXIS> axis;

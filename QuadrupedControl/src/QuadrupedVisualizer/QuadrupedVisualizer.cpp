@@ -22,6 +22,8 @@ void QuadrupedVisualizer::setup() {
     //
     plane = new myprimitives::Plane(mGlsl);
     myRobot = new Robot(mGlsl);
+
+    robotModel.Initialize();
 }
 
 void QuadrupedVisualizer::resize()
@@ -32,6 +34,9 @@ void QuadrupedVisualizer::resize()
 
 void QuadrupedVisualizer::update() {
     // Update logic if needed
+    
+    robotModel.dynamics.Xb[0];
+
 }
 
 void QuadrupedVisualizer::draw() {

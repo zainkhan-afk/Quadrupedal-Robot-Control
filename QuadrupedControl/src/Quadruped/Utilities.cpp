@@ -56,3 +56,13 @@ MathTypes::Vec3 GetLegSignedVector(const MathTypes::Vec3& v, int legID) {
 	}
 }
 
+MathTypes::Mat3 RotationMatrixFromQuat(MathTypes::Vec4 quat)
+{
+	MathTypes::Mat3 R;
+
+	R <<	1 - 2 * (quat(2) * quat(2) + quat(3) * quat(3)),		2 * (quat(1) * quat(2) - quat(0) * quat(3)),		2 * (quat(1) * quat(3) + quat(0) * quat(2)),
+				2 * (quat(1) * quat(2) + quat(0) * quat(3)),	1 - 2 * (quat(1) * quat(1) + quat(3) * quat(3)),		2 * (quat(2) * quat(3) - quat(0) * quat(1)),
+				2 * (quat(1) * quat(3) - quat(0) * quat(2)),		2 * (quat(2) * quat(3) + quat(0) * quat(1)),	1 - 2 * (quat(1) * quat(1) + quat(2) * quat(2));
+	R.transposeInPlace();
+	return R;
+}

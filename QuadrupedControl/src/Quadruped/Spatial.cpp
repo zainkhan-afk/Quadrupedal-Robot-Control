@@ -13,7 +13,7 @@ MathTypes::Mat6 CreateSpatialForm(const MathTypes::Mat3& R, const MathTypes::Vec
 	return X;
 }
 
-MathTypes::Mat6 SpatialRotation(float q, int axis) {
+MathTypes::Mat6 SpatialRotation(float q, COORD_AXIS axis) {
 	MathTypes::Mat3 R = GetRotationMatrix(q, axis);
 	MathTypes::Mat6 X = MathTypes::Mat6::Zero();
 	X.template topLeftCorner<3, 3>() = R;
@@ -21,9 +21,9 @@ MathTypes::Mat6 SpatialRotation(float q, int axis) {
 	return X;
 }
 
-MathTypes::Mat6 JointRotationMatrix(float q, int axis) {
+MathTypes::Mat6 JointRotationMatrix(float q, COORD_AXIS axis) {
 	MathTypes::Mat6 X = MathTypes::Mat6::Zero();
-	X = SpatialRotation(axis, q);
+	X = SpatialRotation(q, axis);
 	return X;
 }
 
@@ -47,4 +47,30 @@ MathTypes::Vec6 JointMotionSubspace(JOINT_TYPE jointType, COORD_AXIS axis) {
 	S[baseIdx + offsetIdx] = 1;
 
     return S;
+}
+
+MathTypes::Vec6 CrossProductMotion(const MathTypes::Vec6& v1, const MathTypes::Vec6& v2) {
+	MathTypes::Vec6 v;
+
+	v << v1(1) * v2(2) - v1(2) * v2(1),
+		 v1(2) * v2(0) - v1(0) * v2(2),
+		 v1(0) * v2(1) - v1(1) * v2(0),
+		 v1(1) * v2(5) - v1(2) * v2(4) + v1(4) * v2(2) - v1(5) * v2(1),
+		 v1(2) * v2(3) - v1(0) * v2(5) - v1(3) * v2(2) + v1(5) * v2(0),
+		 v1(0) * v2(4) - v1(1) * v2(3) + v1(3) * v2(1) - v1(4) * v2(0);
+
+	return v;
+}
+
+MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Vec6& v2) {
+	MathTypes::Vec6 v;
+
+	v << v2(2) * v1(1) - v2(1) * v1(2) - v2(4) * v1(5) + v2(5) * v1(4),
+		 v2(0) * v1(2) - v2(2) * v1(0) + v2(3) * v1(5) - v2(5) * v1(3),
+		 v2(1) * v1(0) - v2(0) * v1(1) - v2(3) * v1(4) + v2(4) * v1(3),
+		 v2(5) * v1(1) - v2(4) * v1(2),
+		 v2(3) * v1(2) - v2(5) * v1(0),
+		 v2(4) * v1(0) - v2(3) * v1(1);
+
+	return v;
 }

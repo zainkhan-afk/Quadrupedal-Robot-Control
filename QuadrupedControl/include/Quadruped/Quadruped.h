@@ -76,6 +76,8 @@ private:
 	State state;
 	StateDot stateDot;
 	LegController legController;
+
+public:
 	RobotDynamics dynamics;
 };
 

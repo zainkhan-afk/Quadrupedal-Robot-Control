@@ -18,15 +18,10 @@
 
 
 MathTypes::Mat3 VectorToSkewMat(const MathTypes::Vec3& v);
-
-
-MathTypes::Mat3 GetRotationMatrix(float angle, int axis);
-
-
+MathTypes::Mat3 GetRotationMatrix(float angle, COORD_AXIS);
 MathTypes::Vec3 MatToSkewVec(const MathTypes::Mat3& m);
-
-
 MathTypes::Vec3 GetLegSignedVector(const MathTypes::Vec3& v, int legID);
+MathTypes::Mat3 RotationMatrixFromQuat(MathTypes::Vec4);
 
 
 #endif

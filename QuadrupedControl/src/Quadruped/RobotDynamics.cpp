@@ -60,7 +60,8 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 {
 	StateDot dState;
 	// Pass 1 down the tree
-	this->Xp[0] = MathTypes::Mat6::Identity(); // Change this to the actual robot base position wrt to the world.
+	this->Xp[0] = CreateSpatialForm(RotationMatrixFromQuat(state.bodyOrientation), state.bodyPosition);
+	this->v[0] = state.bodyVelocity;
 	for (int i = 1; i < numLinks; i++)
 	{	
 		MathTypes::Mat6 Xj = JointRotationMatrix(state.q[i - 1], this->axis[i]);
@@ -70,13 +71,14 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
 		
 		v[i] = Xp[i] * v[parents[i]] + vJoint;
+		c[i] = CrossProductMotion(v[i], vJoint);
 	}
 
 	// This second loop can be removed and incorporated into the first one.
 	for (int i = 0; i < numLinks; i++)
 	{
-		if (this->parents[i] != -1) {
-			this->Xb[i] = this->Xp[i] * this->Xl[i];
+		if (this->parents[i] == -1) {
+			this->Xb[i] = this->Xp[i];
 		}
 		else {
 			this->Xb[i] = this->Xp[i] * this->Xb[this->parents[i]];
@@ -84,17 +86,17 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	}
 
 	// Pass 2 up the tree
-	for (int i = numLinks; i > 0; i++)
+	/*for (int i = numLinks; i > 0; i++)
 	{
 
-	}
+	}*/
 
 	
 	// Pass 3 down the tree
-	for (int i = 0; i < numLinks; i++)
+	/*for (int i = 0; i < numLinks; i++)
 	{
 
-	}
+	}*/
 
 	return dState;
 }

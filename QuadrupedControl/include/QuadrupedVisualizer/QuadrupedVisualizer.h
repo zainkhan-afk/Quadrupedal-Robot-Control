@@ -8,6 +8,9 @@
 #include "QuadrupedVisualizer/Cube.h"
 #include "QuadrupedVisualizer/Robot.h"
 
+#include "Quadruped/Quadruped.h"
+#include "Quadruped/State.h"
+
 class QuadrupedVisualizer : public ci::app::App 
 {
 public:
@@ -23,7 +26,8 @@ private:
     ci::gl::GlslProgRef		mGlsl;
     myprimitives::Plane*    plane;
 
-    Robot*                   myRobot;
+    Quadruped               robotModel;
 
-    double              ang = 0.0;
+    Robot*                  myRobot;
+    double                  ang = 0.0;
 };

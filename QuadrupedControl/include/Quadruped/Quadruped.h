@@ -5,7 +5,7 @@
 #include "Quadruped/LegController.h"
 #include "Quadruped/SpatialInertia.h"
 #include "Quadruped/RobotDynamics.h"
-
+#include "Quadruped/QuadrupedCommon.h"
 /*
 * The quadruped has 4 legs, the legs are arranged in the follwing way when viewed from top.
 * 
@@ -31,15 +31,7 @@
 *						Back
 */
 
-
 #define _USE_MATH_DEFINES
-
-
-#ifdef QUADRUPED_LIB
-#    define QUADRUPED_API __declspec(dllexport)
-#else
-#    define QUADRUPED_API __declspec(dllimport)
-#endif
 
 
 class QUADRUPED_API Quadruped
@@ -53,11 +45,12 @@ public:
 
 	void SetFloatingBaseStateFromIMU(float IMUData[]);
 	void SetJointsStateFromSensors(float jointStateData[]);
-	void SetState(State& newState);
+	void SetState(const State& newState);
 	void SetState(float IMUData[], float jointStateData[]);
 
+	State StepDynamicsModel(const State& state);
+
 	State GetState();
-	dtypes::Vec12 LegPositionForState();
 
 private:
 	struct 

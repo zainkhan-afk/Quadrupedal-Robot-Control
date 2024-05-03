@@ -39,9 +39,11 @@ public:
 
 	void AddBody(SpatialInertia I, dtypes::Mat6 pos, int axis, int parent);
 
+	StateDot Step(const State& state);
+
 
 private:
-	void RunArticulatedBodyAlgorithm(const State& state, StateDot& dState);
+	StateDot RunArticulatedBodyAlgorithm(const State& state);
 
 private:
 	int numLinks = 13;

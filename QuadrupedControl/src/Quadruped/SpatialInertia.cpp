@@ -6,7 +6,7 @@
 
 SpatialInertia::SpatialInertia()
 {
-    this->inertia = dtypes::MatSp::Zero();
+    this->inertia = dtypes::Mat6::Zero();
 }
 
 
@@ -81,19 +81,19 @@ SpatialInertia SpatialInertia::FlipAlongAxis(int axis)
 
 
 
-void SpatialInertia::AddInertia(dtypes::MatSp otherInertia)
+void SpatialInertia::AddInertia(dtypes::Mat6 otherInertia)
 {
     this->inertia += otherInertia;
 }
 
 
-void SpatialInertia::SetInertia(dtypes::MatSp otherInertia)
+void SpatialInertia::SetInertia(dtypes::Mat6 otherInertia)
 {
     this->inertia = otherInertia;
 }
 
 
-dtypes::MatSp SpatialInertia::GetInertia()
+dtypes::Mat6 SpatialInertia::GetInertia()
 {
     return this->inertia;
 }

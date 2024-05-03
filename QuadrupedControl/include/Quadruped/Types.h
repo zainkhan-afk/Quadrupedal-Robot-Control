@@ -24,13 +24,6 @@ namespace dtypes {
 
 	using Vec18 = typename Eigen::Matrix<float, 18, 1>;
 
-	// Special Purpose Vectors
-
-	using VecSp = typename Eigen::Matrix<float, 6, 1>;
-
-
-	using Quat = typename Eigen::Matrix<float, 4, 1>;
-
 	// Matrices
 
 	using Mat3 = typename Eigen::Matrix<float, 3, 3>;
@@ -47,7 +40,5 @@ namespace dtypes {
 
 	using Mat18 = typename Eigen::Matrix<float, 18, 18>;
 
-
-	using MatSp = typename Eigen::Matrix<float, 6, 6>;
 }
 #endif

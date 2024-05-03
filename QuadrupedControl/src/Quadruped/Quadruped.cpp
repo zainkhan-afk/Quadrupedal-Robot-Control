@@ -142,7 +142,7 @@ void Quadruped::SetJointsStateFromSensors(float jointStateData[])
 }
 
 
-void Quadruped::SetState(State& newState)
+void Quadruped::SetState(const State& newState)
 {
 	state = newState;
 }
@@ -166,24 +166,9 @@ State Quadruped::GetState()
 	return state;
 }
 
-
-dtypes::Vec12 Quadruped::LegPositionForState()
+State StepDynamicsModel(const State& state)
 {
-	dtypes::Vec12 q = dtypes::Vec12::Zero();
-	dtypes::Vec3 p = dtypes::Vec3::Zero();
+	State newState;
 
-	p[0] = 0;
-	p[1] = robotParameters.abdLinkLength + robotParameters.kneeLinkYOffset;
-	p[2] = -0.3f;
-
-	for (int i = 0; i < 4; i++)
-	{
-		dtypes::Vec3 motorPos = legController.InverseKinematics(p, i);
-
-		q[i * 3 + 0] = motorPos[0];
-		q[i * 3 + 1] = motorPos[1];
-		q[i * 3 + 2] = motorPos[2];
-	}
-
-	return q;
+	return newState;
 }

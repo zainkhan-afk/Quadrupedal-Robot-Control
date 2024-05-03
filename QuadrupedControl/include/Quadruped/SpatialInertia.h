@@ -16,11 +16,11 @@ public:
 	dtypes::Mat4 GetPseudoInertia();
 	SpatialInertia FlipAlongAxis(int axis);
 
-	void AddInertia(dtypes::MatSp otherInertia);
-	void SetInertia(dtypes::MatSp otherInertia);
-	dtypes::MatSp GetInertia();
+	void AddInertia(dtypes::Mat6 otherInertia);
+	void SetInertia(dtypes::Mat6 otherInertia);
+	dtypes::Mat6 GetInertia();
 private:
-	dtypes::MatSp inertia;
+	dtypes::Mat6 inertia;
 
 };
 

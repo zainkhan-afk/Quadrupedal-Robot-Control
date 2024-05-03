@@ -166,6 +166,7 @@
     <ClInclude Include="..\..\include\Quadruped\LegController.h" />
     <ClInclude Include="..\..\include\Quadruped\MPC.h" />
     <ClInclude Include="..\..\include\Quadruped\Quadruped.h" />
+    <ClInclude Include="..\..\include\Quadruped\QuadrupedCommon.h" />
     <ClInclude Include="..\..\include\Quadruped\QuadrupedControl.h" />
     <ClInclude Include="..\..\include\Quadruped\RobotDynamics.h" />
     <ClInclude Include="..\..\include\Quadruped\Spatial.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="..\..\src\Quadruped\Quadruped.cpp" />
     <ClCompile Include="..\..\src\Quadruped\QuadrupedControl.cpp" />
     <ClCompile Include="..\..\src\Quadruped\RobotDynamics.cpp" />
+    <ClCompile Include="..\..\src\Quadruped\Spatial.cpp" />
     <ClCompile Include="..\..\src\Quadruped\SpatialInertia.cpp" />
     <ClCompile Include="..\..\src\Quadruped\TestClass.cpp" />
     <ClCompile Include="..\..\src\Quadruped\Utilities.cpp" />

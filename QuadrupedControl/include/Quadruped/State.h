@@ -2,18 +2,19 @@
 #define STATE_H
 
 #include "Quadruped/Types.h"
+#include "Quadruped/QuadrupedCommon.h"
 #include <iostream>
 
 
-struct State
+struct QUADRUPED_API State
 {
-	dtypes::Vec3 bodyPosition;
-	dtypes::Quat bodyOrientation;
+	dtypes::Vec3 bodyPosition = dtypes::Vec3::Zero();
+	dtypes::Vec4 bodyOrientation = dtypes::Vec4::Zero();
 
-	dtypes::VecSp bodyVelocity;
+	dtypes::Vec6 bodyVelocity = dtypes::Vec6::Zero();
 
-	dtypes::Vec12 q;
-	dtypes::Vec12 qDot;
+	dtypes::Vec12 q = dtypes::Vec12::Zero();;
+	dtypes::Vec12 qDot = dtypes::Vec12::Zero();
 
 	void PrintState()
 	{
@@ -22,12 +23,12 @@ struct State
 };
 
 
-struct StateDot
+struct QUADRUPED_API StateDot
 {
-	dtypes::Vec3 bodyPositionDot;
-	dtypes::VecSp bodyVelocityDDot;
+	dtypes::Vec3 bodyPositionDot = dtypes::Vec3::Zero();;
+	dtypes::Vec6 bodyVelocityDDot = dtypes::Vec6::Zero();;
 
-	dtypes::Vec12 qDDot;
+	dtypes::Vec12 qDDot = dtypes::Vec12::Zero();;
 };
 
 #endif

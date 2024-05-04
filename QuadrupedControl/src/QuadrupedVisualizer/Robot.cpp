@@ -31,6 +31,11 @@ Robot::~Robot() {
 	}
 }
 
+void Robot::SetRobotLinkPosition(MathTypes::Mat4 T, int linkIdx)
+{
+
+}
+
 void Robot::Draw() {
 	for (int i = 0; i < 13; i++)
 	{

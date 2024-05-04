@@ -1,6 +1,7 @@
 #pragma once
 
 #include "QuadrupedVisualizer/Cube.h"
+#include "Quadruped/Types.h"
 
 
 class Robot
@@ -8,6 +9,8 @@ class Robot
 public:
 	Robot(const ci::gl::GlslProgRef& Glsl);
 	~Robot();
+
+	void SetRobotLinkPosition(MathTypes::Mat4 T, int linkIdx);
 
 	void Draw();
 

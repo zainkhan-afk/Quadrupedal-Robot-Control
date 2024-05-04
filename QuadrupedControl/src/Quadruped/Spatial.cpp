@@ -74,3 +74,27 @@ MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Ve
 
 	return v;
 }
+
+
+QUADRUPED_API MathTypes::Mat4 SpatialToHomog(const MathTypes::Mat6& X)
+{
+	MathTypes::Mat4 H = MathTypes::Mat4::Zero();
+	H.template topLeftCorner<3, 3>() = SpatialToRotMat(X);
+	H.template topRightCorner<3, 1>() = SpatialToTranslation(X);
+	H(3, 3) = 1;
+	return H;
+}
+
+
+MathTypes::Mat3 SpatialToRotMat(const MathTypes::Mat6& X)
+{
+	MathTypes::Mat3 R = X.template topLeftCorner<3, 3>();
+	return R;
+}
+
+MathTypes::Vec3 SpatialToTranslation(const MathTypes::Mat6& X)
+{
+	MathTypes::Mat3 R = SpatialToRotMat(X);
+	MathTypes::Vec3 r = -SkewMatToVecor(R.transpose() * X.template bottomLeftCorner<3, 3>());
+	return r;
+}

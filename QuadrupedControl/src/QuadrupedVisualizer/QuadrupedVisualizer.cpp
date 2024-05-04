@@ -2,6 +2,8 @@
 #include "QuadrupedVisualizer/Resources.h"
 #include "cinder/Log.h"
 
+#include "Quadruped/Spatial.h"
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
@@ -34,9 +36,8 @@ void QuadrupedVisualizer::resize()
 
 void QuadrupedVisualizer::update() {
     // Update logic if needed
-    
-    robotModel.dynamics.Xb[0];
-
+    MathTypes::Mat4 T = SpatialToHomog(robotModel.dynamics.Xb[0]);
+    myRobot->SetRobotLinkPosition(T, 0);
 }
 
 void QuadrupedVisualizer::draw() {

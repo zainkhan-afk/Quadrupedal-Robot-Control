@@ -45,7 +45,7 @@ SpatialInertia::~SpatialInertia()
 
 
 MathTypes::Mat4 SpatialInertia::GetPseudoInertia() {
-    MathTypes::Vec3 h = MatToSkewVec(this->inertia.template topRightCorner<3, 3>());
+    MathTypes::Vec3 h = SkewMatToVecor(this->inertia.template topRightCorner<3, 3>());
     MathTypes::Mat3 Ibar = this->inertia.template topLeftCorner<3, 3>();
     float m = this->inertia(5, 5);
     

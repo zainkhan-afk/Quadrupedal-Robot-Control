@@ -170,5 +170,7 @@ State Quadruped::StepDynamicsModel(const State& state)
 {
 	State newState;
 
+	dynamics.Step(state);
+
 	return newState;
 }

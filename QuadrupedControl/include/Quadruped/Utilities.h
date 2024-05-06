@@ -24,6 +24,7 @@ MathTypes::Mat3 GetRotationMatrix(float angle, COORD_AXIS);
 MathTypes::Vec3 GetLegSignedVector(const MathTypes::Vec3& v, int legID);
 
 MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3);
+QUADRUPED_API MathTypes::Vec3 RotationMatrixToEuler(MathTypes::Mat3);
 MathTypes::Mat3 QuatToRotationMatrix(MathTypes::Vec4);
 MathTypes::Vec3 QuatToEuler(MathTypes::Vec4);
 MathTypes::Vec4 EulerToQuat(MathTypes::Vec3);

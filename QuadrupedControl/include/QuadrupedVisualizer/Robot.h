@@ -10,7 +10,7 @@ public:
 	Robot(const ci::gl::GlslProgRef& Glsl);
 	~Robot();
 
-	void SetRobotLinkPosition(MathTypes::Mat4 T, int linkIdx);
+	void SetRobotLinkPose(MathTypes::Vec3 position, MathTypes::Vec3 rotation, int linkIdx);
 
 	void Draw();
 

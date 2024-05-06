@@ -30,15 +30,21 @@ MathTypes::Mat3 GetRotationMatrix(float angle, COORD_AXIS axis)
 
 	if (axis == COORD_AXIS::X)
 	{
-		rotation << 1, 0, 0, 0, c, s, 0, -s, c;
+		rotation << 1,  0, 0, 
+					0,  c, s, 
+					0, -s, c;
 	}
 	else if (axis == COORD_AXIS::Y)
 	{
-		rotation << c, 0, -s, 0, 1, 0, s, 0, c;
+		rotation << c, 0, -s, 
+					0, 1,  0, 
+					s, 0,  c;
 	}
 	else if (axis == COORD_AXIS::Z)
 	{
-		rotation << c, s, 0, -s, c, 0, 0, 0, 1;
+		rotation <<  c, s, 0, 
+					-s, c, 0, 
+					 0, 0, 1;
 	}
 
 	return rotation;
@@ -62,47 +68,53 @@ MathTypes::Vec3 GetLegSignedVector(const MathTypes::Vec3& v, int legID) {
 }
 
 
-MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
+MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 RT)
 {
 	MathTypes::Vec4 q;
-	MathTypes::Mat3 R_T = R.transpose();
+	MathTypes::Mat3 R = RT.transpose();
 
+	float RTrace = R.trace();
 
-
-
+	if (RTrace > 0.0f)
+	{
+		float S = sqrtf(RTrace + 1.0f) * 2.0f;
+		q(0) = 0.25f * S;
+		q(1) = (R(2, 1) - R(1, 2)) / S;
+		q(2) = (R(0, 2) - R(2, 0)) / S;
+		q(3) = (R(1, 0) - R(0, 1)) / S;
+	}
+	else if((R(0, 0) > R(1, 1)) && (R(0, 0) > R(2, 2)))
+	{ 
+		float S = sqrtf(1.0f + R(0, 0) - R(1, 1) - R(2, 2)) * 2.0f;
+		q(0) = (R(2, 1) - R(1, 2)) / S;
+		q(1) = 0.25f * S;
+		q(2) = (R(0, 1) + R(1, 0)) / S;
+		q(3) = (R(0, 2) + R(2, 0)) / S;
+	}
+	else if (R(1, 1) > R(2, 2))
+	{ 
+		float S = sqrtf(1.0f + R(1, 1) - R(0, 0) - R(2, 2)) * 2.0f;
+		q(0) = (R(0, 2) - R(2, 0)) / S;
+		q(1) = (R(0, 1) + R(1, 0)) / S;
+		q(2) = 0.25f * S;
+		q(3) = (R(1, 2) + R(2, 1)) / S;
+	}
+	else
+	{ 
+		float S = sqrtf(1.0f + R(2, 2) - R(0, 0) - R(1, 1)) * 2.0f;
+		q(0) = (R(1, 0) - R(0, 1)) / S;
+		q(1) = (R(0, 2) + R(2, 0)) / S;
+		q(2) = (R(1, 2) + R(2, 1)) / S;
+		q(3) = 0.25f * S;
+	}
+	
 	return q;
-	Quat<typename T::Scalar> q;
-	Mat3<typename T::Scalar> r = r1.transpose();
-	typename T::Scalar tr = r.trace();
-	if (tr > 0.0) {
-		typename T::Scalar S = sqrt(tr + 1.0) * 2.0;
-		q(0) = 0.25 * S;
-		q(1) = (r(2, 1) - r(1, 2)) / S;
-		q(2) = (r(0, 2) - r(2, 0)) / S;
-		q(3) = (r(1, 0) - r(0, 1)) / S;
-	}
-	else if ((r(0, 0) > r(1, 1)) && (r(0, 0) > r(2, 2))) {
-		typename T::Scalar S = sqrt(1.0 + r(0, 0) - r(1, 1) - r(2, 2)) * 2.0;
-		q(0) = (r(2, 1) - r(1, 2)) / S;
-		q(1) = 0.25 * S;
-		q(2) = (r(0, 1) + r(1, 0)) / S;
-		q(3) = (r(0, 2) + r(2, 0)) / S;
-	}
-	else if (r(1, 1) > r(2, 2)) {
-		typename T::Scalar S = sqrt(1.0 + r(1, 1) - r(0, 0) - r(2, 2)) * 2.0;
-		q(0) = (r(0, 2) - r(2, 0)) / S;
-		q(1) = (r(0, 1) + r(1, 0)) / S;
-		q(2) = 0.25 * S;
-		q(3) = (r(1, 2) + r(2, 1)) / S;
-	}
-	else {
-		typename T::Scalar S = sqrt(1.0 + r(2, 2) - r(0, 0) - r(1, 1)) * 2.0;
-		q(0) = (r(1, 0) - r(0, 1)) / S;
-		q(1) = (r(0, 2) + r(2, 0)) / S;
-		q(2) = (r(1, 2) + r(2, 1)) / S;
-		q(3) = 0.25 * S;
-	}
-	return q;
+}
+
+QUADRUPED_API MathTypes::Vec3 RotationMatrixToEuler(MathTypes::Mat3 R)
+{
+	MathTypes::Vec4 q = RotationMatrixToQuat(R);
+	return QuatToEuler(q);
 }
 
 MathTypes::Mat3 QuatToRotationMatrix(MathTypes::Vec4 quat)

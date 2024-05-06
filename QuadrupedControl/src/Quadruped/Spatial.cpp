@@ -8,7 +8,8 @@ MathTypes::Mat6 CreateSpatialForm(const MathTypes::Mat3& R, const MathTypes::Vec
 	MathTypes::Mat6 X = MathTypes::Mat6::Zero();
 	X.template topLeftCorner<3, 3>() = R;
 	X.template bottomRightCorner<3, 3>() = R;
-	X.template bottomLeftCorner<3, 3>() = -R * VectorToSkewMat(r);
+	//X.template bottomLeftCorner<3, 3>() = -R * VectorToSkewMat(r);
+	X.template bottomLeftCorner<3, 3>() = VectorToSkewMat(r) * R;
 
 	return X;
 }
@@ -76,7 +77,7 @@ MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Ve
 }
 
 
-QUADRUPED_API MathTypes::Mat4 SpatialToHomog(const MathTypes::Mat6& X)
+MathTypes::Mat4 SpatialToHomog(const MathTypes::Mat6& X)
 {
 	MathTypes::Mat4 H = MathTypes::Mat4::Zero();
 	H.template topLeftCorner<3, 3>() = SpatialToRotMat(X);
@@ -86,15 +87,16 @@ QUADRUPED_API MathTypes::Mat4 SpatialToHomog(const MathTypes::Mat6& X)
 }
 
 
-MathTypes::Mat3 SpatialToRotMat(const MathTypes::Mat6& X)
+QUADRUPED_API MathTypes::Mat3 SpatialToRotMat(const MathTypes::Mat6& X)
 {
 	MathTypes::Mat3 R = X.template topLeftCorner<3, 3>();
 	return R;
 }
 
-MathTypes::Vec3 SpatialToTranslation(const MathTypes::Mat6& X)
+QUADRUPED_API MathTypes::Vec3 SpatialToTranslation(const MathTypes::Mat6& X)
 {
 	MathTypes::Mat3 R = SpatialToRotMat(X);
-	MathTypes::Vec3 r = -SkewMatToVecor(R.transpose() * X.template bottomLeftCorner<3, 3>());
+	//MathTypes::Vec3 r = -SkewMatToVecor(R.transpose() * X.template bottomLeftCorner<3, 3>());
+	MathTypes::Vec3 r = SkewMatToVecor(X.template bottomLeftCorner<3, 3>() * R.transpose());
 	return r;
 }

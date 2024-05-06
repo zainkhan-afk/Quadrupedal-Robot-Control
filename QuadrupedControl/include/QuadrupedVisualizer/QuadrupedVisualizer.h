@@ -27,6 +27,7 @@ private:
     myprimitives::Plane*    plane;
 
     Quadruped               robotModel;
+    State                   state;
 
     Robot*                  myRobot;
     double                  ang = 0.0;

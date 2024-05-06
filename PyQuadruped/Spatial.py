@@ -1,5 +1,8 @@
 import numpy as np
-from PyQuadruped.utils import Vector2SkewMat, Mat2SkewVec, GetRotMat
+try:
+	from PyQuadruped.utils import Vector2SkewMat, Mat2SkewVec, GetRotMat
+except:
+	from utils import Vector2SkewMat, Mat2SkewVec, GetRotMat
 
 
 

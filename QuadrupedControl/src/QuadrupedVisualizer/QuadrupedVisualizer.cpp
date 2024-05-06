@@ -20,7 +20,6 @@ void QuadrupedVisualizer::setup() {
         CI_LOG_E("Shader Error: " << e.what());
     }
 
-
     //
     plane = new myprimitives::Plane(mGlsl);
     myRobot = new Robot(mGlsl);
@@ -30,18 +29,32 @@ void QuadrupedVisualizer::setup() {
 
 void QuadrupedVisualizer::resize()
 {
-    mCam.setPerspective(30, getWindowAspectRatio(), 1, 1000);
+    mCam.setPerspective(45, getWindowAspectRatio(), 1, 1000);
     gl::setMatrices(mCam);
 }
 
 void QuadrupedVisualizer::update() {
     // Update logic if needed
-    MathTypes::Mat4 T = SpatialToHomog(robotModel.dynamics.Xb[0]);
-    myRobot->SetRobotLinkPosition(T, 0);
+
+    state.bodyPosition = MathTypes::Vec3(0, 0, 0.5f);
+    state.q[1] = 2 * ang;
+    state.q[2] = 3 * ang;
+    //state.q[6] = 2 * ang;
+    //state.q[9] = 2 * ang;
+
+    state = robotModel.StepDynamicsModel(state);
+
+    for (int i = 0; i < 13; i++) {
+        MathTypes::Vec3 R = RotationMatrixToEuler(SpatialToRotMat(robotModel.dynamics.Xb[i]));
+        MathTypes::Vec3 P = SpatialToTranslation(robotModel.dynamics.Xb[i]);
+
+        myRobot->SetRobotLinkPose(P, R, i);
+    }
 }
 
 void QuadrupedVisualizer::draw() {
-    mCam.lookAt(vec3(2.0 * sin(ang), 2.0 * cos(ang), 2.0), vec3(0, 0, 1), vec3(0, 0, 1));
+    //mCam.lookAt(vec3(2.0, 1.0 * cos(ang), 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
+    mCam.lookAt(vec3(2.0, -2.0, 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
 
     gl::clear();
     gl::setMatrices(mCam);

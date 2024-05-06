@@ -17,6 +17,7 @@ RobotDynamics::RobotDynamics()
 
 		this->v.push_back(zeroVec6);
 		this->S.push_back(zeroVec6);
+		this->c.push_back(zeroVec6);
 		
 		this->Xl.push_back(eyeMat6);
 		this->Xp.push_back(eyeMat6);
@@ -60,12 +61,13 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 {
 	StateDot dState;
 	// Pass 1 down the tree
-	this->Xp[0] = CreateSpatialForm(RotationMatrixFromQuat(state.bodyOrientation), state.bodyPosition);
+	this->Xp[0] = CreateSpatialForm(QuatToRotationMatrix(state.bodyOrientation), state.bodyPosition);
 	this->v[0] = state.bodyVelocity;
 	for (int i = 1; i < numLinks; i++)
 	{	
 		MathTypes::Mat6 Xj = JointRotationMatrix(state.q[i - 1], this->axis[i]);
-		Xp[i] = Xj * Xl[i];
+		Xp[i] = Xl[i] * Xj;
+		//Xp[i] = Xj * Xl[i];
 
 
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
@@ -81,7 +83,8 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 			this->Xb[i] = this->Xp[i];
 		}
 		else {
-			this->Xb[i] = this->Xp[i] * this->Xb[this->parents[i]];
+			this->Xb[i] = this->Xb[this->parents[i]] * this->Xp[i];
+			//this->Xb[i] = this->Xp[i] * this->Xb[this->parents[i]];
 		}
 	}
 

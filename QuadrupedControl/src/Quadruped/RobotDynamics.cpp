@@ -67,7 +67,6 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	{	
 		MathTypes::Mat6 Xj = JointRotationMatrix(state.q[i - 1], this->axis[i]);
 		Xp[i] = Xl[i] * Xj;
-		//Xp[i] = Xj * Xl[i];
 
 
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
@@ -84,7 +83,6 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		}
 		else {
 			this->Xb[i] = this->Xb[this->parents[i]] * this->Xp[i];
-			//this->Xb[i] = this->Xp[i] * this->Xb[this->parents[i]];
 		}
 	}
 

@@ -11,7 +11,7 @@ Robot::Robot(const ci::gl::GlslProgRef& Glsl) {
 		else {
 			int index = i - 1;
 			if (index % 3 == 0) {
-				bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, sign*robotParameters.abdLinkLength/2.0f, 0), ci::vec3(0),
+				bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, sign*robotParameters.abdLinkLength/2.0f, 0), ci::vec3(0, M_PI, 0),
 					ci::vec3(robotParameters.bodyHeight, robotParameters.abdLinkLength, robotParameters.bodyHeight));
 				sign *= -1;
 			}

@@ -35,12 +35,13 @@ void QuadrupedVisualizer::resize()
 
 void QuadrupedVisualizer::update() {
     // Update logic if needed
-
     state.bodyPosition = MathTypes::Vec3(0, 0, 0.5f);
-    state.q[1] = 2 * ang;
-    state.q[2] = 3 * ang;
-    //state.q[6] = 2 * ang;
-    //state.q[9] = 2 * ang;
+    
+    int offset = 2;
+    state.q[0 + offset] = 2 * ang;
+    state.q[3 + offset] = 2 * ang;
+    state.q[6 + offset] = 2 * ang;
+    state.q[9 + offset] = 2 * ang;
 
     state = robotModel.StepDynamicsModel(state);
 

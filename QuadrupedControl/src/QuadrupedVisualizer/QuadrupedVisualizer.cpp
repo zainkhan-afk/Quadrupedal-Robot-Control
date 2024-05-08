@@ -24,7 +24,13 @@ void QuadrupedVisualizer::setup() {
     plane = new myprimitives::Plane(mGlsl);
     myRobot = new Robot(mGlsl);
 
+    MathTypes::Vec6 f;
+
+    f << 0, 0, 0, 50, 0, 0;
+
     robotModel.Initialize();
+    robotModel.SetExternalForceAt(0, f);
+    state.bodyPosition = MathTypes::Vec3(0, 0, 0.5f);
 }
 
 void QuadrupedVisualizer::resize()
@@ -35,13 +41,13 @@ void QuadrupedVisualizer::resize()
 
 void QuadrupedVisualizer::update() {
     // Update logic if needed
-    state.bodyPosition = MathTypes::Vec3(0, 0, 0.5f);
+    //state.bodyPosition = MathTypes::Vec3(0, 0, 0.5f);
     
-    int offset = 2;
+    int offset = 2;/*
     state.q[0 + offset] = 2 * ang;
     state.q[3 + offset] = 2 * ang;
     state.q[6 + offset] = 2 * ang;
-    state.q[9 + offset] = 2 * ang;
+    state.q[9 + offset] = 2 * ang;*/
 
     state = robotModel.StepDynamicsModel(state);
 

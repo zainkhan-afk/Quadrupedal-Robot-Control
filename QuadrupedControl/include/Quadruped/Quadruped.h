@@ -47,10 +47,14 @@ public:
 	void SetJointsStateFromSensors(float jointStateData[]);
 	void SetState(const State& newState);
 	void SetState(float IMUData[], float jointStateData[]);
+	void SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces);
+	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
 
-	State StepDynamicsModel(const State& state);
+	State StepDynamicsModel(State& state);
 
 	State GetState();
+
+	void Integrate(State& state, const StateDot& dstate);
 
 private:
 	struct 
@@ -73,6 +77,7 @@ private:
 		MathTypes::Vec3 abdLocation, hipLocation, kneeLocation;
 	} bodyInertiaParams;
 
+	float deltaT = 0.001f;
 	State state;
 	StateDot stateDot;
 	LegController legController;

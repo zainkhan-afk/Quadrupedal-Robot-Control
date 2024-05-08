@@ -160,17 +160,42 @@ void Quadruped::SetState(float IMUData[], float jointStateData[])
 	}
 }
 
+void Quadruped::SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces)
+{
+	dynamics.SetExternalForces(externalForces);
+}
+
+void Quadruped::SetExternalForceAt(int i, const MathTypes::Vec6& externalForce)
+{
+	dynamics.SetExternalForceAt(i, externalForce);
+}
+
 
 State Quadruped::GetState()
 {
 	return state;
 }
 
-State Quadruped::StepDynamicsModel(const State& state)
+void Quadruped::Integrate(State& state,const StateDot& dstate)
 {
-	State newState;
+	state.bodyVelocity += dstate.bodyVelocityDDot * deltaT;
+	state.bodyPosition += dstate.bodyPositionDot * deltaT;
 
-	dynamics.Step(state);
+	//state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
 
-	return newState;
+	for (int i = 0; i < 12; i++)
+	{
+		state.qDot[i] += dstate.qDDot[i] * deltaT;
+		state.q[i] += state.qDot[i] * deltaT;
+	}
+}
+
+
+State Quadruped::StepDynamicsModel(State& state)
+{
+	StateDot dState = dynamics.Step(state);
+
+	Integrate(state, dState);
+
+	return state;
 }

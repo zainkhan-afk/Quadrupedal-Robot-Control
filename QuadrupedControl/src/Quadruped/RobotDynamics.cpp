@@ -88,7 +88,12 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	Xb[0] = Xp[0];
 	v[0] = state.bodyVelocity;
 	articulatedInertias[0] = linkInertias[0];
-	pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) - f[0];
+
+	MathTypes::Mat3 R = SpatialToRotMat(Xb[0]);
+	MathTypes::Vec3 p = SpatialToTranslation(Xb[0]);
+	MathTypes::Mat6 iX0 = CreateSpatialForm(R.transpose(), R * p);
+
+	pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) - iX0 * f[0];
 	
 	for (int i = 1; i < numLinks; i++)
 	{	

@@ -63,6 +63,9 @@
     <ClInclude Include="..\..\include\Quadruped\QuadrupedCommon.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\Chain.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -97,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Quadruped\Spatial.cpp">
       <Filter>src\Quadruped</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\Chain.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

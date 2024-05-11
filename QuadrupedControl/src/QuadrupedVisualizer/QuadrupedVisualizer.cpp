@@ -61,7 +61,7 @@ void QuadrupedVisualizer::update() {
 
         myRobot->SetRobotLinkPose(P, R, i);
     }*/
-    state.q[1] = ang;
+    state.q[0] = ang;
     //state.q[1] = 3 * ang;
     //state.q[2] = 3 * ang;
     //state.q[1] = ang;

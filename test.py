@@ -1,5 +1,95 @@
 import cv2
 import numpy as np
+from scipy.spatial.transform import Rotation as RTool
+import math
+# def RToQuat(RT):
+# 	q = np.zeros((4, 1))
+# 	R = RT.T.copy()
+
+# 	RTrace = np.trace(R)
+
+# 	if RTrace > 0.0:
+# 		S = np.sqrt(RTrace + 1.0) * 2.0
+		
+# 		q[0, 0] = 0.25 * S;
+# 		q[1, 0] = (R[2, 1] - R[1, 2]) / S
+# 		q[2, 0] = (R[0, 2] - R[2, 0]) / S
+# 		q[3, 0] = (R[1, 0] - R[0, 1]) / S
+# 	elif((R[0, 0] > R[1, 1]) and (R[0, 0] > R[2, 2])):
+# 		S = np.sqrt(1.0 + R[0, 0] - R[1, 1] - R[2, 2]) * 2.0
+# 		q[0, 0] = (R[2, 1] - R[1, 2]) / S
+# 		q[1, 0] = 0.25 * S
+# 		q[2, 0] = (R[0, 1] + R[1, 0]) / S
+# 		q[3, 0] = (R[0, 2] + R[2, 0]) / S
+# 	elif (R[1, 1] > R[2, 2]): 
+# 		S = np.sqrt(1.0 + R[1, 1] - R[0, 0] - R[2, 2]) * 2.0
+# 		q[0, 0] = (R[0, 2] - R[2, 0]) / S;
+# 		q[1, 0] = (R[0, 1] + R[1, 0]) / S;
+# 		q[2, 0] = 0.25 * S;
+# 		q[3, 0] = (R[1, 2] + R[2, 1]) / S;
+# 	else:
+# 		S = np.sqrtf(1.0 + R[2, 2] - R[0, 0] - R[1, 1]) * 2.0
+# 		q[0, 0] = (R[1, 0] - R[0, 1]) / S
+# 		q[1, 0] = (R[0, 2] + R[2, 0]) / S
+# 		q[2, 0] = (R[1, 2] + R[2, 1]) / S
+# 		q[3, 0] = 0.25 * S;
+
+# 	return q
+
+def RToQuat(m):
+	#q0 = qw
+	t = np.matrix.trace(m)
+	q = np.asarray([0.0, 0.0, 0.0, 0.0], dtype=np.float64)
+	q = np.zeros((4, 1))
+
+	if(t > 0):
+		t = np.sqrt(t + 1)
+		q[3, 0] = 0.5 * t
+		t = 0.5/t
+		q[0, 0] = (m[2,1] - m[1,2]) * t
+		q[1, 0] = (m[0,2] - m[2,0]) * t
+		q[2, 0] = (m[1,0] - m[0,1]) * t
+
+	else:
+		i = 0
+		if (m[1,1] > m[0,0]):
+			i = 1
+		if (m[2,2] > m[i,i]):
+			i = 2
+		j = (i+1)%3
+		k = (j+1)%3
+
+		t = np.sqrt(m[i,i] - m[j,j] - m[k,k] + 1)
+		q[i, 0] = 0.5 * t
+		t = 0.5 / t
+		q[3, 0] = (m[k,j] - m[j,k]) * t
+		q[j, 0] = (m[j,i] + m[i,j]) * t
+		q[k, 0] = (m[k,i] + m[i,k]) * t
+
+	return q
+
+def QuatToEuler(q):
+	euler = np.zeros((3, 1))
+
+	x = q[0, 0]
+	y = q[1, 0]
+	z = q[2, 0]
+	w = q[3, 0]
+
+	t0 = +2.0 * (w * x + y * z)
+	t1 = +1.0 - 2.0 * (x * x + y * y)
+	euler[0, 0] = math.atan2(t0, t1)
+ 
+	t2 = +2.0 * (w * y - z * x)
+	t2 = +1.0 if t2 > +1.0 else t2
+	t2 = -1.0 if t2 < -1.0 else t2
+	euler[1, 0] = math.asin(t2)
+ 
+	t3 = +2.0 * (w * z + x * y)
+	t4 = +1.0 - 2.0 * (y * y + z * z)
+	euler[2, 0] = math.atan2(t3, t4)
+ 
+	return euler
 
 def ToHomog(R, p):
 	H = np.zeros((4, 4))
@@ -106,6 +196,27 @@ def ToRotMat(r, p, y):
 def ToRad(deg):
 	return deg / 180 * np.pi
 
+
+
+for i in range(10):
+	a = [np.random.random(), np.random.random(), np.random.random()]
+	R = ToRotMat(a[0], a[1], a[2])
+	
+	RN = RTool.from_matrix(R)
+	
+	q = RToQuat(R)
+	a_ = QuatToEuler(q)
+
+	# print(q)
+	# print(RN.as_quat())
+	
+	print(a)
+	print(a_.ravel())
+	print(RN.as_euler('xyz'))
+	print()
+
+exit()
+
 to_spatial_func = ToSpatial
 get_coords_func = GetTranslationFromSpatial
 
@@ -116,20 +227,20 @@ while True:
 	img2 = np.zeros((400, 400, 3)).astype("uint8")
 	img3 = np.zeros((400, 400, 3)).astype("uint8")
 
-	theta1 = np.random.random()*0
-	theta2 = np.random.random()*0
-	theta3 = np.random.random()*0
+	theta1 = np.random.random() * 12
+	theta2 = np.random.random() * 12
+	theta3 = np.random.random() * 12
 
-	theta2 = 25*np.sin(ang)
+	# theta2 = 25*np.sin(ang)
 
 	X_b = 200
 	Y_b = 200
 	scale = 20
 	w_P_a = np.array([[2, 0, 0]]).T*scale
-	w_R_a = ToRotMat(0, 0, ToRad(theta1))
+	w_R_a = ToRotMat(0, ToRad(theta1), 0)
 
 	a_P_b = np.array([[2, 3, 0]]).T*scale
-	a_R_b = ToRotMat(0, 0, ToRad(theta2))
+	a_R_b = ToRotMat(ToRad(theta2), 0, 0)
 
 	b_P_c = np.array([[2, -2, 0]]).T*scale
 	b_R_c = ToRotMat(0, 0, ToRad(theta3))
@@ -154,7 +265,7 @@ while True:
 	# print(w_P_a_t)
 	# print(w_P_b_t)
 	# print(w_P_c_t)
-	# print(w_P_d_t)
+	print(w_P_d_t)
 	# print()
 
 	cv2.line(img1, (X_b, Y_b), (X_b+w_P_a_t[0], Y_b+w_P_a_t[1]), (255, 0, 0), 1)
@@ -211,7 +322,8 @@ while True:
 	# print(w_P_a_t)
 	# print(w_P_b_t)
 	# print(w_P_c_t)
-	# print(w_P_d_t)
+	print(w_P_d_t)
+	print()
 
 
 	cv2.line(img3, (X_b, Y_b), (X_b+w_P_a_t[0], Y_b+w_P_a_t[1]), (255, 0, 0), 1)

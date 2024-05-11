@@ -68,44 +68,38 @@ MathTypes::Vec3 GetLegSignedVector(const MathTypes::Vec3& v, int legID) {
 }
 
 
-MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 RT)
+MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 {
 	MathTypes::Vec4 q;
-	MathTypes::Mat3 R = RT.transpose();
 
-	float RTrace = R.trace();
-
-	if (RTrace > 0.0f)
+	float t = R.trace();
+	
+	if (t > 0.0f)
 	{
-		float S = sqrtf(RTrace + 1.0f) * 2.0f;
-		q(0) = 0.25f * S;
-		q(1) = (R(2, 1) - R(1, 2)) / S;
-		q(2) = (R(0, 2) - R(2, 0)) / S;
-		q(3) = (R(1, 0) - R(0, 1)) / S;
+
+		t = sqrtf(t + 1.0f);
+		q[3] = 0.5f * t;
+		t = 0.5f / t;
+		q[0] = (R(2, 1) - R(1, 2)) * t;
+		q[1] = (R(0, 2) - R(2, 0)) * t;
+		q[2] = (R(1, 0) - R(0, 1)) * t;
+
 	}
-	else if((R(0, 0) > R(1, 1)) && (R(0, 0) > R(2, 2)))
-	{ 
-		float S = sqrtf(1.0f + R(0, 0) - R(1, 1) - R(2, 2)) * 2.0f;
-		q(0) = (R(2, 1) - R(1, 2)) / S;
-		q(1) = 0.25f * S;
-		q(2) = (R(0, 1) + R(1, 0)) / S;
-		q(3) = (R(0, 2) + R(2, 0)) / S;
-	}
-	else if (R(1, 1) > R(2, 2))
-	{ 
-		float S = sqrtf(1.0f + R(1, 1) - R(0, 0) - R(2, 2)) * 2.0f;
-		q(0) = (R(0, 2) - R(2, 0)) / S;
-		q(1) = (R(0, 1) + R(1, 0)) / S;
-		q(2) = 0.25f * S;
-		q(3) = (R(1, 2) + R(2, 1)) / S;
-	}
-	else
-	{ 
-		float S = sqrtf(1.0f + R(2, 2) - R(0, 0) - R(1, 1)) * 2.0f;
-		q(0) = (R(1, 0) - R(0, 1)) / S;
-		q(1) = (R(0, 2) + R(2, 0)) / S;
-		q(2) = (R(1, 2) + R(2, 1)) / S;
-		q(3) = 0.25f * S;
+
+	else {
+		int i = 0;
+		if (R(1, 1) > R(0, 0)) { i = 1; }
+		if (R(2, 2) > R(i, i)) { i = 2; }
+						
+		int j = (i + 1) % 3;
+		int k = (j + 1) % 3;
+		
+		t = sqrtf(R(i, i) - R(j, j) - R(k, k) + 1);
+		q[i] = 0.5f * t;
+		t = 0.5f / t;
+		q[3] = (R(k, j) - R(j, k)) * t;
+		q[j] = (R(j, i) + R(i, j)) * t;
+		q[k] = (R(k, i) + R(i, k)) * t;
 	}
 	
 	return q;
@@ -131,22 +125,27 @@ MathTypes::Mat3 QuatToRotationMatrix(MathTypes::Vec4 quat)
 
 MathTypes::Vec3 QuatToEuler(MathTypes::Vec4 q)
 {
+
 	MathTypes::Vec3 euler = MathTypes::Vec3::Zero();
 	
-	// roll (x-axis rotation)
-	float sinr_cosp = 2 * (q[0] * q[1] + q[2] * q[3]);
-	float cosr_cosp = 1 - 2 * (q[1] * q[1] + q[2] * q[2]);
-	euler[0] = std::atan2(sinr_cosp, cosr_cosp);
+	float x = q[0];
+	float y = q[1];
+	float z = q[2];
+	float w = q[3];
 
-	// pitch (y-axis rotation)
-	float sinp = std::sqrt(1 + 2 * (q[0] * q[2] - q[1] * q[3]));
-	float cosp = std::sqrt(1 - 2 * (q[0] * q[2] - q[1] * q[3]));
-	euler[1] = 2 * std::atan2(sinp, cosp) - M_PI / 2;
+	float t0 = +2.0f * (w * x + y * z);
+	float t1 = +1.0f - 2.0f * (x * x + y * y);
+	euler[0] = std::atan2(t0, t1);
 
-	// yaw (z-axis rotation)
-	float siny_cosp = 2 * (q[0] * q[3] + q[1] * q[2]);
-	float cosy_cosp = 1 - 2 * (q[2] * q[2] + q[3] * q[3]);
-	euler[2] = std::atan2(siny_cosp, cosy_cosp);
+	float t2 = +2.0f * (w * y - z * x);
+
+	if (t2 > 1.0f) { t2 = 1.0f; }
+	else if (t2 < -1.0f) { t2 = -1.0f; }
+	euler[1] = std::asin(t2);
+
+	float t3 = +2.0f * (w * z + x * y);
+	float t4 = +1.0f - 2.0f * (y * y + z * z);
+	euler[2] = std::atan2(t3, t4);
 
 	return euler;
 }

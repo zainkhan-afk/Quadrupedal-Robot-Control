@@ -36,6 +36,9 @@
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Robot.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Chain.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\QuadrupedVisualizer\QuadrupedVisualizer.cpp">
@@ -51,6 +54,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Robot.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Chain.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -23,6 +23,11 @@ namespace myprimitives {
 		ci::vec3 rotation;
 		ci::vec3 positionOffset;
 		ci::vec3 rotationOffset;
+		
+
+		glm::mat4x4 transformMatrix;
+
+		
 		ci::Color color;
 	};
 }

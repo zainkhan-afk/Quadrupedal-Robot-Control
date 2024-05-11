@@ -36,7 +36,7 @@ MathTypes::Vec6 JointMotionSubspace(JOINT_TYPE jointType, COORD_AXIS axis) {
 	int baseIdx = 0;
 	int offsetIdx = 0;
 
-	if (jointType == JOINT_TYPE::REVOLUTE) { baseIdx = 3; }
+	if (jointType == JOINT_TYPE::PRISMATIC) { baseIdx = 3; }
 	else if (jointType == JOINT_TYPE::REVOLUTE) { baseIdx = 0; }
 	else { return S; }
 
@@ -77,7 +77,7 @@ MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Ve
 }
 
 
-MathTypes::Mat4 SpatialToHomog(const MathTypes::Mat6& X)
+QUADRUPED_API MathTypes::Mat4 SpatialToHomog(const MathTypes::Mat6& X)
 {
 	MathTypes::Mat4 H = MathTypes::Mat4::Zero();
 	H.template topLeftCorner<3, 3>() = SpatialToRotMat(X);

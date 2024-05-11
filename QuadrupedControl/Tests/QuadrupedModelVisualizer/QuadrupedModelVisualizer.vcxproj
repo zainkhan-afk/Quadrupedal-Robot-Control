@@ -175,6 +175,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Chain.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Cube.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Entity.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Plane.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Robot.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Chain.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Cube.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Entity.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Plane.cpp" />

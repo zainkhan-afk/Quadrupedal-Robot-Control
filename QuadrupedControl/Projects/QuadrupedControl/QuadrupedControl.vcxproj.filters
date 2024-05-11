@@ -63,7 +63,10 @@
     <ClInclude Include="..\..\include\Quadruped\QuadrupedCommon.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Quadruped\Chain.h">
+    <ClInclude Include="..\..\include\Quadruped\CubeChain.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\Quadruped\ChainDynamics.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,7 +104,10 @@
     <ClCompile Include="..\..\src\Quadruped\Spatial.cpp">
       <Filter>src\Quadruped</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Quadruped\Chain.cpp">
+    <ClCompile Include="..\..\src\Quadruped\CubeChain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Quadruped\ChainDynamics.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

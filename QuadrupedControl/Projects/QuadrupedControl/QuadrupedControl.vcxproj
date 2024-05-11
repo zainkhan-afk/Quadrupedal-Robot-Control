@@ -163,7 +163,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Quadruped\Chain.h" />
+    <ClInclude Include="..\..\include\Quadruped\CubeChain.h" />
+    <ClInclude Include="..\..\include\Quadruped\ChainDynamics.h" />
     <ClInclude Include="..\..\include\Quadruped\LegController.h" />
     <ClInclude Include="..\..\include\Quadruped\MPC.h" />
     <ClInclude Include="..\..\include\Quadruped\Quadruped.h" />
@@ -180,7 +181,8 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Quadruped\Chain.cpp" />
+    <ClCompile Include="..\..\src\Quadruped\CubeChain.cpp" />
+    <ClCompile Include="..\..\src\Quadruped\ChainDynamics.cpp" />
     <ClCompile Include="..\..\src\Quadruped\LegController.cpp" />
     <ClCompile Include="..\..\src\Quadruped\MPC.cpp" />
     <ClCompile Include="..\..\src\Quadruped\Quadruped.cpp" />

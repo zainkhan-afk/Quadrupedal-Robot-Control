@@ -22,15 +22,20 @@ void QuadrupedVisualizer::setup() {
 
     //
     plane = new myprimitives::Plane(mGlsl);
-    myRobot = new Robot(mGlsl);
+    //myRobot = new Robot(mGlsl);
+    myChain = new Chain(mGlsl);
 
     MathTypes::Vec6 f;
 
     f << 0, 0, 0, 50, 0, 0;
 
-    robotModel.Initialize();
-    robotModel.SetExternalForceAt(0, f);
-    state.bodyPosition = MathTypes::Vec3(0, 0, 0.5f);
+    //robotModel.Initialize();
+    //robotModel.SetExternalForceAt(0, f);
+
+    chainModel.Initialize();
+    //robotModel.SetExternalForceAt(0, f);
+
+    state.bodyPosition = MathTypes::Vec3(0, 0, 1.0f);
 }
 
 void QuadrupedVisualizer::resize()
@@ -42,33 +47,48 @@ void QuadrupedVisualizer::resize()
 void QuadrupedVisualizer::update() {
     // Update logic if needed
     //state.bodyPosition = MathTypes::Vec3(0, 0, 0.5f);
-    
-    int offset = 2;/*
+    /*
+    int offset = 2;
     state.q[0 + offset] = 2 * ang;
     state.q[3 + offset] = 2 * ang;
     state.q[6 + offset] = 2 * ang;
     state.q[9 + offset] = 2 * ang;*/
 
-    state = robotModel.StepDynamicsModel(state);
-
-    for (int i = 0; i < 13; i++) {
+    //state = robotModel.StepDynamicsModel(state);
+    /*for (int i = 0; i < 13; i++) {
         MathTypes::Vec3 R = RotationMatrixToEuler(SpatialToRotMat(robotModel.dynamics.Xb[i]));
         MathTypes::Vec3 P = SpatialToTranslation(robotModel.dynamics.Xb[i]);
 
         myRobot->SetRobotLinkPose(P, R, i);
+    }*/
+    state.q[1] = ang;
+    //state.q[1] = 3 * ang;
+    //state.q[2] = 3 * ang;
+    //state.q[1] = ang;
+    
+    state = chainModel.StepDynamicsModel(state);
+    for (int i = 0; i < 4; i++) {
+        MathTypes::Vec3 R = RotationMatrixToEuler(SpatialToRotMat(chainModel.dynamics.Xb[i]));
+        MathTypes::Vec3 P = SpatialToTranslation(chainModel.dynamics.Xb[i]);
+
+        myChain->SetRobotLinkPose(P, R, i);
+
+        //MathTypes::Mat4 T = SpatialToHomog(chainModel.dynamics.Xb[i]);
+        //myChain->SetRobotLinkPose(T, i);
     }
 }
 
 void QuadrupedVisualizer::draw() {
     //mCam.lookAt(vec3(2.0, 1.0 * cos(ang), 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
-    mCam.lookAt(vec3(2.0, -2.0, 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
+    mCam.lookAt(vec3(0, -3.0, 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
 
     gl::clear();
     gl::setMatrices(mCam);
 
 
-    plane->Draw();
-    myRobot->Draw();
+    //plane->Draw();
+    //myRobot->Draw();
+    myChain->Draw();
 
     ang += 0.01;
 }
@@ -76,7 +96,8 @@ void QuadrupedVisualizer::draw() {
 
 void QuadrupedVisualizer::cleanup() {
     delete plane;
-    delete myRobot;
+    //delete myRobot;
+    delete myChain;
 }
 
 CINDER_APP(QuadrupedVisualizer, RendererGl(RendererGl::Options().msaa(16)))

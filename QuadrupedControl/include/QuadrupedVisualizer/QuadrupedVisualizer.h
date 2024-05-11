@@ -7,8 +7,10 @@
 #include "QuadrupedVisualizer/Plane.h"
 #include "QuadrupedVisualizer/Cube.h"
 #include "QuadrupedVisualizer/Robot.h"
+#include "QuadrupedVisualizer/Chain.h"
 
 #include "Quadruped/Quadruped.h"
+#include "Quadruped/CubeChain.h"
 #include "Quadruped/State.h"
 
 class QuadrupedVisualizer : public ci::app::App 
@@ -26,9 +28,12 @@ private:
     ci::gl::GlslProgRef		mGlsl;
     myprimitives::Plane*    plane;
 
-    Quadruped               robotModel;
+    //Quadruped               robotModel;
+    CubeChain               chainModel;
     State                   state;
 
-    Robot*                  myRobot;
+    //Robot*                  myRobot;
+    Chain*                  myChain;
+
     double                  ang = 0.0;
 };

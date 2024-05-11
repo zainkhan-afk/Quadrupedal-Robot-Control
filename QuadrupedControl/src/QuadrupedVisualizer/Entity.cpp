@@ -17,9 +17,8 @@ namespace myprimitives {
 	{
 		ci::gl::pushModelMatrix();
 		ci::gl::translate(position);
-		ci::gl::rotate(rotation + rotationOffset);
-		ci::gl::translate(positionOffset);
-
+		ci::gl::rotate(rotation);
+		//ci::gl::translate(positionOffset);
 		
 		ci::gl::color(color);
 		objectRef->draw();

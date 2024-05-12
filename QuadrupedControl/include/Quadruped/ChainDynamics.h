@@ -12,6 +12,8 @@ public:
 	ChainDynamics();
 	~ChainDynamics();
 
+	void Initialize(int _numLinks = 4);
+
 	void AddBody(SpatialInertia I, MathTypes::Mat6 pos, COORD_AXIS axis, int parent);
 	void SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces);
 	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
@@ -27,7 +29,7 @@ public:
 	std::vector<MathTypes::Mat6> Xb;
 
 private:
-	int numLinks = 4;
+	int numLinks;
 	int currentIndex = 0;
 	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 

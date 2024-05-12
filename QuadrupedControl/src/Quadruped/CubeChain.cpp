@@ -14,20 +14,22 @@ CubeChain::~CubeChain()
 
 }
 
-void CubeChain::Initialize()
+void CubeChain::Initialize(int _numLinks)
 {
-	MathTypes::Mat3 linkRotationalInertia;
-	linkRotationalInertia <<	0.006042f, 0.0f, 0.0f,
-								0.0f, 0.006042f, 0.0f,
-								0.0f, 0.0f, 0.0016667f;
+	numLinks = _numLinks;
 
-	SpatialInertia linkSpatialInertial1(linkMass, MathTypes::Vec3::Zero(), linkRotationalInertia);
-	SpatialInertia linkSpatialInertial2(linkMass, MathTypes::Vec3::Zero(), linkRotationalInertia);
-	SpatialInertia linkSpatialInertial3(linkMass, MathTypes::Vec3::Zero(), linkRotationalInertia);
+	dynamics.Initialize(numLinks);
+	
+	MathTypes::Mat3 linkRotationalInertia;
+	linkRotationalInertia <<	0.00016667f, 0.0f, 0.0f,
+								0.0f, 0.00016667f, 0.0f,
+								0.0f, 0.0f, 0.00016667f;
+
+	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3::Zero(), linkRotationalInertia);
 
 	int parentID = -1;
 	
-	dynamics.AddBody(linkSpatialInertial1, MathTypes::Mat6::Identity(), COORD_AXIS::Y, parentID);
+	dynamics.AddBody(linkSpatialInertial, MathTypes::Mat6::Identity(), COORD_AXIS::Y, parentID);
 	parentID++;
 
 	for (int i = 1; i < numLinks; i++) {
@@ -36,10 +38,10 @@ void CubeChain::Initialize()
 		MathTypes::Mat6 X = CreateSpatialForm(MathTypes::Mat3::Identity(), constantLinkOffset);
 
 		if (i % 2 == 0) {
-			dynamics.AddBody(linkSpatialInertial1, X, COORD_AXIS::Y, parentID);
+			dynamics.AddBody(linkSpatialInertial, X, COORD_AXIS::Y, parentID);
 		}
 		else {
-			dynamics.AddBody(linkSpatialInertial1, X, COORD_AXIS::X, parentID);
+			dynamics.AddBody(linkSpatialInertial, X, COORD_AXIS::X, parentID);
 		}
 		parentID++;
 	}
@@ -73,7 +75,7 @@ void CubeChain::Integrate(State& state, const StateDot& dstate)
 
 	//state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < numLinks; i++)
 	{
 		state.qDot[i] += dstate.qDDot[i] * deltaT;
 		state.q[i] += state.qDot[i] * deltaT;

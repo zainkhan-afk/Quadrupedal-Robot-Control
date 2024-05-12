@@ -1,7 +1,8 @@
 #include "QuadrupedVisualizer/Chain.h"
 
 
-Chain::Chain(const ci::gl::GlslProgRef& Glsl) {
+Chain::Chain(const ci::gl::GlslProgRef& Glsl, int _numLinks) {
+	chainParameters.numLinks = _numLinks;
 	for (int i = 0; i < chainParameters.numLinks; i++)
 	{
 		bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, 0, chainParameters.cubeHeight / 2.0f), ci::vec3(0),

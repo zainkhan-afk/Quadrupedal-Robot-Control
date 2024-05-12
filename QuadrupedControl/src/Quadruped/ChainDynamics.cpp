@@ -4,6 +4,19 @@
 
 ChainDynamics::ChainDynamics()
 {
+	G[5] = 9.8f;
+}
+
+
+ChainDynamics::~ChainDynamics()
+{
+
+}
+
+void ChainDynamics::Initialize(int _numLinks)
+{
+	numLinks = _numLinks;
+
 	MathTypes::Mat6 eyeMat6 = MathTypes::Mat6::Identity();
 	MathTypes::Vec6 zeroVec6 = MathTypes::Vec6::Zero();
 	MathTypes::Mat6 zeroMat6 = MathTypes::Mat6::Zero();
@@ -33,14 +46,6 @@ ChainDynamics::ChainDynamics()
 		this->torques.push_back(0.0f);
 		this->parents.push_back(-1);
 	}
-
-	G[5] = 9.8f;
-}
-
-
-ChainDynamics::~ChainDynamics()
-{
-
 }
 
 
@@ -89,11 +94,12 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	v[0] = MathTypes::Vec6::Zero();
 	articulatedInertias[0] = linkInertias[0];
 
-	MathTypes::Mat3 R = SpatialToRotMat(Xb[0]);
-	MathTypes::Vec3 p = SpatialToTranslation(Xb[0]);
-	MathTypes::Mat6 iX0 = CreateSpatialForm(R.transpose(), R * p);
+	//MathTypes::Mat3 R = SpatialToRotMat(Xb[0]);
+	//MathTypes::Vec3 p = SpatialToTranslation(Xb[0]);
+	//MathTypes::Mat6 iX0 = CreateSpatialForm(R.transpose(), R * p);
 
-	pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) /*- iX0 * f[0]*/;
+	//pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) /*- iX0 * f[0]*/;
+	pa[0] = MathTypes::Vec6::Zero();
 
 	for (int i = 1; i < numLinks; i++)
 	{
@@ -109,7 +115,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 
 		v[i] = Xp[i] * v[parents[i]] + vJoint;
 		c[i] = CrossProductMotion(v[i], vJoint);
-		articulatedInertias[i] = linkInertias[i];
+		articulatedInertias[i].SetInertia(linkInertias[i].GetInertia());
 
 		MathTypes::Mat3 R = SpatialToRotMat(Xb[i]);
 		MathTypes::Vec3 p = SpatialToTranslation(Xb[i]);

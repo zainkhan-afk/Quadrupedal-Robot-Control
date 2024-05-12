@@ -6,7 +6,7 @@
 class Chain
 {
 public:
-	Chain(const ci::gl::GlslProgRef& Glsl);
+	Chain(const ci::gl::GlslProgRef& Glsl, const int _numLinks);
 	~Chain();
 
 	void SetRobotLinkPose(MathTypes::Vec3 position, MathTypes::Vec3 rotation, int linkIdx);
@@ -14,13 +14,13 @@ public:
 
 	void Draw();
 
-private:
+public:
 	myprimitives::Cube* bodyParts[13];
 
 	struct
 	{
-		float cubeLength{ 0.1f }, cubeWidth{ 0.1f }, cubeHeight{ 0.25f };
-		int numLinks{ 4 };
+		float cubeLength{ 0.1f }, cubeWidth{ 0.1f }, cubeHeight{ 0.1f };
+		int numLinks;
 
 	} chainParameters;
 };

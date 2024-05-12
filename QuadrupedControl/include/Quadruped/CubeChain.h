@@ -9,7 +9,7 @@ public:
 	CubeChain();
 	~CubeChain();
 
-	void Initialize();
+	void Initialize(int _numLinks = 4);
 
 	void SetState(const State& newState);
 	
@@ -24,12 +24,12 @@ public:
 
 private:
 	State state;
-	int numLinks = 4;
+	int numLinks;
 	float deltaT = 0.01f;
-	float linkHieght{ 0.25f };
+	float linkHieght{ 0.1f };
 	float linkWidth{ 0.1f };
 	float linkLength{ 0.1f };
-	float linkMass{ 1.0f };
+	float linkMass{ 0.1f };
 
 public:
 	ChainDynamics dynamics;

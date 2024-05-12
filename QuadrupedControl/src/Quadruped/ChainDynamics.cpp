@@ -34,7 +34,7 @@ ChainDynamics::ChainDynamics()
 		this->parents.push_back(-1);
 	}
 
-	//G[5] = -9.8f;
+	G[5] = 9.8f;
 }
 
 
@@ -89,9 +89,9 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	v[0] = MathTypes::Vec6::Zero();
 	articulatedInertias[0] = linkInertias[0];
 
-	//MathTypes::Mat3 R = SpatialToRotMat(Xb[0]);
-	//MathTypes::Vec3 p = SpatialToTranslation(Xb[0]);
-	//MathTypes::Mat6 iX0 = CreateSpatialForm(R.transpose(), R * p);
+	MathTypes::Mat3 R = SpatialToRotMat(Xb[0]);
+	MathTypes::Vec3 p = SpatialToTranslation(Xb[0]);
+	MathTypes::Mat6 iX0 = CreateSpatialForm(R.transpose(), R * p);
 
 	pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) /*- iX0 * f[0]*/;
 
@@ -105,46 +105,46 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		Xb[i] = Xb[parents[i]] * Xp[i];
 
 
-		//MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
+		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
 
-		//v[i] = Xp[i] * v[parents[i]] + vJoint;
-		//c[i] = CrossProductMotion(v[i], vJoint);
-		//articulatedInertias[i] = linkInertias[i];
+		v[i] = Xp[i] * v[parents[i]] + vJoint;
+		c[i] = CrossProductMotion(v[i], vJoint);
+		articulatedInertias[i] = linkInertias[i];
 
-		//MathTypes::Mat3 R = SpatialToRotMat(Xb[i]);
-		//MathTypes::Vec3 p = SpatialToTranslation(Xb[i]);
-		//MathTypes::Mat6 iX = CreateSpatialForm(R.transpose(), R * p);
+		MathTypes::Mat3 R = SpatialToRotMat(Xb[i]);
+		MathTypes::Vec3 p = SpatialToTranslation(Xb[i]);
+		MathTypes::Mat6 iX = CreateSpatialForm(R.transpose(), R * p);
 
-		//pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) /*- iX * f[i]*/;
+		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - /*iX **/ f[i];
 	}
 
 	// Pass 2 up the tree
-	//for (int i = numLinks - 1; i > 0; i--)
-	//{
-	//	U[i] = articulatedInertias[i].GetInertia() * S[i];
-	//	D[i] = 1.0f / (S[i].transpose() * U[i]);
+	for (int i = numLinks - 1; i > 0; i--)
+	{
+		U[i] = articulatedInertias[i].GetInertia() * S[i];
+		D[i] = 1.0f / (S[i].transpose() * U[i]);
 
-	//	u[i] = torques[i - 1] - U[i].transpose() * c[i] - S[i].transpose() * pa[i];
+		u[i] = torques[i - 1] - U[i].transpose() * c[i] - S[i].transpose() * pa[i];
 
-	//	MathTypes::Mat6 Ia = Xp[i].transpose() * (articulatedInertias[i].GetInertia() - U[i] * D[i] * U[i].transpose()) * Xp[i];
-	//	MathTypes::Vec6 _pa = Xp[i].transpose() * (pa[i] + articulatedInertias[i].GetInertia() * c[i] + U[i] * D[i] * u[i]);
+		MathTypes::Mat6 Ia = Xp[i].transpose() * (articulatedInertias[i].GetInertia() - U[i] * D[i] * U[i].transpose()) * Xp[i];
+		MathTypes::Vec6 _pa = Xp[i].transpose() * (pa[i] + articulatedInertias[i].GetInertia() * c[i] + U[i] * D[i] * u[i]);
 
-	//	articulatedInertias[parents[i]].AddInertia(Ia);
-	//	pa[parents[i]] += _pa;
-	//}
+		articulatedInertias[parents[i]].AddInertia(Ia);
+		pa[parents[i]] += _pa;
+	}
 
 
-	//a[0] = -G;
-	//// Pass 3 down the tree
-	//for (int i = 1; i < numLinks; i++)
-	//{
-	//	a[i] = Xp[i] * a[parents[i]] + c[i];
-	//	dState.qDDot[i - 1] = D[i] * (u[i] - U[i].transpose() * a[i]);
-	//	a[i] += S[i] * dState.qDDot[i - 1];
-	//}
-	////a[0] += Xp[0] * G;
-	//dState.bodyVelocityDDot = a[0];
-	//dState.bodyPositionDot = state.bodyVelocity.template block<3, 1>(3, 0);
+	a[0] = -G;
+	// Pass 3 down the tree
+	for (int i = 1; i < numLinks; i++)
+	{
+		a[i] = Xp[i] * a[parents[i]] + c[i];
+		dState.qDDot[i - 1] = D[i] * (u[i] - U[i].transpose() * a[i]);
+		a[i] += S[i] * dState.qDDot[i - 1];
+	}
+	//a[0] += Xp[0] * G;
+	dState.bodyVelocityDDot = a[0];
+	dState.bodyPositionDot = state.bodyVelocity.template block<3, 1>(3, 0);
 
 	return dState;
 }

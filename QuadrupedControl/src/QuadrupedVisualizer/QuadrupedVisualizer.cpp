@@ -27,15 +27,16 @@ void QuadrupedVisualizer::setup() {
 
     MathTypes::Vec6 f;
 
-    f << 0, 0, 0, 50, 0, 0;
+    f << 0, 0, 0, 2, 2, 0;
 
     //robotModel.Initialize();
     //robotModel.SetExternalForceAt(0, f);
 
     chainModel.Initialize();
-    //robotModel.SetExternalForceAt(0, f);
+    //chainModel.SetExternalForceAt(3, f);
 
     state.bodyPosition = MathTypes::Vec3(0, 0, 1.0f);
+    state.q[2] = M_PI / 2.0f;
 }
 
 void QuadrupedVisualizer::resize()
@@ -61,9 +62,10 @@ void QuadrupedVisualizer::update() {
 
         myRobot->SetRobotLinkPose(P, R, i);
     }*/
-    state.q[0] = ang;
-    //state.q[1] = 3 * ang;
-    //state.q[2] = 3 * ang;
+
+    /*state.q[0] = ang;
+    state.q[1] = ang;
+    state.q[2] = ang;*/
     //state.q[1] = ang;
     
     state = chainModel.StepDynamicsModel(state);
@@ -76,17 +78,23 @@ void QuadrupedVisualizer::update() {
         //MathTypes::Mat4 T = SpatialToHomog(chainModel.dynamics.Xb[i]);
         //myChain->SetRobotLinkPose(T, i);
     }
+
+    /*if (ang > 1) {
+        MathTypes::Vec6 f;
+        f << 0, 0, 0, 0, 0, 0;
+        chainModel.SetExternalForceAt(3, f);
+    }*/
 }
 
 void QuadrupedVisualizer::draw() {
     //mCam.lookAt(vec3(2.0, 1.0 * cos(ang), 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
-    mCam.lookAt(vec3(0, -3.0, 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
+    mCam.lookAt(vec3(3.0f, -3.0, 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
 
     gl::clear();
     gl::setMatrices(mCam);
 
 
-    //plane->Draw();
+    plane->Draw();
     //myRobot->Draw();
     myChain->Draw();
 

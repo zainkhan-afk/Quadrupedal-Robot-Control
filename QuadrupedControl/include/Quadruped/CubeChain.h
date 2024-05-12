@@ -25,7 +25,7 @@ public:
 private:
 	State state;
 	int numLinks = 4;
-	float deltaT = 0.001f;
+	float deltaT = 0.01f;
 	float linkHieght{ 0.25f };
 	float linkWidth{ 0.1f };
 	float linkLength{ 0.1f };

@@ -35,7 +35,12 @@ void CubeChain::Initialize()
 		constantLinkOffset << 0.0f, 0.0f, -linkHieght;
 		MathTypes::Mat6 X = CreateSpatialForm(MathTypes::Mat3::Identity(), constantLinkOffset);
 
-		dynamics.AddBody(linkSpatialInertial1, X, COORD_AXIS::Y, parentID);
+		if (i % 2 == 0) {
+			dynamics.AddBody(linkSpatialInertial1, X, COORD_AXIS::Y, parentID);
+		}
+		else {
+			dynamics.AddBody(linkSpatialInertial1, X, COORD_AXIS::X, parentID);
+		}
 		parentID++;
 	}
 }
@@ -63,8 +68,8 @@ State CubeChain::GetState()
 
 void CubeChain::Integrate(State& state, const StateDot& dstate)
 {
-	state.bodyVelocity += dstate.bodyVelocityDDot * deltaT;
-	state.bodyPosition += dstate.bodyPositionDot * deltaT;
+	//state.bodyVelocity += dstate.bodyVelocityDDot * deltaT;
+	//state.bodyPosition += dstate.bodyPositionDot * deltaT;
 
 	//state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
 

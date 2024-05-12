@@ -568,3 +568,5 @@ FodyWeavers.xsd
 
 
 eigen3/ 
+/QuadrupedControl/Projects/QuadrupedControl/vc143.idb
+/QuadrupedControl/Tests/QuadrupedModelVisualizer/vc143.idb

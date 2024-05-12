@@ -37,7 +37,7 @@ void QuadrupedVisualizer::setup() {
     //chainModel.SetExternalForceAt(3, f);
 
     state.bodyPosition = MathTypes::Vec3(0, 0, 1.0f);
-    state.q[9] = M_PI / 4.0f;
+    state.q[0] = M_PI / 10.0f;
 }
 
 void QuadrupedVisualizer::resize()

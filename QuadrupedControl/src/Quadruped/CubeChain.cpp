@@ -25,7 +25,7 @@ void CubeChain::Initialize(int _numLinks)
 								0.0f, 0.00016667f, 0.0f,
 								0.0f, 0.0f, 0.00016667f;
 
-	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3::Zero(), linkRotationalInertia);
+	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0.0f, 0.0f, linkHieght/2.0f), linkRotationalInertia);
 
 	int parentID = -1;
 	
@@ -75,10 +75,10 @@ void CubeChain::Integrate(State& state, const StateDot& dstate)
 
 	//state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
 
-	for (int i = 0; i < numLinks; i++)
+	for (int i = 1; i < numLinks; i++)
 	{
-		state.qDot[i] += dstate.qDDot[i] * deltaT;
-		state.q[i] += state.qDot[i] * deltaT;
+		state.qDot[i - 1] += dstate.qDDot[i - 1] * deltaT;
+		state.q[i - 1] += state.qDot[i - 1] * deltaT;
 	}
 }
 

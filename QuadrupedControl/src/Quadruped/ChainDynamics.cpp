@@ -4,7 +4,7 @@
 
 ChainDynamics::ChainDynamics()
 {
-	G[5] = 9.8f;
+	G[5] = 10;
 }
 
 
@@ -119,9 +119,9 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 
 		MathTypes::Mat3 R = SpatialToRotMat(Xb[i]);
 		MathTypes::Vec3 p = SpatialToTranslation(Xb[i]);
-		MathTypes::Mat6 iX = CreateSpatialForm(R.transpose(), R * p);
+		MathTypes::Mat6 iX = CreateSpatialForm(R.transpose(), -R.transpose()*p);
 
-		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) /* - iX *  f[i]*/;
+		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - iX * f[i];
 	}
 
 	// Pass 2 up the tree

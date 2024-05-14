@@ -10,11 +10,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CC39BC07-2EBE-47E4-8F4C-2E8F90D0B222}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuadrupedTest", "Tests\QuadrupedTest\QuadrupedTest.vcxproj", "{6AE685F3-B0E5-440F-AE8D-22E5A24BE16A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuadrupedModelVisualizer", "Tests\QuadrupedModelVisualizer\QuadrupedModelVisualizer.vcxproj", "{B2CDF09B-9F7F-423C-A85F-7F77100B1710}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7F5C4F4B-F4D3-4EB0-A2E8-72B80074CAE7} = {7F5C4F4B-F4D3-4EB0-A2E8-72B80074CAE7}
 	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuadrupedModelVisualizer", "Tests\QuadrupedModelVisualizer\QuadrupedModelVisualizer.vcxproj", "{B2CDF09B-9F7F-423C-A85F-7F77100B1710}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

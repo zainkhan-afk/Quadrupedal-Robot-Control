@@ -21,15 +21,18 @@ public:
 	State GetState();
 
 	void Integrate(State& state, const StateDot& dstate);
+	void VerletIntegrate(State& state, const StateDot& dstate);
 
 private:
 	State state;
+	State prevState;
+	StateDot prevDState;
 	int numLinks;
 	float deltaT = 0.01f;
 	float linkHieght{ 0.1f };
 	float linkWidth{ 0.1f };
 	float linkLength{ 0.1f };
-	float linkMass{ 0.1f };
+	float linkMass{ 3.0f };
 
 public:
 	ChainDynamics dynamics;

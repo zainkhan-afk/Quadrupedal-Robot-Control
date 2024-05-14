@@ -20,25 +20,20 @@ void QuadrupedVisualizer::setup() {
         CI_LOG_E("Shader Error: " << e.what());
     }
 
-    int numLinks = 13;
+    int numLinks = 8;
     //
     plane = new myprimitives::Plane(mGlsl);
     //myRobot = new Robot(mGlsl);
     myChain = new Chain(mGlsl, numLinks);
 
-    MathTypes::Vec6 f;
-
-    f << 0, 0, 0, 2, 2, 0;
-
     //robotModel.Initialize();
     //robotModel.SetExternalForceAt(0, f);
 
     chainModel.Initialize(numLinks);
-    //chainModel.SetExternalForceAt(3, f);
 
-    state.bodyPosition = MathTypes::Vec3(0, 0, 1.5f);
-    state.q[7] = M_PI / 5.0f;
-    //state.q[1] = M_PI / 5.0f;
+    state.bodyPosition = MathTypes::Vec3(0, 0, 1.5);
+    state.q[0] = M_PI / 5.0f;
+    //state.q[1] = M_PI / 10.0f;
 }
 
 void QuadrupedVisualizer::resize()
@@ -48,55 +43,33 @@ void QuadrupedVisualizer::resize()
 }
 
 void QuadrupedVisualizer::update() {
-    // Update logic if needed
-    //state.bodyPosition = MathTypes::Vec3(0, 0, 0.5f);
-    /*
-    int offset = 2;
-    state.q[0 + offset] = 2 * ang;
-    state.q[3 + offset] = 2 * ang;
-    state.q[6 + offset] = 2 * ang;
-    state.q[9 + offset] = 2 * ang;*/
 
-    //state = robotModel.StepDynamicsModel(state);
-    /*for (int i = 0; i < 13; i++) {
-        MathTypes::Vec3 R = RotationMatrixToEuler(SpatialToRotMat(robotModel.dynamics.Xb[i]));
-        MathTypes::Vec3 P = SpatialToTranslation(robotModel.dynamics.Xb[i]);
 
-        myRobot->SetRobotLinkPose(P, R, i);
-    }*/
-    
-    /*state.q[0] = ang;
-    state.q[1] = ang;
-    state.q[2] = ang;*/
-    //state.q[1] = ang;
+    //chainModel.dynamics.torques[0] = (state.q[0] - M_PI) * 3;
+    //chainModel.dynamics.torques[2] = (state.q[2] - M_PI) * 3;
+    //chainModel.dynamics.torques[11] = (state.q[11] - M_PI / 6.0) * 0.2;
     
     state = chainModel.StepDynamicsModel(state);
     for (int i = 0; i < myChain->chainParameters.numLinks; i++) {
         MathTypes::Vec3 R = RotationMatrixToEuler(SpatialToRotMat(chainModel.dynamics.Xb[i]));
         MathTypes::Vec3 P = SpatialToTranslation(chainModel.dynamics.Xb[i]);
-
-        if (i == myChain->chainParameters.numLinks - 1)
-        {
-            int j = i + 1;
-        }
     
         myChain->SetRobotLinkPose(P, R, i);
-
-        //MathTypes::Mat4 T = SpatialToHomog(chainModel.dynamics.Xb[i]);
-        //myChain->SetRobotLinkPose(T, i);
     }
 
-    /*if (ang > 1) {
+    /*if (ang < 0.1)
+    {
         MathTypes::Vec6 f;
-        f << 0, 0, 0, 0, 0, 0;
-        chainModel.SetExternalForceAt(3, f);
+        f << 0, 0, 0, 10, 0, 0;
+        chainModel.SetExternalForceAt(4, f);
     }*/
+
 }
 
 void QuadrupedVisualizer::draw() {
     //mCam.lookAt(vec3(4.0 * sin(ang), 4.0 * cos(ang), 4.0), vec3(0, 0, 0), vec3(0, 0, 1));
     mCam.lookAt(vec3(3.0f, -3.0, 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
-
+    
     gl::clear();
     gl::setMatrices(mCam);
 

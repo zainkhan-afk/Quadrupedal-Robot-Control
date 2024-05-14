@@ -21,11 +21,15 @@ void CubeChain::Initialize(int _numLinks)
 	dynamics.Initialize(numLinks);
 	
 	MathTypes::Mat3 linkRotationalInertia;
-	linkRotationalInertia <<	0.00016667f, 0.0f, 0.0f,
-								0.0f, 0.00016667f, 0.0f,
-								0.0f, 0.0f, 0.00016667f;
+	/*linkRotationalInertia << 0.00016667f, 0.0f, 0.0f,
+		0.0f, 0.00016667f, 0.0f,
+		0.0f, 0.0f, 0.00016667f;*/
 
-	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0.0f, 0.0f, linkHieght/2.0f), linkRotationalInertia);
+	linkRotationalInertia << 0.005, 0.0, 0.0,
+		0.0, 0.005, 0.0,
+		0.0, 0.0, 0.005;
+
+	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, linkHieght), linkRotationalInertia);
 
 	int parentID = -1;
 	
@@ -79,7 +83,27 @@ void CubeChain::Integrate(State& state, const StateDot& dstate)
 	{
 		state.qDot[i - 1] += dstate.qDDot[i - 1] * deltaT;
 		state.q[i - 1] += state.qDot[i - 1] * deltaT;
+		
+		//dynamics.torques[i - 1] = (state.q[i - 1] - prevState.q[i - 1]) * 0.1;
+		//dynamics.torques[i - 1] += (state.qDot[i - 1] - prevState.qDot[i - 1]) * 0.1;
 	}
+	prevState = state;
+	prevDState = dstate;
+}
+
+void CubeChain::VerletIntegrate(State& state, const StateDot& dstate)
+{
+	// TODO: Does not work. need to fix it.
+	State state_i = state;
+	for (int i = 1; i < numLinks; i++)
+	{
+		double prevVal = state.q[i - 1];
+		state.q[i - 1] = 2 * state_i.q[i - 1] - prevState.q[i - 1] + (dstate.qDDot[i - 1] * deltaT * deltaT);
+		
+		state.qDot[i - 1] = (state.q[i - 1] - state_i.q[i - 1]);
+		//state.qDot[i - 1] += dstate.qDDot[i - 1] * deltaT;
+	}
+	prevState = state_i;
 }
 
 

@@ -6,7 +6,7 @@ Chain::Chain(const ci::gl::GlslProgRef& Glsl, int _numLinks) {
 	for (int i = 0; i < chainParameters.numLinks; i++)
 	{
 		bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, 0, chainParameters.cubeHeight / 2.0f), ci::vec3(0),
-			ci::vec3(chainParameters.cubeWidth, chainParameters.cubeLength, chainParameters.cubeHeight));
+			ci::vec3(chainParameters.cubeWidth / 2.0f, chainParameters.cubeLength / 2.0f, chainParameters.cubeHeight / 2.0f));
 	}
 }
 
@@ -35,7 +35,7 @@ void Chain::SetRobotLinkPose(MathTypes::Mat4 pose, int linkIdx)
 	bodyParts[linkIdx]->transformMatrix[0][3] = pose(0, 3);
 	bodyParts[linkIdx]->transformMatrix[1][3] = pose(1, 3);
 	bodyParts[linkIdx]->transformMatrix[2][3] = pose(2, 3);
-	bodyParts[linkIdx]->transformMatrix[3][3] = 1.0f;
+	bodyParts[linkIdx]->transformMatrix[3][3] = 1.0;
 
 }
 

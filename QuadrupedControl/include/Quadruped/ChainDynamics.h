@@ -27,6 +27,7 @@ private:
 
 public:
 	std::vector<MathTypes::Mat6> Xb;
+	std::vector<float> torques;
 
 private:
 	int numLinks;
@@ -54,7 +55,6 @@ private:
 	std::vector<int> parents;
 	std::vector<float> D;
 	std::vector<float> u;
-	std::vector<float> torques;
 	std::vector<COORD_AXIS> axis;
 };
 

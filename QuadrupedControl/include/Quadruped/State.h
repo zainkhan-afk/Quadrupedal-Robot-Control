@@ -8,6 +8,16 @@
 
 struct QUADRUPED_API State
 {
+	const State& operator=(const State& rhs)
+	{
+		this->bodyPosition = rhs.bodyPosition;
+		this->bodyOrientation = rhs.bodyOrientation;
+		this->bodyVelocity = rhs.bodyVelocity;
+		this->q = rhs.q;
+		this->qDot = rhs.qDot;
+		
+		return *this;
+	}
 	MathTypes::Vec3 bodyPosition = MathTypes::Vec3::Zero();
 	MathTypes::Vec4 bodyOrientation = MathTypes::Vec4::Zero();
 
@@ -25,6 +35,15 @@ struct QUADRUPED_API State
 
 struct QUADRUPED_API StateDot
 {
+	const StateDot& operator=(const StateDot& rhs)
+	{
+		this->bodyPositionDot = rhs.bodyPositionDot;
+		this->bodyVelocityDDot = rhs.bodyVelocityDDot;
+		this->qDDot = rhs.qDDot;
+
+		return *this;
+	}
+
 	MathTypes::Vec3 bodyPositionDot = MathTypes::Vec3::Zero();;
 	MathTypes::Vec6 bodyVelocityDDot = MathTypes::Vec6::Zero();;
 

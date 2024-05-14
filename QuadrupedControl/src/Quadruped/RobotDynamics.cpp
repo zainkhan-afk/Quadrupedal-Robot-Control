@@ -112,7 +112,7 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		MathTypes::Vec3 p = SpatialToTranslation(Xb[i]);
 		MathTypes::Mat6 iX = CreateSpatialForm(R.transpose(), R * p);
 		
-		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - iX * f[i];
+		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - f[i];
 	}
 
 	// Pass 2 up the tree

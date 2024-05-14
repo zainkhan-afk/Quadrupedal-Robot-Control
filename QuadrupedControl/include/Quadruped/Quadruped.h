@@ -62,12 +62,11 @@ private:
 		std::vector<SpatialInertia> I;
 		int numDoF{ 18 }, numActuatedDoF{ 12 }, numUnActuatedDoF{ 6 };
 
-		float bodyLength{ 0.38 }, bodyWidth{ 0.098 }, bodyHeight{ 0.1 };
-		float abdGearRatio{ 6 }, hipGearRatio{ 6 }, kneeGearRatio{ 9.33 };
-		
-		float abdLinkLength{ 0.062 }, hipLinkLength{ 0.209 }, kneeLinkLength{ 0.195 }, kneeLinkYOffset{ 0.004 }, maxLegLength{ 0.409 };
+		double bodyLength{ 0.38 }, bodyWidth{ 0.098 }, bodyHeight{ 0.1 };
+	
+		double abdLinkLength{ 0.062 }, hipLinkLength{ 0.209 }, kneeLinkLength{ 0.195 }, kneeLinkYOffset{ 0.004 }, maxLegLength{ 0.409 };
 
-		float bodyMass{ 3.3 };
+		double bodyMass{ 3.3 };
 
 	} robotParameters;
 
@@ -77,7 +76,7 @@ private:
 		MathTypes::Vec3 abdLocation, hipLocation, kneeLocation;
 	} bodyInertiaParams;
 
-	float deltaT = 0.001f;
+	double deltaT = 0.001;
 	State state;
 	StateDot stateDot;
 	LegController legController;

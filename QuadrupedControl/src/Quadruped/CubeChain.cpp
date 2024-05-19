@@ -29,7 +29,7 @@ void CubeChain::Initialize(int _numLinks)
 		0.0, 0.005, 0.0,
 		0.0, 0.0, 0.005;
 
-	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, linkHieght), linkRotationalInertia);
+	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, linkHieght/2), linkRotationalInertia);
 
 	int parentID = -1;
 	

@@ -32,8 +32,8 @@ void QuadrupedVisualizer::setup() {
     chainModel.Initialize(numLinks);
 
     state.bodyPosition = MathTypes::Vec3(0, 0, 1.5);
-    state.q[0] = M_PI / 5.0f;
-    //state.q[1] = M_PI / 10.0f;
+    state.q[0] = M_PI / 10.0f;
+    state.q[1] = M_PI / 10.0f;
 }
 
 void QuadrupedVisualizer::resize()

@@ -106,8 +106,8 @@ def ToSpatial(R, p):
 	X[3:, 3:] = R
 
 	Sp = VecToSkewMat(p)
-	X[3:, :3] = Sp@R
-	# X[3:, :3] = -R@Sp
+	# X[3:, :3] = Sp@R
+	X[3:, :3] = -Sp
 
 	return X
 
@@ -130,7 +130,7 @@ def GetTranslationFromSpatial(X):
 	R = GetRotationFromSpatial(X)
 	skewR = X[3:, :3]
 
-	return SketMatToVec(skewR@R.T)
+	return SketMatToVec(-skewR)
 	
 
 # def GetTranslationFromSpatial2(X):
@@ -198,24 +198,6 @@ def ToRad(deg):
 
 
 
-for i in range(10):
-	a = [np.random.random(), np.random.random(), np.random.random()]
-	R = ToRotMat(a[0], a[1], a[2])
-	
-	RN = RTool.from_matrix(R)
-	
-	q = RToQuat(R)
-	a_ = QuatToEuler(q)
-
-	# print(q)
-	# print(RN.as_quat())
-	
-	print(a)
-	print(a_.ravel())
-	print(RN.as_euler('xyz'))
-	print()
-
-exit()
 
 to_spatial_func = ToSpatial
 get_coords_func = GetTranslationFromSpatial
@@ -227,11 +209,11 @@ while True:
 	img2 = np.zeros((400, 400, 3)).astype("uint8")
 	img3 = np.zeros((400, 400, 3)).astype("uint8")
 
-	theta1 = np.random.random() * 12
-	theta2 = np.random.random() * 12
-	theta3 = np.random.random() * 12
+	theta1 = np.random.random() * 0
+	theta2 = np.random.random() * 0
+	theta3 = np.random.random() * 0
 
-	# theta2 = 25*np.sin(ang)
+	theta3 = 25*np.sin(ang)
 
 	X_b = 200
 	Y_b = 200

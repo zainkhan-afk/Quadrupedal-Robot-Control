@@ -173,6 +173,7 @@
     <ClInclude Include="..\..\include\Quadruped\RobotDynamics.h" />
     <ClInclude Include="..\..\include\Quadruped\Spatial.h" />
     <ClInclude Include="..\..\include\Quadruped\SpatialInertia.h" />
+    <ClInclude Include="..\..\include\Quadruped\SpatialTransform.h" />
     <ClInclude Include="..\..\include\Quadruped\State.h" />
     <ClInclude Include="..\..\include\Quadruped\TestClass.h" />
     <ClInclude Include="..\..\include\Quadruped\Types.h" />
@@ -190,6 +191,7 @@
     <ClCompile Include="..\..\src\Quadruped\RobotDynamics.cpp" />
     <ClCompile Include="..\..\src\Quadruped\Spatial.cpp" />
     <ClCompile Include="..\..\src\Quadruped\SpatialInertia.cpp" />
+    <ClCompile Include="..\..\src\Quadruped\SpatialTransform.cpp" />
     <ClCompile Include="..\..\src\Quadruped\TestClass.cpp" />
     <ClCompile Include="..\..\src\Quadruped\Utilities.cpp" />
     <ClCompile Include="dllmain.cpp" />

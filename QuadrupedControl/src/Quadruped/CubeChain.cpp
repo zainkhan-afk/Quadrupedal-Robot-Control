@@ -33,13 +33,19 @@ void CubeChain::Initialize(int _numLinks)
 
 	int parentID = -1;
 	
-	dynamics.AddBody(linkSpatialInertial, MathTypes::Mat6::Identity(), COORD_AXIS::Y, parentID);
+	SpatialTransform XIdent;
+
+	dynamics.AddBody(linkSpatialInertial, XIdent, COORD_AXIS::Y, parentID);
 	parentID++;
+
+	MathTypes::Mat3 RIdent = MathTypes::Mat3::Identity();
+
+	transformationChain.push_back(MathTypes::Mat4::Identity());
 
 	for (int i = 1; i < numLinks; i++) {
 		MathTypes::Vec3 constantLinkOffset;
 		constantLinkOffset << 0.0f, 0.0f, -linkHieght;
-		MathTypes::Mat6 X = CreateSpatialForm(MathTypes::Mat3::Identity(), constantLinkOffset);
+		SpatialTransform X(RIdent, constantLinkOffset);
 
 		if (i % 2 == 0) {
 			dynamics.AddBody(linkSpatialInertial, X, COORD_AXIS::Y, parentID);
@@ -47,6 +53,7 @@ void CubeChain::Initialize(int _numLinks)
 		else {
 			dynamics.AddBody(linkSpatialInertial, X, COORD_AXIS::X, parentID);
 		}
+		transformationChain.push_back(MathTypes::Mat4::Identity());
 		parentID++;
 	}
 }
@@ -106,6 +113,31 @@ void CubeChain::VerletIntegrate(State& state, const StateDot& dstate)
 	prevState = state_i;
 }
 
+void CubeChain::GetVisualTransformations(const State& state)
+{
+	//transformationChain[0] = MathTypes::Mat4::Identity();
+
+	for (int i = 1; i < numLinks; i++)
+	{
+		MathTypes::Mat4 T = MathTypes::Mat4::Identity();
+		
+		MathTypes::Mat4 TpjTrans = MathTypes::Mat4::Identity();
+		MathTypes::Mat4 TpjRot = MathTypes::Mat4::Identity();
+		MathTypes::Mat4 Tj = MathTypes::Mat4::Identity();
+
+		MathTypes::Vec3 t = dynamics.Xl[i].GetTranslation();
+
+		TpjRot.template topLeftCorner<3, 3>() = dynamics.Xl[i].GetRotation();
+		TpjTrans(0, 3) = t[0];
+		TpjTrans(1, 3) = t[1];
+		TpjTrans(2, 3) = t[2];
+		
+		
+		Tj.template topLeftCorner<3, 3>() = GetRotationMatrix(state.q[i - 1], dynamics.axis[i]);
+
+		transformationChain[i] = transformationChain[dynamics.parents[i]] * Tj * TpjTrans * TpjRot;
+	}
+}
 
 State CubeChain::StepDynamicsModel(State& state)
 {

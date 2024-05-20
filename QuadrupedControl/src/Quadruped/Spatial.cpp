@@ -8,8 +8,8 @@ MathTypes::Mat6 CreateSpatialForm(const MathTypes::Mat3& R, const MathTypes::Vec
 	MathTypes::Mat6 X = MathTypes::Mat6::Zero();
 	X.template topLeftCorner<3, 3>() = R;
 	X.template bottomRightCorner<3, 3>() = R;
-	//X.template bottomLeftCorner<3, 3>() = -R * VectorToSkewMat(r);
-	X.template bottomLeftCorner<3, 3>() = VectorToSkewMat(r) * R;
+	X.template bottomLeftCorner<3, 3>() = -R * VectorToSkewMat(r);
+	//X.template bottomLeftCorner<3, 3>() = VectorToSkewMat(r) * R;
 
 	return X;
 }

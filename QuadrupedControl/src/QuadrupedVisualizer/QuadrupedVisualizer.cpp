@@ -31,9 +31,9 @@ void QuadrupedVisualizer::setup() {
 
     chainModel.Initialize(numLinks);
 
-    state.bodyPosition = MathTypes::Vec3(0, 0, 1.5);
+    //state.bodyPosition = MathTypes::Vec3(0, 0, 1.5);
     state.q[0] = M_PI / 10.0f;
-    state.q[1] = M_PI / 10.0f;
+    //state.q[1] = M_PI / 10.0f;
 }
 
 void QuadrupedVisualizer::resize()
@@ -43,17 +43,26 @@ void QuadrupedVisualizer::resize()
 }
 
 void QuadrupedVisualizer::update() {
-
-
+    //state.q[0] = ang;
     //chainModel.dynamics.torques[0] = (state.q[0] - M_PI) * 3;
     //chainModel.dynamics.torques[2] = (state.q[2] - M_PI) * 3;
     //chainModel.dynamics.torques[11] = (state.q[11] - M_PI / 6.0) * 0.2;
-    
+
     state = chainModel.StepDynamicsModel(state);
+    chainModel.GetVisualTransformations(state);
     for (int i = 0; i < myChain->chainParameters.numLinks; i++) {
-        MathTypes::Vec3 R = RotationMatrixToEuler(SpatialToRotMat(chainModel.dynamics.Xb[i]));
-        MathTypes::Vec3 P = SpatialToTranslation(chainModel.dynamics.Xb[i]);
-    
+        //MathTypes::Vec3 R = RotationMatrixToEuler(chainModel.dynamics.Xb[i].GetRotation());
+        //MathTypes::Vec3 P = chainModel.dynamics.Xb[i].GetTranslation();
+
+        MathTypes::Vec3 R = RotationMatrixToEuler(chainModel.transformationChain[i].template topLeftCorner<3, 3>());
+        //MathTypes::Vec3 R = MathTypes::Vec3::Zero();
+        MathTypes::Vec3 P = MathTypes::Vec3::Zero();
+
+        P[0] = chainModel.transformationChain[i](0, 3);
+        P[1] = chainModel.transformationChain[i](1, 3);
+        P[2] = chainModel.transformationChain[i](2, 3);
+
+
         myChain->SetRobotLinkPose(P, R, i);
     }
 
@@ -74,7 +83,7 @@ void QuadrupedVisualizer::draw() {
     gl::setMatrices(mCam);
 
 
-    plane->Draw();
+    //plane->Draw();
     //myRobot->Draw();
     myChain->Draw();
     

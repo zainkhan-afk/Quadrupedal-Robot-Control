@@ -21,6 +21,8 @@ void ChainDynamics::Initialize(int _numLinks)
 	MathTypes::Vec6 zeroVec6 = MathTypes::Vec6::Zero();
 	MathTypes::Mat6 zeroMat6 = MathTypes::Mat6::Zero();
 
+	SpatialTransform Xident;
+
 	SpatialInertia zeroI;
 
 	for (int i = 0; i < numLinks; i++) {
@@ -36,9 +38,9 @@ void ChainDynamics::Initialize(int _numLinks)
 		this->a.push_back(zeroVec6);
 		this->f.push_back(zeroVec6);
 
-		this->Xl.push_back(eyeMat6);
-		this->Xp.push_back(eyeMat6);
-		this->Xb.push_back(eyeMat6);
+		this->Xl.push_back(Xident);
+		this->Xp.push_back(Xident);
+		this->Xb.push_back(Xident);
 
 		this->axis.push_back(COORD_AXIS::X);
 		this->D.push_back(0.0f);
@@ -49,10 +51,10 @@ void ChainDynamics::Initialize(int _numLinks)
 }
 
 
-void ChainDynamics::AddBody(SpatialInertia I, MathTypes::Mat6 pos, COORD_AXIS axis, int parent)
+void ChainDynamics::AddBody(SpatialInertia I, SpatialTransform X, COORD_AXIS axis, int parent)
 {
 	this->linkInertias[currentIndex] = I;
-	this->Xl[currentIndex] = pos;
+	this->Xl[currentIndex] = X;
 	this->parents[currentIndex] = parent;
 
 	if (parent >= 0) {
@@ -88,7 +90,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 {
 	StateDot dState;
 	// Pass 1 down the tree
-	Xp[0] = CreateSpatialForm(QuatToRotationMatrix(state.bodyOrientation), state.bodyPosition);
+	Xp[0] = SpatialTransform(QuatToRotationMatrix(state.bodyOrientation), state.bodyPosition);
 	Xb[0] = Xp[0];
 	v[0] = state.bodyVelocity;
 	v[0] = MathTypes::Vec6::Zero();
@@ -103,25 +105,20 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 
 	for (int i = 1; i < numLinks; i++)
 	{
-		MathTypes::Mat6 Xj = JointRotationMatrix(state.q[i - 1], this->axis[i]);
+		MathTypes::Mat3 R = GetRotationMatrix(state.q[i - 1], this->axis[i]);
+		SpatialTransform Xj(R, MathTypes::Vec3::Zero());
 		Xp[i] = Xj * Xl[i];
+		Xb[i] = Xp[i] * Xb[parents[i]];
 		//Xb[i] = Xb[parents[i]] * Xp[i];
-
-		//Xp[i] = Xj * Xl[i];
-		Xb[i] = Xb[parents[i]] * Xp[i];
 
 
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
 
-		v[i] = Xp[i] * v[parents[i]] + vJoint;
+		v[i] = Xp[i].GetSpatialForm() * v[parents[i]] + vJoint;
 		c[i] = CrossProductMotion(v[i], vJoint);
 		articulatedInertias[i].SetInertia(linkInertias[i].GetInertia());
 
-		MathTypes::Mat3 R = SpatialToRotMat(Xb[i]);
-		MathTypes::Vec3 p = SpatialToTranslation(Xb[i]);
-		MathTypes::Mat6 iX = CreateSpatialForm(R.transpose(), -R.transpose()*p);
-
-		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - iX * f[i];
+		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) /*- iX * f[i]*/;
 	}
 
 	// Pass 2 up the tree
@@ -138,8 +135,8 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		MathTypes::Mat6 Ia = articulatedInertias[i].GetInertia() - U[i] * (U[i] / D[i]).transpose();
 		MathTypes::Vec6 _pa = pa[i] + Ia * c[i] + U[i] * u[i] / D[i];
 
-		articulatedInertias[parents[i]].AddInertia(Xp[i].transpose() * Ia * Xp[i]);
-		pa[parents[i]] += Xp[i].transpose() * _pa;
+		articulatedInertias[parents[i]].AddInertia(Xp[i].GetSpatialFormForce() * Ia * Xp[i].GetSpatialForm());
+		pa[parents[i]] += Xp[i].GetSpatialFormForce() * _pa;
 	}
 
 
@@ -147,13 +144,13 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	// Pass 3 down the tree
 	for (int i = 1; i < numLinks; i++)
 	{
-		MathTypes::Vec6 a_ = Xp[i] * a[parents[i]] + c[i];
+		MathTypes::Vec6 a_ = Xp[i].GetSpatialForm() * a[parents[i]] + c[i];
 		dState.qDDot[i - 1] = (1 / D[i]) * (u[i] - U[i].transpose() * a_);
 		a[i] = a_ + S[i] * dState.qDDot[i - 1];
 	}
 	//a[0] += Xp[0] * G;
 	//dState.bodyVelocityDDot = a[0];
-	//dState.bodyPositionDot = state.bodyVelocity.template block<3, 1>(3, 0);
+	// dState.bodyPositionDot = state.bodyVelocity.template block<3, 1>(3, 0);
 
 	return dState;
 }

@@ -4,6 +4,7 @@
 #include "Quadruped/Types.h"
 #include "Quadruped/State.h"
 #include "Quadruped/SpatialInertia.h"
+#include "Quadruped/SpatialTransform.h"
 
 class ChainDynamics
 {
@@ -14,7 +15,7 @@ public:
 
 	void Initialize(int _numLinks = 4);
 
-	void AddBody(SpatialInertia I, MathTypes::Mat6 pos, COORD_AXIS axis, int parent);
+	void AddBody(SpatialInertia I, SpatialTransform X, COORD_AXIS axis, int parent);
 	void SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces);
 	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
 	
@@ -26,11 +27,14 @@ private:
 
 
 public:
-	std::vector<MathTypes::Mat6> Xb;
+	std::vector<SpatialTransform> Xb;
 	std::vector<float> torques;
+	int numLinks;
+	std::vector<COORD_AXIS> axis;
+	std::vector<SpatialTransform> Xl;
+	std::vector<int> parents;
 
 private:
-	int numLinks;
 	int currentIndex = 0;
 	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 
@@ -48,14 +52,11 @@ private:
 
 	std::vector<MathTypes::Vec6> f;
 
-	std::vector<MathTypes::Mat6> Xl;
-	std::vector<MathTypes::Mat6> Xp;
+	std::vector<SpatialTransform> Xp;
 	
 
-	std::vector<int> parents;
 	std::vector<float> D;
 	std::vector<float> u;
-	std::vector<COORD_AXIS> axis;
 };
 
 #endif // CHAINDYNAMICS_H

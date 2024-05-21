@@ -1,9 +1,7 @@
 #include "QuadrupedVisualizer/QuadrupedVisualizer.h"
 #include "QuadrupedVisualizer/Resources.h"
 #include "cinder/Log.h"
-
 #include "Quadruped/Spatial.h"
-
 
 using namespace ci;
 using namespace ci::app;
@@ -34,7 +32,7 @@ void QuadrupedVisualizer::setup() {
 
     //state.bodyPosition = MathTypes::Vec3(0, 0, 1.5);
     state.q[0] = M_PI / 10.0f;
-    //state.q[1] = M_PI / 10.0f;
+    state.q[1] = M_PI / 10.0f;
 }
 
 void QuadrupedVisualizer::resize()

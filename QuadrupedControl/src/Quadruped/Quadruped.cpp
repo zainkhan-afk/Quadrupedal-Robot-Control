@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Quadruped/SpatialTransform.h"
 #include "Quadruped/Quadruped.h"
 #include "Quadruped/Utilities.h"
 #include "Quadruped/Spatial.h"
@@ -63,18 +64,20 @@ void Quadruped::Initialize()
 	int baseID = 0;
 	int bodyID = 0;
 	int parentID = -1;
+
+	SpatialTransform X;
+
 	// Floating Base
-	dynamics.AddBody(bodyInertiaParams.floatingBodyInertia, MathTypes::Mat6::Identity(), COORD_AXIS::X, parentID);
+	dynamics.AddBody(bodyInertiaParams.floatingBodyInertia, X, COORD_AXIS::X, parentID);
 	bodyID++;
 	parentID++;
-
-	MathTypes::Mat6 X;
-
+	
+	MathTypes::Mat3 RIdent = MathTypes::Mat3::Identity();
 	// Legs
 	int side = -1;
 	for (int leg = 0; leg < 4; leg++)
 	{
-		X = CreateSpatialForm(MathTypes::Mat3::Identity(), GetLegSignedVector(bodyInertiaParams.abdLocation, leg));
+		X = SpatialTransform(RIdent, GetLegSignedVector(bodyInertiaParams.abdLocation, leg));
 		// Abd
 		if (side < 0) {
 			dynamics.AddBody(bodyInertiaParams.abdInertia.FlipAlongAxis(1), X, COORD_AXIS::X, baseID);
@@ -86,7 +89,7 @@ void Quadruped::Initialize()
 		parentID++;
 
 		// Hip
-		X = CreateSpatialForm(GetRotationMatrix(M_PI, COORD_AXIS::Z), GetLegSignedVector(bodyInertiaParams.hipLocation, leg));
+		X = SpatialTransform(GetRotationMatrix(M_PI, COORD_AXIS::Z), GetLegSignedVector(bodyInertiaParams.hipLocation, leg));
 		if (side < 0) {
 			dynamics.AddBody(bodyInertiaParams.hipInertia.FlipAlongAxis(1), X, COORD_AXIS::Y, parentID);
 		}
@@ -97,7 +100,7 @@ void Quadruped::Initialize()
 		parentID++;
 
 		// Knee
-		X = CreateSpatialForm(MathTypes::Mat3::Identity(), bodyInertiaParams.kneeLocation);
+		X = SpatialTransform(RIdent, bodyInertiaParams.kneeLocation);
 		if (side < 0) {
 			dynamics.AddBody(bodyInertiaParams.kneeInertia.FlipAlongAxis(1), X, COORD_AXIS::Y, parentID);
 		}

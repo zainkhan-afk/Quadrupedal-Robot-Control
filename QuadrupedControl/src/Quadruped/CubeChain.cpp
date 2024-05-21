@@ -107,7 +107,7 @@ void CubeChain::VerletIntegrate(State& state, const StateDot& dstate)
 		double prevVal = state.q[i - 1];
 		state.q[i - 1] = 2 * state_i.q[i - 1] - prevState.q[i - 1] + (dstate.qDDot[i - 1] * deltaT * deltaT);
 		
-		state.qDot[i - 1] = (state.q[i - 1] - state_i.q[i - 1]);
+		state.qDot[i - 1] = (prevState.q[i - 1] - state_i.q[i - 1]);
 		//state.qDot[i - 1] += dstate.qDDot[i - 1] * deltaT;
 	}
 	prevState = state_i;
@@ -144,6 +144,7 @@ State CubeChain::StepDynamicsModel(State& state)
 	StateDot dState = dynamics.Step(state);
 
 	Integrate(state, dState);
+	//VerletIntegrate(state, dState);
 
 	return state;
 }

@@ -76,7 +76,7 @@ private:
 		MathTypes::Vec3 abdLocation, hipLocation, kneeLocation;
 	} bodyInertiaParams;
 
-	double deltaT = 0.001;
+	double deltaT = 0.01;
 	State state;
 	StateDot stateDot;
 	LegController legController;

@@ -4,6 +4,7 @@
 #include "Quadruped/Types.h"
 #include "Quadruped/State.h"
 #include "Quadruped/SpatialInertia.h"
+#include "Quadruped/SpatialTransform.h"
 
 #include <eigen3/Eigen/StdVector>
 
@@ -37,7 +38,7 @@ public:
 	RobotDynamics();
 	~RobotDynamics();
 
-	void AddBody(SpatialInertia I, MathTypes::Mat6 pos, COORD_AXIS axis, int parent);
+	void AddBody(SpatialInertia I, SpatialTransform X, COORD_AXIS axis, int parent);
 	void SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces);
 	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
 
@@ -48,7 +49,7 @@ private:
 	StateDot RunArticulatedBodyAlgorithm(const State& state);
 
 public:
-	std::vector<MathTypes::Mat6> Xb;
+	std::vector<SpatialTransform> Xb;
 
 private:
 	int numLinks = 13;
@@ -69,9 +70,8 @@ private:
 
 	std::vector<MathTypes::Vec6> f;
 
-	std::vector<MathTypes::Mat6> Xl;
-	std::vector<MathTypes::Mat6> Xp;
-	//std::vector<MathTypes::Mat6> Xb;
+	std::vector<SpatialTransform> Xl;
+	std::vector<SpatialTransform> Xp;
 
 	std::vector<int> parents;
 	std::vector<float> D;

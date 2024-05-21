@@ -108,8 +108,8 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		MathTypes::Mat3 R = GetRotationMatrix(state.q[i - 1], this->axis[i]);
 		SpatialTransform Xj(R, MathTypes::Vec3::Zero());
 		Xp[i] = Xj * Xl[i];
-		Xb[i] = Xp[i] * Xb[parents[i]];
-		//Xb[i] = Xb[parents[i]] * Xp[i];
+		//Xb[i] = Xp[i] * Xb[parents[i]];
+		Xb[i] = Xb[parents[i]] * Xp[i];
 
 
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
@@ -118,7 +118,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		c[i] = CrossProductMotion(v[i], vJoint);
 		articulatedInertias[i].SetInertia(linkInertias[i].GetInertia());
 
-		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) /*- iX * f[i]*/;
+		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - Xb[i].GetSpatialFormForce() * f[i];
 	}
 
 	// Pass 2 up the tree
@@ -126,10 +126,6 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	{
 		U[i] = articulatedInertias[i].GetInertia() * S[i];
 		D[i] = (S[i].transpose() * U[i]);
-
-		//u[i] = torques[i - 1] - U[i].transpose() * c[i] - S[i].transpose() * pa[i];
-		//MathTypes::Mat6 Ia = Xp[i].transpose() * (articulatedInertias[i].GetInertia() - U[i] * U[i].transpose() * D[i]) * Xp[i];
-		//MathTypes::Vec6 _pa = Xp[i].transpose() * (pa[i] + articulatedInertias[i].GetInertia() * c[i] + U[i] * D[i] * u[i]);
 		
 		u[i] = torques[i - 1] - S[i].transpose() * pa[i];
 		MathTypes::Mat6 Ia = articulatedInertias[i].GetInertia() - U[i] * (U[i] / D[i]).transpose();

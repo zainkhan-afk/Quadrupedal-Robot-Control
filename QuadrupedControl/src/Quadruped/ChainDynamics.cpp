@@ -135,8 +135,8 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		MathTypes::Mat6 Ia = articulatedInertias[i].GetInertia() - U[i] * (U[i] / D[i]).transpose();
 		MathTypes::Vec6 _pa = pa[i] + Ia * c[i] + U[i] * u[i] / D[i];
 
-		articulatedInertias[parents[i]].AddInertia(Xp[i].GetSpatialFormForce() * Ia * Xp[i].GetSpatialForm());
-		pa[parents[i]] += Xp[i].GetSpatialFormForce() * _pa;
+		articulatedInertias[parents[i]].AddInertia(Xp[i].GetSpatialFormTranspose() * Ia * Xp[i].GetSpatialForm());
+		pa[parents[i]] += Xp[i].GetSpatialFormTranspose() * _pa;
 	}
 
 

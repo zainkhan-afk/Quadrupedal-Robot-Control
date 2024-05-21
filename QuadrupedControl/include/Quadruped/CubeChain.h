@@ -34,7 +34,7 @@ private:
 	float linkHieght{ 0.1f };
 	float linkWidth{ 0.1f };
 	float linkLength{ 0.1f };
-	float linkMass{ 3.0f };
+	float linkMass{ 1.0f };
 
 public:
 	ChainDynamics dynamics;

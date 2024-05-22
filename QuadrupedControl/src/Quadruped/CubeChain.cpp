@@ -21,13 +21,15 @@ void CubeChain::Initialize(int _numLinks)
 	dynamics.Initialize(numLinks);
 	
 	MathTypes::Mat3 linkRotationalInertia;
-	/*linkRotationalInertia << 0.00016667f, 0.0f, 0.0f,
+	linkRotationalInertia << 0.00016667f, 0.0f, 0.0f,
 		0.0f, 0.00016667f, 0.0f,
-		0.0f, 0.0f, 0.00016667f;*/
+		0.0f, 0.0f, 0.00016667f;
 
-	linkRotationalInertia << 0.005, 0.0, 0.0,
+	/*linkRotationalInertia << 0.005, 0.0, 0.0,
 		0.0, 0.005, 0.0,
-		0.0, 0.0, 0.005;
+		0.0, 0.0, 0.005;*/
+
+	//linkRotationalInertia *= 10;
 
 	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, linkHieght/2), linkRotationalInertia);
 

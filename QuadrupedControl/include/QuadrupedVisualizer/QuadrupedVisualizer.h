@@ -28,12 +28,12 @@ private:
     ci::gl::GlslProgRef		mGlsl;
     myprimitives::Plane*    plane;
 
-    Quadruped               robotModel;
-    //CubeChain               chainModel;
+    //Quadruped               robotModel;
+    CubeChain               chainModel;
     State                   state;
 
-    Robot*                  myRobot;
-    //Chain*                  myChain;
+    //Robot*                  myRobot;
+    Chain*                  myChain;
 
     double                  ang = 0.0;
 };

@@ -25,13 +25,13 @@ void CubeChain::Initialize(int _numLinks)
 		0.0f, 0.00016667f, 0.0f,
 		0.0f, 0.0f, 0.00016667f;
 
-	/*linkRotationalInertia << 0.005, 0.0, 0.0,
-		0.0, 0.005, 0.0,
-		0.0, 0.0, 0.005;*/
+	/*linkRotationalInertia << 1, 0.0f, 0.0f,
+		0.0f, 1, 0.0f,
+		0.0f, 0.0f, 1*/;
 
-	//linkRotationalInertia *= 10;
+	linkRotationalInertia *= 10;
 
-	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, linkHieght/2), linkRotationalInertia);
+	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, -linkHieght/2), linkRotationalInertia);
 
 	int parentID = -1;
 	
@@ -137,7 +137,7 @@ void CubeChain::GetVisualTransformations(const State& state)
 		
 		Tj.template topLeftCorner<3, 3>() = GetRotationMatrix(state.q[i - 1], dynamics.axis[i]);
 
-		transformationChain[i] = transformationChain[dynamics.parents[i]] * Tj * TpjTrans * TpjRot;
+		transformationChain[i] = transformationChain[dynamics.parents[i]] * TpjRot * TpjTrans * Tj;
 	}
 }
 

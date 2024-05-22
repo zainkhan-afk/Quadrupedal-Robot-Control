@@ -33,8 +33,8 @@ MathTypes::Mat6 SpatialTransform::GetSpatialForm()
 	MathTypes::Mat6 X = MathTypes::Mat6::Zero();
 	X.template topLeftCorner<3, 3>() = R;
 	X.template bottomRightCorner<3, 3>() = R;
-	//X.template bottomLeftCorner<3, 3>() = -R * VectorToSkewMat(p);
-	X.template bottomLeftCorner<3, 3>() = VectorToSkewMat(p)*R;
+	X.template bottomLeftCorner<3, 3>() = -R * VectorToSkewMat(p); // This was in the book
+	//X.template bottomLeftCorner<3, 3>() = VectorToSkewMat(p)*R; // This works with transformations
 
 	return X;
 }
@@ -44,7 +44,8 @@ MathTypes::Mat6 SpatialTransform::GetSpatialFormTranspose()
 	MathTypes::Mat6 X = MathTypes::Mat6::Zero();
 	X.template topLeftCorner<3, 3>() = R.transpose();
 	X.template bottomRightCorner<3, 3>() = R.transpose();
-	X.template topRightCorner<3, 3>() = (VectorToSkewMat(p) * R).transpose();
+	X.template topRightCorner<3, 3>() = (-R * VectorToSkewMat(p)).transpose();
+	//X.template topRightCorner<3, 3>() = (VectorToSkewMat(p) * R).transpose();
 
 	return X;
 }
@@ -54,7 +55,8 @@ MathTypes::Mat6 SpatialTransform::GetSpatialFormForce()
 	MathTypes::Mat6 X = MathTypes::Mat6::Zero();
 	X.template topLeftCorner<3, 3>() = R;
 	X.template bottomRightCorner<3, 3>() = R;
-	X.template topRightCorner<3, 3>() = VectorToSkewMat(p) * R;
+	X.template topRightCorner<3, 3>() = -R * VectorToSkewMat(p);
+	//X.template topRightCorner<3, 3>() = VectorToSkewMat(p) * R;
 
 	return X;
 }
@@ -85,8 +87,12 @@ MathTypes::Vec6 SpatialTransform::Apply(MathTypes::Vec6 spVec)
 SpatialTransform SpatialTransform::operator*(const SpatialTransform& rhs) const
 {
 
+	//MathTypes::Mat3 newR = R * rhs.R;
+	//MathTypes::Vec3 newp = p + R * rhs.p;
+
 	MathTypes::Mat3 newR = R * rhs.R;
-	MathTypes::Vec3 newp = p + R * rhs.p;
+	MathTypes::Vec3 newp = rhs.p + rhs.R.transpose() * p;
+
 	return SpatialTransform(newR, newp);
 }
 

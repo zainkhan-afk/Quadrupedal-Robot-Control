@@ -4,7 +4,7 @@
 
 ChainDynamics::ChainDynamics()
 {
-	G[5] = 10;
+	G[5] = -10;
 }
 
 
@@ -107,9 +107,13 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	{
 		MathTypes::Mat3 R = GetRotationMatrix(state.q[i - 1], this->axis[i]);
 		SpatialTransform Xj(R, MathTypes::Vec3::Zero());
-		Xp[i] = Xj * Xl[i];
+		
 		//Xp[i] = Xl[i] * Xj;
-		Xb[i] = Xb[parents[i]] * Xp[i];
+		//Xb[i] = Xb[parents[i]] * Xp[i];
+
+
+		Xp[i] = Xj * Xl[i];
+		Xb[i] = Xp[i] * Xb[parents[i]];
 
 
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
@@ -127,7 +131,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		U[i] = articulatedInertias[i].GetInertia() * S[i];
 		D[i] = (S[i].transpose() * U[i]);
 		
-		u[i] = 0 - S[i].transpose() * pa[i];
+		u[i] = torques[i-1] - S[i].transpose() * pa[i];
 		MathTypes::Mat6 Ia = articulatedInertias[i].GetInertia() - U[i] * (U[i] / D[i]).transpose();
 		MathTypes::Vec6 _pa = pa[i] + Ia * c[i] + U[i] * u[i] / D[i];
 

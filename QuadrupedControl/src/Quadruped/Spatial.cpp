@@ -96,7 +96,7 @@ QUADRUPED_API MathTypes::Mat3 SpatialToRotMat(const MathTypes::Mat6& X)
 QUADRUPED_API MathTypes::Vec3 SpatialToTranslation(const MathTypes::Mat6& X)
 {
 	MathTypes::Mat3 R = SpatialToRotMat(X);
-	//MathTypes::Vec3 r = -SkewMatToVecor(R.transpose() * X.template bottomLeftCorner<3, 3>());
-	MathTypes::Vec3 r = SkewMatToVecor(X.template bottomLeftCorner<3, 3>() * R.transpose());
+	MathTypes::Vec3 r = -SkewMatToVecor(-R.transpose() * X.template bottomLeftCorner<3, 3>());
+	//MathTypes::Vec3 r = SkewMatToVecor(X.template bottomLeftCorner<3, 3>() * R.transpose());
 	return r;
 }

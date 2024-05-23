@@ -29,7 +29,7 @@ void CubeChain::Initialize(int _numLinks)
 		0.0f, 1, 0.0f,
 		0.0f, 0.0f, 1*/;
 
-	linkRotationalInertia *= 10;
+	//linkRotationalInertia *= 10;
 
 	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, -linkHieght/2), linkRotationalInertia);
 
@@ -93,11 +93,12 @@ void CubeChain::Integrate(State& state, const StateDot& dstate)
 		state.qDot[i - 1] += dstate.qDDot[i - 1] * deltaT;
 		state.q[i - 1] += state.qDot[i - 1] * deltaT;
 		
-		//dynamics.torques[i - 1] = (state.q[i - 1] - prevState.q[i - 1]) * 0.1;
-		//dynamics.torques[i - 1] += (state.qDot[i - 1] - prevState.qDot[i - 1]) * 0.1;
+		dynamics.torques[i - 1] = (prevState.q[i - 1] - state.q[i - 1])*2;
+		//dynamics.torques[i - 1] = (prevState.qDot[i - 1] - state.qDot[i - 1]) * 0.1;
 	}
 	prevState = state;
 	prevDState = dstate;
+
 }
 
 void CubeChain::VerletIntegrate(State& state, const StateDot& dstate)
@@ -109,7 +110,7 @@ void CubeChain::VerletIntegrate(State& state, const StateDot& dstate)
 		double prevVal = state.q[i - 1];
 		state.q[i - 1] = 2 * state_i.q[i - 1] - prevState.q[i - 1] + (dstate.qDDot[i - 1] * deltaT * deltaT);
 		
-		state.qDot[i - 1] = (prevState.q[i - 1] - state_i.q[i - 1]);
+		//state.qDot[i - 1] = (prevState.q[i - 1] - state_i.q[i - 1]);
 		//state.qDot[i - 1] += dstate.qDDot[i - 1] * deltaT;
 	}
 	prevState = state_i;

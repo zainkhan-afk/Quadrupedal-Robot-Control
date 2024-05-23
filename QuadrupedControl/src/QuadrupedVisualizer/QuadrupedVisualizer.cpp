@@ -23,12 +23,13 @@ void QuadrupedVisualizer::setup() {
     plane = new myprimitives::Plane(mGlsl);
     //myRobot = new Robot(mGlsl);
     myChain = new Chain(mGlsl, numLinks);
-
+   
     //robotModel.Initialize();
     //robotModel.SetExternalForceAt(2, f);
 
     chainModel.Initialize(numLinks);
-    // 
+
+
     //state.bodyPosition = MathTypes::Vec3(0, 0, 1.5);
     state.q[0] = M_PI / 10.0f;
     state.q[1] = M_PI / 10.0f;
@@ -43,6 +44,12 @@ void QuadrupedVisualizer::resize()
 void QuadrupedVisualizer::update() {
     /*state.q[0] = ang;
     state.q[1] = ang;*/
+
+
+    //MathTypes::Vec6 f;
+    //f << 0, 0, 0, ang, 0, 0;
+    //chainModel.SetExternalForceAt(10, f);
+
     state = chainModel.StepDynamicsModel(state);
     chainModel.GetVisualTransformations(state);
     for (int i = 0; i < myChain->chainParameters.numLinks; i++) {
@@ -65,8 +72,6 @@ void QuadrupedVisualizer::update() {
     }*/
 }
 
-
-
 void QuadrupedVisualizer::draw() {
     //mCam.lookAt(vec3(4.0 * sin(ang), 4.0 * cos(ang), 4.0), vec3(0, 0, 0), vec3(0, 0, 1));
     mCam.lookAt(vec3(3.0f, -3.0, 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
@@ -79,7 +84,7 @@ void QuadrupedVisualizer::draw() {
     //myRobot->Draw();
     myChain->Draw();
     
-    ang += 0.01;
+    ang += 0.001;
 }
 
 

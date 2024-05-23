@@ -122,7 +122,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		c[i] = CrossProductMotion(v[i], vJoint);
 		articulatedInertias[i].SetInertia(linkInertias[i].GetInertia());
 
-		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) /*- Xb[i].GetSpatialFormForce() * f[i]*/;
+		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - Xb[i].GetSpatialFormForce() * f[i];
 	}
 
 	// Pass 2 up the tree

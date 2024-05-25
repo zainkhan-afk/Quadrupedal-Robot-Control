@@ -50,9 +50,13 @@ private:
 
 public:
 	std::vector<SpatialTransform> Xb;
+	int numLinks = 13;
+	std::vector<int> parents;
+	std::vector<SpatialTransform> Xl;
+	std::vector<COORD_AXIS> axis;
+	std::vector<float> torques;
 
 private:
-	int numLinks = 13;
 	int currentIndex = 0;
 	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 
@@ -70,14 +74,10 @@ private:
 
 	std::vector<MathTypes::Vec6> f;
 
-	std::vector<SpatialTransform> Xl;
 	std::vector<SpatialTransform> Xp;
 
-	std::vector<int> parents;
 	std::vector<float> D;
 	std::vector<float> u;
-	std::vector<float> torques;
-	std::vector<COORD_AXIS> axis;
 
 };
 

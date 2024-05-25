@@ -11,19 +11,27 @@ Robot::Robot(const ci::gl::GlslProgRef& Glsl) {
 		else {
 			int index = i - 1;
 			if (index % 3 == 0) {
-				bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, sign*robotParameters.abdLinkLength/2.0f, 0), ci::vec3(0, 0, 0),
+				bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, sign * robotParameters.abdLinkLength / 2.0f, 0), ci::vec3(0, 0, 0),
 					ci::vec3(robotParameters.bodyHeight, robotParameters.abdLinkLength, robotParameters.bodyHeight));
+				//bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, 0, 0), ci::vec3(0, 0, 0),
+				//	ci::vec3(robotParameters.bodyHeight, robotParameters.abdLinkLength, robotParameters.bodyHeight));
 				sign *= -1;
 			}
 			else if (index % 3 == 1) {
 				//-robotParameters.hipLinkLength / 2)
-				bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, 0, -robotParameters.hipLinkLength/2.0f), ci::vec3(0),
+				bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, 0, -robotParameters.hipLinkLength / 2.0f), ci::vec3(0),
 					ci::vec3(robotParameters.bodyHeight, robotParameters.bodyHeight, robotParameters.hipLinkLength));
+
+				//bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, 0, 0), ci::vec3(0),
+				//	ci::vec3(robotParameters.bodyHeight, robotParameters.bodyHeight, robotParameters.hipLinkLength));
 			}
 			else if (index % 3 == 2) {
 				//-robotParameters.kneeLinkLength / 2
 				bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, 0, -robotParameters.kneeLinkLength / 2.0f), ci::vec3(0),
 					ci::vec3(robotParameters.bodyHeight, robotParameters.bodyHeight, robotParameters.kneeLinkLength));
+
+				//bodyParts[i] = new myprimitives::Cube(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0, 0, 0), ci::vec3(0),
+				//	ci::vec3(robotParameters.bodyHeight, robotParameters.bodyHeight, robotParameters.kneeLinkLength));
 			}
 		}
 	}

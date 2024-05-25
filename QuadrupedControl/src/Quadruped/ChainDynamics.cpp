@@ -90,7 +90,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 {
 	StateDot dState;
 	// Pass 1 down the tree
-	Xp[0] = SpatialTransform(QuatToRotationMatrix(state.bodyOrientation), state.bodyPosition);
+	Xp[0] = SpatialTransform(state.bodyOrientation, state.bodyPosition);
 	Xb[0] = Xp[0];
 	v[0] = state.bodyVelocity;
 	v[0] = MathTypes::Vec6::Zero();

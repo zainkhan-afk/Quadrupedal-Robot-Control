@@ -58,7 +58,7 @@ void Quadruped::Initialize()
 
 	// locations
 	bodyInertiaParams.abdLocation = MathTypes::Vec3(robotParameters.bodyLength, robotParameters.bodyWidth, 0) * 0.5;
-	bodyInertiaParams.hipLocation = MathTypes::Vec3(0, robotParameters.abdLinkLength, 0);
+	bodyInertiaParams.hipLocation = MathTypes::Vec3(0, -robotParameters.abdLinkLength, 0);
 	bodyInertiaParams.kneeLocation = MathTypes::Vec3(0, 0, -robotParameters.hipLinkLength);
 
 	int baseID = 0;
@@ -71,12 +71,18 @@ void Quadruped::Initialize()
 	dynamics.AddBody(bodyInertiaParams.floatingBodyInertia, X, COORD_AXIS::X, parentID);
 	bodyID++;
 	parentID++;
+
+	transformationChain.push_back(MathTypes::Mat4::Identity());
 	
 	MathTypes::Mat3 RIdent = MathTypes::Mat3::Identity();
 	// Legs
 	int side = -1;
 	for (int leg = 0; leg < 4; leg++)
 	{
+		transformationChain.push_back(MathTypes::Mat4::Identity());
+		transformationChain.push_back(MathTypes::Mat4::Identity());
+		transformationChain.push_back(MathTypes::Mat4::Identity());
+
 		X = SpatialTransform(RIdent, GetLegSignedVector(bodyInertiaParams.abdLocation, leg));
 		// Abd
 		if (side < 0) {
@@ -126,7 +132,6 @@ void Quadruped::SetFloatingBaseStateFromIMU(float IMUData[])
 	state.bodyOrientation[0] = IMUData[3];
 	state.bodyOrientation[1] = IMUData[4];
 	state.bodyOrientation[2] = IMUData[5];
-	state.bodyOrientation[3] = IMUData[6];
 }
 
 
@@ -182,14 +187,49 @@ State Quadruped::GetState()
 void Quadruped::Integrate(State& state,const StateDot& dstate)
 {
 	state.bodyVelocity += dstate.bodyVelocityDDot * deltaT;
-	state.bodyPosition += dstate.bodyPositionDot * deltaT;
+	//state.bodyPosition += dstate.bodyPositionDot * deltaT;
 
-	//state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
+	state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
 
 	for (int i = 0; i < 12; i++)
 	{
+		float prevQ = state.q[i];
 		state.qDot[i] += dstate.qDDot[i] * deltaT;
 		state.q[i] += state.qDot[i] * deltaT;
+
+		dynamics.torques[i] = (prevQ - state.q[i]) * 0.5;
+	}
+}
+
+void Quadruped::GetVisualTransformations(const State& state)
+{
+	MathTypes::Mat3  R = GetRotationMatrix(state.bodyOrientation[0], COORD_AXIS::X) * GetRotationMatrix(state.bodyOrientation[1], COORD_AXIS::Y) * GetRotationMatrix(state.bodyOrientation[2], COORD_AXIS::Z);
+	MathTypes::Vec3 position = state.bodyPosition;
+
+	transformationChain[0].template topLeftCorner<3, 3>() = R;
+	transformationChain[0](0, 3) = position[0];
+	transformationChain[0](1, 3) = position[1];
+	transformationChain[0](2, 3) = position[2];
+
+	for (int i = 1; i < dynamics.numLinks; i++)
+	{
+		MathTypes::Mat4 T = MathTypes::Mat4::Identity();
+
+		MathTypes::Mat4 TpjTrans = MathTypes::Mat4::Identity();
+		MathTypes::Mat4 TpjRot = MathTypes::Mat4::Identity();
+		MathTypes::Mat4 Tj = MathTypes::Mat4::Identity();
+
+		MathTypes::Vec3 t = dynamics.Xl[i].GetTranslation();
+
+		TpjRot.template topLeftCorner<3, 3>() = dynamics.Xl[i].GetRotation();
+		TpjTrans(0, 3) = t[0];
+		TpjTrans(1, 3) = t[1];
+		TpjTrans(2, 3) = t[2];
+
+
+		Tj.template topLeftCorner<3, 3>() = GetRotationMatrix(state.q[i - 1], dynamics.axis[i]);
+
+		transformationChain[i] = transformationChain[dynamics.parents[i]] * TpjRot * TpjTrans * Tj;
 	}
 }
 

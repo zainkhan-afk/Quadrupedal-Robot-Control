@@ -56,14 +56,19 @@ MathTypes::Vec3 GetLegSignedVector(const MathTypes::Vec3& v, int legID) {
 	switch (legID) {
 	case 0:
 		return MathTypes::Vec3( v[0], -v[1], v[2]);
+		break;
 	case 1:
 		return MathTypes::Vec3( v[0],  v[1], v[2]);
+		break;
 	case 2:
 		return MathTypes::Vec3(-v[0], -v[1], v[2]);
+		break;
 	case 3:
 		return MathTypes::Vec3(-v[0],  v[1], v[2]);
+		break;
 	default:
 		throw std::runtime_error("Invalid leg id!");
+		break;
 	}
 }
 
@@ -105,17 +110,19 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 	return q;
 }
 
+
 QUADRUPED_API MathTypes::Vec3 RotationMatrixToEuler(MathTypes::Mat3 R)
 {
 	MathTypes::Vec4 q = RotationMatrixToQuat(R);
 	return QuatToEuler(q);
 }
 
+
 MathTypes::Mat3 QuatToRotationMatrix(MathTypes::Vec4 quat)
 {
 	MathTypes::Mat3 R;
 
-	R <<	1 - 2 * (quat(2) * quat(2) + quat(3) * quat(3)),		2 * (quat(1) * quat(2) - quat(0) * quat(3)),		2 * (quat(1) * quat(3) + quat(0) * quat(2)),
+	R <<	1 - 2 * (quat(2) * quat(2) + quat(3) * quat(3)),		2 * (quat(1) * quat(2) - quat(0) * quat(3)),		2 * (quat(0) * quat(2) + quat(1) * quat(3)),
 				2 * (quat(1) * quat(2) + quat(0) * quat(3)),	1 - 2 * (quat(1) * quat(1) + quat(3) * quat(3)),		2 * (quat(2) * quat(3) - quat(0) * quat(1)),
 				2 * (quat(1) * quat(3) - quat(0) * quat(2)),		2 * (quat(2) * quat(3) + quat(0) * quat(1)),	1 - 2 * (quat(1) * quat(1) + quat(2) * quat(2));
 	R.transposeInPlace();
@@ -128,10 +135,16 @@ MathTypes::Vec3 QuatToEuler(MathTypes::Vec4 q)
 
 	MathTypes::Vec3 euler = MathTypes::Vec3::Zero();
 	
+	/*float w = q[0];
+	float x = q[1];
+	float y = q[2];
+	float z = q[3];*/
+
 	float x = q[0];
 	float y = q[1];
 	float z = q[2];
 	float w = q[3];
+
 
 	float t0 = +2.0f * (w * x + y * z);
 	float t1 = +1.0f - 2.0f * (x * x + y * y);
@@ -150,7 +163,7 @@ MathTypes::Vec3 QuatToEuler(MathTypes::Vec4 q)
 	return euler;
 }
 
-MathTypes::Vec4 EulerToQuat(MathTypes::Vec3 euler)
+QUADRUPED_API MathTypes::Vec4 EulerToQuat(MathTypes::Vec3 euler)
 {
 	MathTypes::Vec4 quat = MathTypes::Vec4::Zero();
 
@@ -170,3 +183,4 @@ MathTypes::Vec4 EulerToQuat(MathTypes::Vec3 euler)
 
 	return quat;
 }
+

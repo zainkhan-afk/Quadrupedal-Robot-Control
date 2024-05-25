@@ -36,7 +36,7 @@ RobotDynamics::RobotDynamics()
 		this->parents.push_back(-1);
 	}
 
-	//G[5] = -9.8f;
+	G[5] = -9.8f;
 }
 
 
@@ -85,8 +85,10 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 {
 	//TODO: Calcuate everything in base coordinates. Remove global context, and calculate forces and everything else in robot base frame 
 	StateDot dState;
+	MathTypes::Mat3 RIdent = MathTypes::Mat3::Identity();
 
-	SpatialTransform Xref_base(QuatToRotationMatrix(state.bodyOrientation), state.bodyPosition);
+	SpatialTransform Xref_base_tranlation(RIdent, state.bodyPosition);
+	SpatialTransform Xref_base_rot(state.bodyOrientation, MathTypes::Vec3::Zero());
 
 	// Pass 1 down the tree
 	//Xp[0] = SpatialTransform(QuatToRotationMatrix(state.bodyOrientation), state.bodyPosition);
@@ -94,13 +96,13 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	v[0] = state.bodyVelocity;
 	articulatedInertias[0] = linkInertias[0];
 
-	pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) - Xb[0].GetSpatialFormForce() * f[0];
+	pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) - Xref_base_rot.GetSpatialForm() * f[0];
 	
 	for (int i = 1; i < numLinks; i++)
 	{	
 		SpatialTransform Xj(GetRotationMatrix(state.q[i - 1], this->axis[i]), MathTypes::Vec3::Zero());
 		Xp[i] = Xj * Xl[i];
-		Xb[i] = Xb[parents[i]] * Xp[i];
+		Xb[i] = Xp[i] * Xb[parents[i]];
 
 
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
@@ -128,15 +130,16 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	}
 
 	
-	a[0]  = -articulatedInertias[0].GetInertia().inverse()* pa[0];
+	a[0]  = -articulatedInertias[0].GetInertia().inverse() * pa[0];
+	//a[0] = -Xref_base_rot.GetSpatialForm()*G;
 	// Pass 3 down the tree
 	for (int i = 1; i < numLinks; i++)
 	{
 		a[i] = Xp[i].GetSpatialForm() * a[parents[i]] + c[i];
-		dState.qDDot[i - 1] = D[i] * (u[i] - U[i].transpose() * a[i]);
+		dState.qDDot[i - 1] = (1 / D[i]) * (u[i] - U[i].transpose() * a[i]);
 		a[i] += S[i] * dState.qDDot[i - 1];
 	}
-	a[0] += Xb[0].GetSpatialFormForce() * G;
+	//a[0] +=  G;
 	dState.bodyVelocityDDot = a[0];
 	dState.bodyPositionDot = state.bodyVelocity.template block<3, 1>(3, 0);
 	

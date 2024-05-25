@@ -27,6 +27,6 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3);
 QUADRUPED_API MathTypes::Vec3 RotationMatrixToEuler(MathTypes::Mat3);
 MathTypes::Mat3 QuatToRotationMatrix(MathTypes::Vec4);
 MathTypes::Vec3 QuatToEuler(MathTypes::Vec4);
-MathTypes::Vec4 EulerToQuat(MathTypes::Vec3);
+QUADRUPED_API MathTypes::Vec4 EulerToQuat(MathTypes::Vec3);
 
 #endif

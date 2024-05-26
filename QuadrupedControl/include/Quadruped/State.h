@@ -18,6 +18,8 @@ struct QUADRUPED_API State
 		
 		return *this;
 	}
+	MathTypes::Vec6 bodyPose = MathTypes::Vec6::Zero();
+
 	MathTypes::Vec3 bodyPosition = MathTypes::Vec3::Zero();
 	MathTypes::Vec3 bodyOrientation = MathTypes::Vec3::Zero();
 

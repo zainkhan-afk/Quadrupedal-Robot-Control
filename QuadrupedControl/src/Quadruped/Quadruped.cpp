@@ -187,9 +187,9 @@ State Quadruped::GetState()
 void Quadruped::Integrate(State& state,const StateDot& dstate)
 {
 	state.bodyVelocity += dstate.bodyVelocityDDot * deltaT;
-	//state.bodyPosition += dstate.bodyPositionDot * deltaT;
+	state.bodyPosition += state.bodyVelocity * deltaT;
 
-	state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
+	//state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
 
 	for (int i = 0; i < 12; i++)
 	{

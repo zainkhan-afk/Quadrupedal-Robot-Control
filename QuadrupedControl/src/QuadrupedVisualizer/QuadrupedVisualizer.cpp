@@ -26,7 +26,8 @@ void QuadrupedVisualizer::setup() {
    
     robotModel.Initialize();
     MathTypes::Vec6 f;
-    f << 0, 0, 0, 0, 1, 0;
+    f << 0, 0, 0, 10, 0, 78;
+    f << 0, 0, 0, 10, 0, 0;
     robotModel.SetExternalForceAt(0, f);
 
     //chainModel.Initialize(numLinks);

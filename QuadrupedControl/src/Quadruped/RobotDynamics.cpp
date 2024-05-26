@@ -96,7 +96,7 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	v[0] = state.bodyVelocity;
 	articulatedInertias[0] = linkInertias[0];
 
-	pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) - Xref_base_rot.GetSpatialForm() * f[0];
+	pa[0] = CrossProductForce(v[0], linkInertias[0].GetInertia() * v[0]) - Xb[0].GetSpatialFormForce() * f[0];
 	
 	for (int i = 1; i < numLinks; i++)
 	{	
@@ -130,7 +130,7 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	}
 
 	
-	a[0]  = -articulatedInertias[0].GetInertia().inverse() * pa[0];
+	a[0]  = -articulatedInertias[0].GetInertia().inverse() * pa[0] + Xref_base_rot.GetSpatialFormForce() * G;
 	//a[0] = -Xref_base_rot.GetSpatialForm()*G;
 	// Pass 3 down the tree
 	for (int i = 1; i < numLinks; i++)

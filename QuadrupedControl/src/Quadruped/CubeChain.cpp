@@ -31,24 +31,24 @@ void CubeChain::Initialize(int _numLinks)
 
 	//linkRotationalInertia *= 10;
 
-	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, -linkHieght/2), linkRotationalInertia);
+	SpatialInertia linkSpatialInertial(linkMass, MathTypes::Vec3(0, 0, 0), linkRotationalInertia);
 
-	int parentID = -1;
+	MathTypes::Vec3 constantLinkOffset;
+	constantLinkOffset << 0, 0, -linkHieght;
 	
-	SpatialTransform XIdent;
+	int parentID = 0;
+	
+	MathTypes::Mat3 RIdent = MathTypes::Mat3::Identity();
+	SpatialTransform X(RIdent, constantLinkOffset);
 
-	dynamics.AddBody(linkSpatialInertial, XIdent, COORD_AXIS::Y, parentID);
+	dynamics.AddBody(linkSpatialInertial, X, COORD_AXIS::Y, parentID);
 	parentID++;
 
-	MathTypes::Mat3 RIdent = MathTypes::Mat3::Identity();
 
 	transformationChain.push_back(MathTypes::Mat4::Identity());
 
 	for (int i = 1; i < numLinks; i++) {
-		MathTypes::Vec3 constantLinkOffset;
-		constantLinkOffset << 0.0f, 0.0f, -linkHieght;
-		SpatialTransform X(RIdent, constantLinkOffset);
-
+		X = SpatialTransform(RIdent, constantLinkOffset);
 		if (i % 2 == 0) {
 			dynamics.AddBody(linkSpatialInertial, X, COORD_AXIS::Y, parentID);
 		}
@@ -84,16 +84,16 @@ State CubeChain::GetState()
 void CubeChain::Integrate(State& state, const StateDot& dstate)
 {
 	//state.bodyVelocity += dstate.bodyVelocityDDot * deltaT;
-	//state.bodyPosition += dstate.bodyPositionDot * deltaT;
+	//state.bodyPose += state.bodyVelocity * deltaT;
 
 	//state.bodyPosition += state.bodyVelocity.template block<3, 1>(3, 0) * deltaT;
 
-	for (int i = 1; i < numLinks; i++)
+	for (int i = 0; i < numLinks; i++)
 	{
-		state.qDot[i - 1] += dstate.qDDot[i - 1] * deltaT;
-		state.q[i - 1] += state.qDot[i - 1] * deltaT;
+		state.qDot[i] += dstate.qDDot[i] * deltaT;
+		state.q[i] += state.qDot[i] * deltaT;
 		
-		dynamics.torques[i - 1] = (prevState.q[i - 1] - state.q[i - 1])*2;
+		dynamics.torques[i] = (prevState.q[i] - state.q[i])*2;
 		//dynamics.torques[i - 1] = (prevState.qDot[i - 1] - state.qDot[i - 1]) * 0.1;
 	}
 	prevState = state;
@@ -118,9 +118,15 @@ void CubeChain::VerletIntegrate(State& state, const StateDot& dstate)
 
 void CubeChain::GetVisualTransformations(const State& state)
 {
-	//transformationChain[0] = MathTypes::Mat4::Identity();
+	MathTypes::Mat3  R = GetRotationMatrix(state.bodyPose[0], COORD_AXIS::X) * GetRotationMatrix(state.bodyPose[1], COORD_AXIS::Y) * GetRotationMatrix(state.bodyPose[2], COORD_AXIS::Z);
+	MathTypes::Vec3 position(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]);
 
-	for (int i = 1; i < numLinks; i++)
+	transformationChain[0].template topLeftCorner<3, 3>() = R;
+	transformationChain[0](0, 3) = position[0];
+	transformationChain[0](1, 3) = position[1];
+	transformationChain[0](2, 3) = position[2];
+
+	for (int i = 1; i < transformationChain.size(); i++)
 	{
 		MathTypes::Mat4 T = MathTypes::Mat4::Identity();
 		

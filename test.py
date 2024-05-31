@@ -89,6 +89,15 @@ def ToRotMat(r, p, y):
 def ToRad(deg):
 	return deg / 180 * np.pi
 
+
+
+R = ToRotMat(np.pi, np.pi/2, np.pi)
+
+print(R)
+
+
+exit()
+
 scale = 20
 
 theta1 = np.random.random()

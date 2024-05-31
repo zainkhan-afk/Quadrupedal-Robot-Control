@@ -20,7 +20,7 @@
 
 MathTypes::Mat3 VectorToSkewMat(const MathTypes::Vec3& v);
 MathTypes::Vec3 SkewMatToVecor(const MathTypes::Mat3& m);
-MathTypes::Mat3 GetRotationMatrix(float angle, COORD_AXIS);
+MathTypes::Mat3 GetRotationMatrix(double angle, COORD_AXIS);
 MathTypes::Vec3 GetLegSignedVector(const MathTypes::Vec3& v, int legID);
 
 MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3);

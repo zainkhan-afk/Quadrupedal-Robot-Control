@@ -25,7 +25,7 @@ void Chain::SetRobotLinkPose(MathTypes::Vec3 position, MathTypes::Vec3 rotation,
 
 void Chain::SetRobotLinkPose(MathTypes::Mat4 pose, int linkIdx)
 {
-	for (int r = 0; r < 3; r++)
+	/*for (int r = 0; r < 3; r++)
 	{
 		for (int c = 0; c < 3; c++)
 		{
@@ -35,7 +35,7 @@ void Chain::SetRobotLinkPose(MathTypes::Mat4 pose, int linkIdx)
 	bodyParts[linkIdx]->transformMatrix[0][3] = pose(0, 3);
 	bodyParts[linkIdx]->transformMatrix[1][3] = pose(1, 3);
 	bodyParts[linkIdx]->transformMatrix[2][3] = pose(2, 3);
-	bodyParts[linkIdx]->transformMatrix[3][3] = 1.0;
+	bodyParts[linkIdx]->transformMatrix[3][3] = 1.0;*/
 
 }
 

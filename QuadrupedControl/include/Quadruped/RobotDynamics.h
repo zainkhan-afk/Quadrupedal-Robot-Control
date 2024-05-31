@@ -5,8 +5,10 @@
 #include "Quadruped/State.h"
 #include "Quadruped/SpatialInertia.h"
 #include "Quadruped/SpatialTransform.h"
-
 #include <eigen3/Eigen/StdVector>
+
+
+#define _USE_MATH_DEFINES
 
 
 /*
@@ -47,6 +49,7 @@ public:
 
 private:
 	StateDot RunArticulatedBodyAlgorithm(const State& state);
+	StateDot RunArticulatedBodyAlgorithmMiT(const State& state);
 
 public:
 	std::vector<SpatialTransform> Xb;
@@ -55,10 +58,11 @@ public:
 	std::vector<SpatialTransform> Xl;
 	std::vector<COORD_AXIS> axis;
 	std::vector<float> torques;
+	std::vector<MathTypes::Vec6> a;
+	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 
 private:
 	int currentIndex = 0;
-	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 
 	std::vector<SpatialInertia> linkInertias;
 	std::vector<SpatialInertia> articulatedInertias;
@@ -70,7 +74,6 @@ private:
 	std::vector<MathTypes::Vec6> pa;
 
 	std::vector<MathTypes::Vec6> U;
-	std::vector<MathTypes::Vec6> a;
 
 	std::vector<MathTypes::Vec6> f;
 
@@ -78,6 +81,8 @@ private:
 
 	std::vector<float> D;
 	std::vector<float> u;
+
+	Eigen::ColPivHouseholderQR<MathTypes::Mat6> invIA0;
 
 };
 

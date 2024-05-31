@@ -60,6 +60,16 @@ MathTypes::Vec6 CrossProductMotion(const MathTypes::Vec6& v1, const MathTypes::V
 		 v1(2) * v2(3) - v1(0) * v2(5) - v1(3) * v2(2) + v1(5) * v2(0),
 		 v1(0) * v2(4) - v1(1) * v2(3) + v1(3) * v2(1) - v1(4) * v2(0);
 
+
+	v = MathTypes::Vec6(
+		-v1[2] * v2[1] + v1[1] * v2[2],
+		v1[2] * v2[0] - v1[0] * v2[2],
+		-v1[1] * v2[0] + v1[0] * v2[1],
+		-v1[5] * v2[1] + v1[4] * v2[2] - v1[2] * v2[4] + v1[1] * v2[5],
+		v1[5] * v2[0] - v1[3] * v2[2] + v1[2] * v2[3] - v1[0] * v2[5],
+		-v1[4] * v2[0] + v1[3] * v2[1] - v1[1] * v2[3] + v1[0] * v2[4]
+	);
+
 	return v;
 }
 
@@ -72,6 +82,16 @@ MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Ve
 		 v2(5) * v1(1) - v2(4) * v1(2),
 		 v2(3) * v1(2) - v2(5) * v1(0),
 		 v2(4) * v1(0) - v2(3) * v1(1);
+
+
+	v = MathTypes::Vec6(
+		-v1[2] * v2[1] + v1[1] * v2[2] - v1[5] * v2[4] + v1[4] * v2[5],
+		v1[2] * v2[0] - v1[0] * v2[2] + v1[5] * v2[3] - v1[3] * v2[5],
+		-v1[1] * v2[0] + v1[0] * v2[1] - v1[4] * v2[3] + v1[3] * v2[4],
+		-v1[2] * v2[4] + v1[1] * v2[5],
+		v1[2] * v2[3] - v1[0] * v2[5],
+		-v1[1] * v2[3] + v1[0] * v2[4]
+	);
 
 	return v;
 }

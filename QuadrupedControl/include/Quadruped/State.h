@@ -10,8 +10,9 @@ struct QUADRUPED_API State
 {
 	const State& operator=(const State& rhs)
 	{
-		this->bodyPosition = rhs.bodyPosition;
-		this->bodyOrientation = rhs.bodyOrientation;
+		this->bodyPose = rhs.bodyPose;
+		//this->bodyPosition = rhs.bodyPosition;
+		//this->bodyOrientation = rhs.bodyOrientation;
 		this->bodyVelocity = rhs.bodyVelocity;
 		this->q = rhs.q;
 		this->qDot = rhs.qDot;
@@ -20,8 +21,8 @@ struct QUADRUPED_API State
 	}
 	MathTypes::Vec6 bodyPose = MathTypes::Vec6::Zero();
 
-	MathTypes::Vec3 bodyPosition = MathTypes::Vec3::Zero();
-	MathTypes::Vec3 bodyOrientation = MathTypes::Vec3::Zero();
+	//MathTypes::Vec3 bodyPosition = MathTypes::Vec3::Zero();
+	//MathTypes::Vec3 bodyOrientation = MathTypes::Vec3::Zero();
 
 	MathTypes::Vec6 bodyVelocity = MathTypes::Vec6::Zero();
 
@@ -30,7 +31,7 @@ struct QUADRUPED_API State
 
 	void PrintState()
 	{
-		std::cout << "Position - (" << bodyPosition[0] << ", " << bodyPosition[1] << ", " << bodyPosition[2] << ")\n";
+		std::cout << "Position - (" << bodyPose[0] << ", " << bodyPose[1] << ", " << bodyPose[2] << ")\n";
 	}
 };
 

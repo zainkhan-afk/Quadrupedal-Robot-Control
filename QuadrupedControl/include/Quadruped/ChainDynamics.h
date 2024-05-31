@@ -33,10 +33,10 @@ public:
 	std::vector<COORD_AXIS> axis;
 	std::vector<SpatialTransform> Xl;
 	std::vector<int> parents;
+	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 
 private:
 	int currentIndex = 0;
-	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 
 	std::vector<SpatialInertia> linkInertias;
 	std::vector<SpatialInertia> articulatedInertias;

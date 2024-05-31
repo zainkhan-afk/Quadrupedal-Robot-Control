@@ -8,6 +8,7 @@
 #include "QuadrupedVisualizer/Cube.h"
 #include "QuadrupedVisualizer/Robot.h"
 #include "QuadrupedVisualizer/Chain.h"
+#include "QuadrupedVisualizer/Axes.h"
 
 #include "Quadruped/Quadruped.h"
 #include "Quadruped/CubeChain.h"
@@ -28,12 +29,15 @@ private:
     ci::gl::GlslProgRef		mGlsl;
     myprimitives::Plane*    plane;
 
+    int                     linkIdx;
+
     Quadruped               robotModel;
-    //CubeChain               chainModel;
+    CubeChain               chainModel;
     State                   state;
 
+    Axes*                   sceneAxes;
     Robot*                  myRobot;
-    //Chain*                  myChain;
+    Chain*                  myChain;
 
     double                  ang = 0.0;
 };

@@ -21,6 +21,7 @@ public:
 	MathTypes::Vec3 GetTranslation();
 
 	MathTypes::Vec6 Apply(MathTypes::Vec6);
+	MathTypes::Vec6 ApplyTranspose(MathTypes::Vec6);
 
 
 	SpatialTransform operator*(const SpatialTransform& rhs) const;

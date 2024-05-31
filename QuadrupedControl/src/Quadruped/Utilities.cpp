@@ -20,13 +20,13 @@ MathTypes::Vec3 SkewMatToVecor(const MathTypes::Mat3& m)
 	return 0.5f * v;
 }
 
-MathTypes::Mat3 GetRotationMatrix(float angle, COORD_AXIS axis)
+MathTypes::Mat3 GetRotationMatrix(double angle, COORD_AXIS axis)
 {
 	// Axis can be 0, 1 or 2 for x, y or z respectively.
 	MathTypes::Mat3 rotation;
 
-	float s = std::sin(angle);
-	float c = std::cos(angle);
+	double s = std::sin(angle);
+	double c = std::cos(angle);
 
 	if (axis == COORD_AXIS::X)
 	{
@@ -77,7 +77,7 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 {
 	MathTypes::Vec4 q;
 
-	float t = R.trace();
+	double t = R.trace();
 	
 	if (t > 0.0f)
 	{
@@ -99,7 +99,7 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 		int j = (i + 1) % 3;
 		int k = (j + 1) % 3;
 		
-		t = sqrtf(R(i, i) - R(j, j) - R(k, k) + 1);
+		t = sqrt(R(i, i) - R(j, j) - R(k, k) + 1);
 		q[i] = 0.5f * t;
 		t = 0.5f / t;
 		q[3] = (R(k, j) - R(j, k)) * t;
@@ -140,24 +140,24 @@ MathTypes::Vec3 QuatToEuler(MathTypes::Vec4 q)
 	float y = q[2];
 	float z = q[3];*/
 
-	float x = q[0];
-	float y = q[1];
-	float z = q[2];
-	float w = q[3];
+	double x = q[0];
+	double y = q[1];
+	double z = q[2];
+	double w = q[3];
 
 
-	float t0 = +2.0f * (w * x + y * z);
-	float t1 = +1.0f - 2.0f * (x * x + y * y);
+	double t0 = +2.0 * (w * x + y * z);
+	double t1 = +1.0 - 2.0 * (x * x + y * y);
 	euler[0] = std::atan2(t0, t1);
 
-	float t2 = +2.0f * (w * y - z * x);
+	double t2 = +2.0 * (w * y - z * x);
 
-	if (t2 > 1.0f) { t2 = 1.0f; }
-	else if (t2 < -1.0f) { t2 = -1.0f; }
+	if (t2 > 1.0) { t2 = 1.0; }
+	else if (t2 < -1.0) { t2 = -1.0; }
 	euler[1] = std::asin(t2);
 
-	float t3 = +2.0f * (w * z + x * y);
-	float t4 = +1.0f - 2.0f * (y * y + z * z);
+	double t3 = +2.0 * (w * z + x * y);
+	double t4 = +1.0 - 2.0 * (y * y + z * z);
 	euler[2] = std::atan2(t3, t4);
 
 	return euler;

@@ -27,7 +27,6 @@ void Quadruped::Initialize()
 	MathTypes::Mat3 rotorRotationalInertiaZ;
 
 	MathTypes::Mat3 RY = GetRotationMatrix(M_PI / 2, COORD_AXIS::Y);
-	MathTypes::Mat3 RX = GetRotationMatrix(M_PI / 2, COORD_AXIS::X);
 
 	// spatial inertias
 	MathTypes::Mat3 abadRotationalInertia;
@@ -39,14 +38,14 @@ void Quadruped::Initialize()
 	MathTypes::Mat3 hipRotationalInertia;
 	hipRotationalInertia << 1983, 245, 13, 245, 2103, 1.5, 13, 1.5, 408;
 	hipRotationalInertia = hipRotationalInertia * 1e-6;
-	MathTypes::Vec3 hipCOM(0, 0.016, -0.02);
+	MathTypes::Vec3 hipCOM(0, 0.016, 0.02);
 	bodyInertiaParams.hipInertia = SpatialInertia(0.634f, hipCOM, hipRotationalInertia);
 
 	MathTypes::Mat3 kneeRotationalInertia, kneeRotationalInertiaRotated;
-	kneeRotationalInertiaRotated << 6, 0, 0, 0, 248, 0, 0, 0, 245;
-	kneeRotationalInertiaRotated = kneeRotationalInertiaRotated * 1e-6;
-	kneeRotationalInertia = RY * kneeRotationalInertiaRotated * RY.transpose();
-	MathTypes::Vec3 kneeCOM(0, 0, -0.061);
+	kneeRotationalInertia << 6, 0, 0, 0, 248, 0, 0, 0, 245;
+	kneeRotationalInertia = kneeRotationalInertia * 1e-6;
+	//MathTypes::Vec3 kneeCOM(0, 0, 0.061);
+	MathTypes::Vec3 kneeCOM(0, 0, 0.209);
 	bodyInertiaParams.kneeInertia = SpatialInertia(0.064f, kneeCOM, kneeRotationalInertia);
 
 	MathTypes::Mat3 bodyRotationalInertia;
@@ -82,6 +81,7 @@ void Quadruped::Initialize()
 		transformationChain.push_back(MathTypes::Mat4::Identity());
 		transformationChain.push_back(MathTypes::Mat4::Identity());
 		transformationChain.push_back(MathTypes::Mat4::Identity());
+		footPos.push_back(MathTypes::Vec3::Zero());
 
 		X = SpatialTransform(RIdent, GetLegSignedVector(bodyInertiaParams.abdLocation, leg));
 		// Abd
@@ -119,6 +119,9 @@ void Quadruped::Initialize()
 		}
 		bodyID++;
 		parentID++;
+
+
+		dynamics.AddContactPoint(MathTypes::Vec3(0, 0, -robotParameters.kneeLinkLength), parentID);
 
 		side *= -1;
 	}
@@ -215,6 +218,8 @@ void Quadruped::GetVisualTransformations(const State& state)
 	transformationChain[0](1, 3) = position[1];
 	transformationChain[0](2, 3) = position[2];
 
+	int footIdx = 0;
+
 	for (int i = 1; i < transformationChain.size(); i++)
 	{
 		MathTypes::Mat4 T = MathTypes::Mat4::Identity();
@@ -234,6 +239,24 @@ void Quadruped::GetVisualTransformations(const State& state)
 		Tj.template topLeftCorner<3, 3>() = GetRotationMatrix(state.q[i - 1], dynamics.axis[i + 1]);
 
 		transformationChain[i] = transformationChain[dynamics.parents[i + 1] - 1] * TpjRot * TpjTrans * Tj;
+
+
+		if (i % 3 == 0)
+		{
+			MathTypes::Mat4 TFoot = MathTypes::Mat4::Identity();
+
+			TFoot(0, 3) = dynamics.contactPoints[footIdx][0];
+			TFoot(1, 3) = dynamics.contactPoints[footIdx][1];
+			TFoot(2, 3) = dynamics.contactPoints[footIdx][2];
+
+			TFoot = transformationChain[i] * TFoot;
+			
+			footPos[footIdx][0] = TFoot(0, 0);
+			footPos[footIdx][1] = TFoot(0, 1);
+			footPos[footIdx][2] = TFoot(0, 2);
+	
+			footIdx++;
+		}
 	}
 }
 

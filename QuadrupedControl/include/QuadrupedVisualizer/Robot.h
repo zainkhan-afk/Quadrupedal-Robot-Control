@@ -1,6 +1,7 @@
 #pragma once
 
 #include "QuadrupedVisualizer/Cube.h"
+#include "QuadrupedVisualizer/Sphere.h"
 #include "Quadruped/Types.h"
 
 
@@ -16,6 +17,7 @@ public:
 
 private:
 	myprimitives::Cube* bodyParts[13];
+	myprimitives::Sphere* feet[4];
 
 	struct
 	{

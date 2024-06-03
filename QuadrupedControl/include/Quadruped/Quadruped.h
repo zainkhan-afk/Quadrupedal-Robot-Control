@@ -86,6 +86,7 @@ private:
 public:
 	RobotDynamics dynamics;
 	std::vector<MathTypes::Mat4> transformationChain;
+	std::vector<MathTypes::Vec3> footPos;
 };
 
 

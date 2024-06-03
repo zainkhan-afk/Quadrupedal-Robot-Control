@@ -30,16 +30,17 @@ void QuadrupedVisualizer::setup() {
     robotModel.Initialize();
     //chainModel.Initialize(numLinks);
 
+
     MathTypes::Vec6 f;
-    //f << 0, 0, 0, 0, 0, 500;
+    f << 0, 0, 0, 0, 0, 500;
     f << 0, 0, 0, 0, 500, 0;
-    //f << 0, 0, 0, -500, 0, 0;
+    f << 0, 0, 0, 500, 0, 0;
     robotModel.SetExternalForceAt(linkIdx, f);
     //chainModel.SetExternalForceAt(linkIdx, f);
     
-    //robotModel.dynamics.G[5] = -9.8;
+    //robotModel.dynamics.G[5] = -3;
 
-    state.bodyPose << 0, M_PI / 6, 0, 0, 0, 0.5;
+    state.bodyPose << 0, 0, 0, 0, 0, 0.5;
 
 
     //state.q[0] = M_PI / 10.0f;
@@ -82,8 +83,8 @@ void QuadrupedVisualizer::update() {
     state = robotModel.StepDynamicsModel(state);
     robotModel.GetVisualTransformations(state);
     for (int i = 0; i < 13; i++) {
-        //MathTypes::Vec3 R = RotationMatrixToEuler(robotModel.dynamics.Xb[i].GetRotation());
-        //MathTypes::Vec3 P = robotModel.dynamics.Xb[i].GetTranslation();
+        //MathTypes::Vec3 R = RotationMatrixToEuler(robotModel.dynamics.Xb[i + 1].GetRotation());
+        //MathTypes::Vec3 P = robotModel.dynamics.Xb[i + 1].GetTranslation();
 
         MathTypes::Vec3 R;
         MathTypes::Vec3 P;
@@ -103,9 +104,9 @@ void QuadrupedVisualizer::update() {
 }
 
 void QuadrupedVisualizer::draw() {
-    mCam.lookAt(vec3(4.0 * sin(ang), 4.0 * cos(ang), 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
+    //mCam.lookAt(vec3(4.0 * sin(ang), 4.0 * cos(ang), 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
     //mCam.lookAt(vec3(state.bodyPose[3] + 3.0f, state.bodyPose[4] - 3.0, state.bodyPose[5] + 1.0), vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]), vec3(0, 0, 1));
-    //mCam.lookAt(vec3(3.0f, - 3.0, 1.0), vec3(0), vec3(0, 0, 1));
+    mCam.lookAt(vec3(3.0f, - 3.0, 1.0), vec3(0), vec3(0, 0, 1));
 
     gl::clear();
     gl::setMatrices(mCam);

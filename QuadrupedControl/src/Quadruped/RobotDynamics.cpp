@@ -64,6 +64,16 @@ void RobotDynamics::AddBody(SpatialInertia I, SpatialTransform X, COORD_AXIS axi
 	currentIndex++;
 }
 
+void RobotDynamics::AddContactPoint(MathTypes::Vec3 contactPoint, int parent)
+{
+	MathTypes::Mat3 Rc = MathTypes::Mat3::Zero();
+	Xc.push_back(SpatialTransform(Rc, contactPoint));
+	Xcb.push_back(SpatialTransform());
+	contactPoints.push_back(contactPoint);
+	contactPointsParents.push_back(parent);
+	fc.push_back(MathTypes::Vec6::Zero());
+}
+
 void RobotDynamics::SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces)
 {
 	for (int i = 0; i<externalForces.size(); i++)
@@ -111,10 +121,8 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	/*Xp[1] = SpatialTransform(MathTypes::Vec3(state.bodyPose[0], state.bodyPose[1], state.bodyPose[2]),
 							 MathTypes::Vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]));*/
 
-	// Pass 1 down the tree
-	//Xb[0] = Xp[0];
+	///////////////////////////// PASS 1 DOWN THE TREE START ///////////////////////////// 
 	v[1] = state.bodyVelocity;
-	//v[1] = MathTypes::Vec6::Zero();
 	
 	for (int i = 2; i < this->Xl.size(); i++)
 	{	
@@ -127,8 +135,13 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		c[i] = CrossProductMotion(v[i], vJoint);
 	}
 
+	for (int i = 0; i < contactPoints.size(); i++)
+	{
+		int contactParent = contactPointsParents[i];
+		Xcb[i] = Xc[i] * Xb[contactParent];
+		f[contactParent - 1] = Xc[i].GetSpatialFormForce() * fc[i];
+	}
 
-	//pa[1] = CrossProductForce(v[1], linkInertias[1].GetInertia() * v[1]) - Xb[1].GetSpatialFormForce() * f[0];
 	for (int i = 1; i < this->Xl.size(); i++){
 
 		if (parents[i] != 0) {
@@ -142,7 +155,10 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - Xb[i].GetSpatialFormForce() /** Xref_base_rot.GetSpatialFormForce()*/ * f[i - 1];
 	}
 
-	// Pass 2 up the tree
+	///////////////////////////// PASS 1 DOWN THE TREE END ///////////////////////////// 
+
+
+	///////////////////////////// PASS 2 DOWN THE TREE Start ///////////////////////////// 
 	for (int i = this->Xl.size() - 1; i >= 2; i--)
 	{
 		U[i] = articulatedInertias[i].GetInertia() * S[i];
@@ -150,21 +166,17 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 
 		u[i] = torques[i - 2] - S[i].transpose() * pa[i];
 		
-		//if (parents[i] != 0) {
-			MathTypes::Mat6 Ia = articulatedInertias[i].GetInertia() - (U[i] * (U[i] / D[i]).transpose());
-			MathTypes::Vec6 _pa = pa[i] + Ia * c[i] + ((U[i] * u[i]) / D[i]);
+		MathTypes::Mat6 Ia = articulatedInertias[i].GetInertia() - (U[i] * (U[i] / D[i]).transpose());
+		MathTypes::Vec6 _pa = pa[i] + Ia * c[i] + ((U[i] * u[i]) / D[i]);
 
-			articulatedInertias[parents[i]].AddInertia(Xp[i].GetSpatialFormTranspose() * Ia * Xp[i].GetSpatialForm());
-			pa[parents[i]].noalias() += Xp[i].GetSpatialFormTranspose() * _pa;
-		//}
+		articulatedInertias[parents[i]].AddInertia(Xp[i].GetSpatialFormTranspose() * Ia * Xp[i].GetSpatialForm());
+		pa[parents[i]].noalias() += Xp[i].GetSpatialFormTranspose() * _pa;
 	}
 	invIA0.compute(articulatedInertias[0].GetInertia());
+	///////////////////////////// PASS 2 DOWN THE TREE END ///////////////////////////// 
 
-
-	// Pass 3 down the tree
+	///////////////////////////// PASS 3 DOWN THE TREE Start ///////////////////////////// 
 	a[1]  = -articulatedInertias[1].GetInertia().inverse() * pa[1];
-	//a[1] = G;
-
 	for (int i = 2; i < this->Xl.size(); i++)
 	{
 		// BOOK
@@ -173,6 +185,9 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		a[i] = a_ + S[i] * dState.qDDot[i - 2];
 	}
 	a[1] +=  G;
+	///////////////////////////// PASS 3 DOWN THE TREE END ///////////////////////////// 
+
+
 	dState.bodyVelocityDDot = Xbase_ref_rot.GetSpatialForm() * a[1];
 
 	return dState;

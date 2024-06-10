@@ -30,6 +30,7 @@ private:
     myprimitives::Plane*    plane;
 
     int                     linkIdx;
+    int                     footIdx;
 
     Quadruped               robotModel;
     CubeChain               chainModel;

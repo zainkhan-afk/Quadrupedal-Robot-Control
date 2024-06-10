@@ -97,11 +97,11 @@ MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Ve
 }
 
 
-QUADRUPED_API MathTypes::Mat4 SpatialToHomog(const MathTypes::Mat6& X)
+QUADRUPED_API MathTypes::Mat4 SpatialToHomog(const SpatialTransform& X)
 {
 	MathTypes::Mat4 H = MathTypes::Mat4::Zero();
-	H.template topLeftCorner<3, 3>() = SpatialToRotMat(X);
-	H.template topRightCorner<3, 1>() = SpatialToTranslation(X);
+	H.template topLeftCorner<3, 3>() = X.GetRotation();
+	H.template topRightCorner<3, 1>() = X.GetTranslation();
 	H(3, 3) = 1;
 	return H;
 }

@@ -26,22 +26,19 @@ void QuadrupedVisualizer::setup() {
     myChain = new Chain(mGlsl, numLinks);
 
     linkIdx = 0;
+    footIdx = 0;
 
     robotModel.Initialize();
     //chainModel.Initialize(numLinks);
-
-
     MathTypes::Vec6 f;
-    f << 0, 0, 0, 0, 0, 500;
-    f << 0, 0, 0, 0, 500, 0;
-    f << 0, 0, 0, 500, 0, 0;
-    robotModel.SetExternalForceAt(linkIdx, f);
-    //chainModel.SetExternalForceAt(linkIdx, f);
-    
+    //f << 0, 0, 0, 0, 0, 1;
+    //f << 0, 0, 0, 0, 1, 0;
+    f << 0, 0, 0, 1000, 0, 0;
+    //robotModel.SetExternalForceAt(linkIdx, f);
+    //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0.01, 0, 0;
     //robotModel.dynamics.G[5] = -3;
 
     state.bodyPose << 0, 0, 0, 0, 0, 0.5;
-
 
     //state.q[0] = M_PI / 10.0f;
     //state.q[1] = M_PI / 10.0f;
@@ -54,35 +51,18 @@ void QuadrupedVisualizer::resize()
 }
 
 void QuadrupedVisualizer::update() {
+    MathTypes::Vec6 f;
+    //f << 0, 0, 0, 0, 0, 10;
+    //f << 0, 0, 0, 0, 10, 0;
+    f << 0, 0, 0, 10, 0, 0;
+    robotModel.SetExternalForceAt(linkIdx, f);
 
-    //state.q[1] = ang;
-    //state.q[1] = ang;
-    //state.q[2] = ang;
-    //state.q[3] = ang;
-    
-    //MathTypes::Vec6 f;
-    //f << 0, 0, 0, ang, 0, 0;
-    //chainModel.SetExternalForceAt(10, f);
-
-    //state = chainModel.StepDynamicsModel(state);
-    //chainModel.GetVisualTransformations(state);
-    //for (int i = 0; i < myChain->chainParameters.numLinks; i++) {
-    //    //MathTypes::Vec3 R = RotationMatrixToEuler(chainModel.dynamics.Xb[i].GetRotation());
-    //    //MathTypes::Vec3 P = chainModel.dynamics.Xb[i].GetTranslation();
-
-    //    MathTypes::Vec3 R;
-    //    MathTypes::Vec3 P;
-
-    //    R = RotationMatrixToEuler(chainModel.transformationChain[i].template topLeftCorner<3, 3>());
-    //    P[0] = chainModel.transformationChain[i](0, 3);
-    //    P[1] = chainModel.transformationChain[i](1, 3);
-    //    P[2] = chainModel.transformationChain[i](2, 3);
-
-    //    myChain->SetRobotLinkPose(P, R, i);
-    //}
     state = robotModel.StepDynamicsModel(state);
     robotModel.GetVisualTransformations(state);
+
     for (int i = 0; i < 13; i++) {
+        //MathTypes::Mat4 H = SpatialToHomog(robotModel.dynamics.Xb[i+1]);
+
         //MathTypes::Vec3 R = RotationMatrixToEuler(robotModel.dynamics.Xb[i + 1].GetRotation());
         //MathTypes::Vec3 P = robotModel.dynamics.Xb[i + 1].GetTranslation();
 
@@ -93,20 +73,27 @@ void QuadrupedVisualizer::update() {
         P[1] = robotModel.transformationChain[i](1, 3);
         P[2] = robotModel.transformationChain[i](2, 3);
 
-
         myRobot->SetRobotLinkPose(P, R, i);
     }
 
-    MathTypes::Vec6 f;
+    for (int i = 0; i < 4; i++) {
+        //myRobot->SetRobotFootPosition(robotModel.dynamics.Xcb[i].GetTranslation(), i);
+        myRobot->SetRobotFootPosition(robotModel.footPos[i], i);
+    }
+
     f << 0, 0, 0, 0, 0, 0;
-    robotModel.SetExternalForceAt(linkIdx, f);
+    for (int i = 0; i < 13; i++) {
+        robotModel.SetExternalForceAt(i, f);
+    }
+    //robotModel.SetExternalForceAt(linkIdx, f);
+    //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0, 0, 0;
     //chainModel.SetExternalForceAt(linkIdx, f);
 }
 
 void QuadrupedVisualizer::draw() {
     //mCam.lookAt(vec3(4.0 * sin(ang), 4.0 * cos(ang), 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
-    //mCam.lookAt(vec3(state.bodyPose[3] + 3.0f, state.bodyPose[4] - 3.0, state.bodyPose[5] + 1.0), vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]), vec3(0, 0, 1));
-    mCam.lookAt(vec3(3.0f, - 3.0, 1.0), vec3(0), vec3(0, 0, 1));
+    mCam.lookAt(vec3(state.bodyPose[3] + 3.0f, state.bodyPose[4] - 3.0, state.bodyPose[5] + 1.0), vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]), vec3(0, 0, 1));
+    //mCam.lookAt(vec3(3.0f, - 3.0, 1.0), vec3(0), vec3(0, 0, 1));
 
     gl::clear();
     gl::setMatrices(mCam);

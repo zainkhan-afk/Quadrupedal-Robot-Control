@@ -13,15 +13,16 @@ public:
 	SpatialTransform(const MathTypes::Vec3& _R, const MathTypes::Vec3& _p);
 	~SpatialTransform();
 
-	MathTypes::Mat6 GetSpatialForm();
-	MathTypes::Mat6 GetSpatialFormTranspose();
-	MathTypes::Mat6 GetSpatialFormForce();
+	MathTypes::Mat6 GetSpatialForm() const;
+	MathTypes::Mat6 GetSpatialFormTranspose() const;
+	MathTypes::Mat6 GetSpatialFormForce() const;
+	SpatialTransform GetInverse() const;
 
-	MathTypes::Mat3 GetRotation();
-	MathTypes::Vec3 GetTranslation();
+	MathTypes::Mat3 GetRotation() const;
+	MathTypes::Vec3 GetTranslation() const;
 
-	MathTypes::Vec6 Apply(MathTypes::Vec6);
-	MathTypes::Vec6 ApplyTranspose(MathTypes::Vec6);
+	//MathTypes::Vec6 Apply(MathTypes::Vec6);
+	//MathTypes::Vec6 ApplyTranspose(MathTypes::Vec6);
 
 
 	SpatialTransform operator*(const SpatialTransform& rhs) const;

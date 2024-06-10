@@ -3,6 +3,7 @@
 
 #include "Quadruped/Types.h"
 #include "Quadruped/QuadrupedCommon.h"
+#include "Quadruped/SpatialTransform.h"
 
 #define _USE_MATH_DEFINES
 //int GetLegSign(int leg)

@@ -33,19 +33,22 @@ void Quadruped::Initialize()
 	abadRotationalInertia << 381, 58, 0.45, 58, 560, 0.95, 0.45, 0.95, 444;
 	abadRotationalInertia = abadRotationalInertia * 1e-6;
 	MathTypes::Vec3 abadCOM(0, 0.036, 0);
+	//MathTypes::Vec3 abadCOM(0, 0, 0);
 	bodyInertiaParams.abdInertia = SpatialInertia(0.54f, abadCOM, abadRotationalInertia);
 
 	MathTypes::Mat3 hipRotationalInertia;
 	hipRotationalInertia << 1983, 245, 13, 245, 2103, 1.5, 13, 1.5, 408;
 	hipRotationalInertia = hipRotationalInertia * 1e-6;
-	MathTypes::Vec3 hipCOM(0, 0.016, 0.02);
+	MathTypes::Vec3 hipCOM(0, 0.016, -0.02);
+	//MathTypes::Vec3 hipCOM(0, 0, 0);
 	bodyInertiaParams.hipInertia = SpatialInertia(0.634f, hipCOM, hipRotationalInertia);
 
 	MathTypes::Mat3 kneeRotationalInertia, kneeRotationalInertiaRotated;
 	kneeRotationalInertia << 6, 0, 0, 0, 248, 0, 0, 0, 245;
 	kneeRotationalInertia = kneeRotationalInertia * 1e-6;
 	//MathTypes::Vec3 kneeCOM(0, 0, 0.061);
-	MathTypes::Vec3 kneeCOM(0, 0, 0.209);
+	MathTypes::Vec3 kneeCOM(0, 0, -0.209);
+	//MathTypes::Vec3 kneeCOM(0, 0, 0);
 	bodyInertiaParams.kneeInertia = SpatialInertia(0.064f, kneeCOM, kneeRotationalInertia);
 
 	MathTypes::Mat3 bodyRotationalInertia;
@@ -96,8 +99,8 @@ void Quadruped::Initialize()
 		parentID++;
 
 		// Hip
-		X = SpatialTransform(GetRotationMatrix(M_PI, COORD_AXIS::Z), GetLegSignedVector(-bodyInertiaParams.hipLocation, leg));
-		//X = SpatialTransform(RIdent, GetLegSignedVector(bodyInertiaParams.hipLocation, leg));
+		//X = SpatialTransform(GetRotationMatrix(M_PI, COORD_AXIS::Z), GetLegSignedVector(-bodyInertiaParams.hipLocation, leg));
+		X = SpatialTransform(RIdent, GetLegSignedVector(bodyInertiaParams.hipLocation, leg));
 		if (side < 0) {
 			dynamics.AddBody(bodyInertiaParams.hipInertia.FlipAlongAxis(1), X, COORD_AXIS::Y, parentID);
 			//dynamics.AddBody(bodyInertiaParams.hipInertia, X, COORD_AXIS::Y, parentID);
@@ -251,9 +254,9 @@ void Quadruped::GetVisualTransformations(const State& state)
 
 			TFoot = transformationChain[i] * TFoot;
 			
-			footPos[footIdx][0] = TFoot(0, 0);
-			footPos[footIdx][1] = TFoot(0, 1);
-			footPos[footIdx][2] = TFoot(0, 2);
+			footPos[footIdx][0] = TFoot(0, 3);
+			footPos[footIdx][1] = TFoot(1, 3);
+			footPos[footIdx][2] = TFoot(2, 3);
 	
 			footIdx++;
 		}

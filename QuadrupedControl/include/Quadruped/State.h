@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-struct QUADRUPED_API State
+ struct QUADRUPED_API State
 {
 	const State& operator=(const State& rhs)
 	{

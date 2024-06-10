@@ -12,6 +12,7 @@ public:
 	~Robot();
 
 	void SetRobotLinkPose(MathTypes::Vec3 position, MathTypes::Vec3 rotation, int linkIdx);
+	void SetRobotFootPosition(MathTypes::Vec3 position, int footIdx);
 
 	void Draw();
 

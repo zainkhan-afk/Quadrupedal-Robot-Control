@@ -119,7 +119,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 1];
 
-		v[i] = Xp[i].Apply(v[parents[i]]) + vJoint;
+		v[i] = Xp[i].GetSpatialForm() * v[parents[i]] + vJoint;
 		c[i] = CrossProductMotion(v[i], vJoint);
 		articulatedInertias[i].SetInertia(linkInertias[i].GetInertia());
 
@@ -139,7 +139,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 			MathTypes::Vec6 _pa = pa[i] + Ia * c[i] + U[i] * u[i] / D[i];
 
 			articulatedInertias[parents[i]].AddInertia(Xp[i].GetSpatialFormTranspose() * Ia * Xp[i].GetSpatialForm());
-			pa[parents[i]] += Xp[i].ApplyTranspose(_pa);
+			pa[parents[i]] += Xp[i].GetSpatialFormTranspose() * _pa;
 		}
 	}
 
@@ -147,7 +147,7 @@ StateDot ChainDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	// Pass 3 down the tree
 	for (int i = 1; i < this->Xl.size(); i++)
 	{
-		MathTypes::Vec6 a_ = Xp[i].Apply(a[parents[i]]) + c[i];
+		MathTypes::Vec6 a_ = Xp[i].GetSpatialForm() * a[parents[i]] + c[i];
 		dState.qDDot[i - 1] = (1 / D[i]) * (u[i] - U[i].dot(a_));
 		a[i] = a_ + S[i] * dState.qDDot[i - 1];
 	}

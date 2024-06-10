@@ -27,6 +27,11 @@ Robot::Robot(const ci::gl::GlslProgRef& Glsl) {
 			}
 		}
 	}
+
+	for (int i = 0; i < 4; i++) {
+		feet[i] = new myprimitives::Sphere(Glsl, ci::vec3(0), ci::vec3(0), ci::vec3(0), ci::vec3(0), 0.02f);
+	}
+
 }
 Robot::~Robot() {
 	for (int i = 0; i < 13; i++)
@@ -46,9 +51,19 @@ void Robot::SetRobotLinkPose(MathTypes::Vec3 position, MathTypes::Vec3 rotation,
 	bodyParts[linkIdx]->rotation = ci::vec3(rotation[0], rotation[1], rotation[2]);
 }
 
+void Robot::SetRobotFootPosition(MathTypes::Vec3 position, int footIdx)
+{
+	feet[footIdx]->position = ci::vec3(position[0], position[1], position[2]);
+}
+
 void Robot::Draw() {
 	for (int i = 0; i < 13; i++)
 	{
 		bodyParts[i]->Draw();
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		feet[i]->Draw();
 	}
 }

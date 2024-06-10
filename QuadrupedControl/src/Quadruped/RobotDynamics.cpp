@@ -66,7 +66,7 @@ void RobotDynamics::AddBody(SpatialInertia I, SpatialTransform X, COORD_AXIS axi
 
 void RobotDynamics::AddContactPoint(MathTypes::Vec3 contactPoint, int parent)
 {
-	MathTypes::Mat3 Rc = MathTypes::Mat3::Zero();
+	MathTypes::Mat3 Rc = MathTypes::Mat3::Identity();
 	Xc.push_back(SpatialTransform(Rc, contactPoint));
 	Xcb.push_back(SpatialTransform());
 	contactPoints.push_back(contactPoint);
@@ -114,12 +114,13 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	SpatialTransform Xref_base_rot(Rref_base, MathTypes::Vec3::Zero());
 	SpatialTransform Xbase_ref_rot(Rref_base_t, MathTypes::Vec3::Zero());
 
-	Xp[1] = SpatialTransform(Rref_base, MathTypes::Vec3::Zero());;
-	//Xp[1] = SpatialTransform();;
+	//Xp[1] = SpatialTransform(Rref_base, MathTypes::Vec3::Zero());;
+	Xp[1] = SpatialTransform();;
  	//Xp[1] = Xref_base_rot;
 
-	/*Xp[1] = SpatialTransform(MathTypes::Vec3(state.bodyPose[0], state.bodyPose[1], state.bodyPose[2]),
-							 MathTypes::Vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]));*/
+	//Xp[1] = SpatialTransform(MathTypes::Vec3(state.bodyPose[0], state.bodyPose[1], state.bodyPose[2]),
+		//				 MathTypes::Vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]));
+
 
 	///////////////////////////// PASS 1 DOWN THE TREE START ///////////////////////////// 
 	v[1] = state.bodyVelocity;
@@ -127,7 +128,8 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	for (int i = 2; i < this->Xl.size(); i++)
 	{	
 		SpatialTransform Xj(GetRotationMatrix(state.q[i - 2], this->axis[i]), MathTypes::Vec3::Zero());
-		Xp[i] = Xj * Xl[i];
+		Xp[i] = Xj * Xl[i]; // Book
+		//Xp[i] = Xl[i] * Xj; // How homog transforms work
 
 		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 2];
 		
@@ -138,14 +140,15 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	for (int i = 0; i < contactPoints.size(); i++)
 	{
 		int contactParent = contactPointsParents[i];
+		SpatialTransform Xpc = Xc[i] * Xp[i];
 		Xcb[i] = Xc[i] * Xb[contactParent];
-		f[contactParent - 1] = Xc[i].GetSpatialFormForce() * fc[i];
+		f[contactParent - 1] += Xpc.GetSpatialFormForce() * fc[i];
 	}
 
 	for (int i = 1; i < this->Xl.size(); i++){
-
 		if (parents[i] != 0) {
-			Xb[i] = Xp[i] * Xb[parents[i]];
+			Xb[i] = Xp[i] * Xb[parents[i]]; // Book
+			//Xb[i] = Xb[parents[i]] * Xp[i]; // How homog transforms work
 		}
 		else {
 			Xb[i] = Xp[i];
@@ -172,7 +175,6 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		articulatedInertias[parents[i]].AddInertia(Xp[i].GetSpatialFormTranspose() * Ia * Xp[i].GetSpatialForm());
 		pa[parents[i]].noalias() += Xp[i].GetSpatialFormTranspose() * _pa;
 	}
-	invIA0.compute(articulatedInertias[0].GetInertia());
 	///////////////////////////// PASS 2 DOWN THE TREE END ///////////////////////////// 
 
 	///////////////////////////// PASS 3 DOWN THE TREE Start ///////////////////////////// 

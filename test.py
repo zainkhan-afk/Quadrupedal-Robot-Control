@@ -91,8 +91,25 @@ def ToRad(deg):
 
 
 
-R = ToRotMat(np.pi, np.pi/2, np.pi)
+R = ToRotMat(0, np.pi / 4, 0)
 
+w = np.array([[0.1, 0.2, 0.33]]).T
+p = np.array([[0.5, 0, 0.33]]).T
+
+p_skew = VecToSkewMat(p)
+w_skew = VecToSkewMat(w)
+
+wp = np.cross(w.T, p.T)
+wp_skew = p_skew@w
+w_skewp = w_skew@p
+
+print(R@wp.T)
+print()
+print(R@wp_skew)
+print(p_skew@R@w)
+print()
+
+print(R@w_skewp)
 print(R)
 
 

@@ -111,7 +111,7 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 }
 
 
-QUADRUPED_API MathTypes::Vec3 RotationMatrixToEuler(MathTypes::Mat3 R)
+MathTypes::Vec3 QUADRUPED_API RotationMatrixToEuler(MathTypes::Mat3 R)
 {
 	MathTypes::Vec4 q = RotationMatrixToQuat(R);
 	return QuatToEuler(q);
@@ -163,7 +163,7 @@ MathTypes::Vec3 QuatToEuler(MathTypes::Vec4 q)
 	return euler;
 }
 
-QUADRUPED_API MathTypes::Vec4 EulerToQuat(MathTypes::Vec3 euler)
+MathTypes::Vec4 EulerToQuat(MathTypes::Vec3 euler)
 {
 	MathTypes::Vec4 quat = MathTypes::Vec4::Zero();
 

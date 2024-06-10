@@ -42,6 +42,9 @@
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Axes.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Sphere.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\QuadrupedVisualizer\QuadrupedVisualizer.cpp">
@@ -63,6 +66,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Axes.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Sphere.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

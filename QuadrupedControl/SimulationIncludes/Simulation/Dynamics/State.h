@@ -2,7 +2,6 @@
 #define STATE_H
 
 #include "Simulation/Dynamics/Types.h"
-#include "Simulation/Dynamics/QuadrupedCommon.h"
 #include <iostream>
 
 

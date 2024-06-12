@@ -29,21 +29,21 @@ MathTypes::Mat3 GetRotationMatrix(double angle, COORD_AXIS axis)
 
 	if (axis == COORD_AXIS::X)
 	{
-		rotation << 1,  0, 0, 
-					0,  c, s, 
-					0, -s, c;
+		rotation << 1, 0,  0, 
+					0, c, -s, 
+					0, s,  c;
 	}
 	else if (axis == COORD_AXIS::Y)
 	{
-		rotation << c, 0, -s, 
-					0, 1,  0, 
-					s, 0,  c;
+		rotation <<  c, 0, s, 
+					 0, 1, 0, 
+					-s, 0, c;
 	}
 	else if (axis == COORD_AXIS::Z)
 	{
-		rotation <<  c, s, 0, 
-					-s, c, 0, 
-					 0, 0, 1;
+		rotation << c, -s, 0, 
+					s,  c, 0, 
+					0,  0, 1;
 	}
 
 	return rotation;
@@ -81,9 +81,9 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 	if (t > 0.0f)
 	{
 
-		t = sqrtf(t + 1.0f);
-		q[3] = 0.5f * t;
-		t = 0.5f / t;
+		t = sqrt(t + 1.0);
+		q[3] = 0.5 * t;
+		t = 0.5 / t;
 		q[0] = (R(2, 1) - R(1, 2)) * t;
 		q[1] = (R(0, 2) - R(2, 0)) * t;
 		q[2] = (R(1, 0) - R(0, 1)) * t;
@@ -99,8 +99,8 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 		int k = (j + 1) % 3;
 		
 		t = sqrt(R(i, i) - R(j, j) - R(k, k) + 1);
-		q[i] = 0.5f * t;
-		t = 0.5f / t;
+		q[i] = 0.5 * t;
+		t = 0.5 / t;
 		q[3] = (R(k, j) - R(j, k)) * t;
 		q[j] = (R(j, i) + R(i, j)) * t;
 		q[k] = (R(k, i) + R(i, k)) * t;

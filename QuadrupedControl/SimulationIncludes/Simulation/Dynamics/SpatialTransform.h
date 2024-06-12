@@ -1,7 +1,6 @@
 #ifndef SPATIAL_TRANSFORM_H
 #define SPATIAL_TRANSFORM_H
 
-#include "Simulation/Dynamics/QuadrupedCommon.h"
 #include "Simulation/Dynamics/Types.h"
 
 

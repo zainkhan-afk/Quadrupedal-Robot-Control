@@ -2,7 +2,6 @@
 #define UTILITIES_H
 
 #include "Simulation/Dynamics/Types.h"
-#include "Simulation/Dynamics/QuadrupedCommon.h"
 #include "Simulation/Dynamics/SpatialTransform.h"
 
 #define _USE_MATH_DEFINES

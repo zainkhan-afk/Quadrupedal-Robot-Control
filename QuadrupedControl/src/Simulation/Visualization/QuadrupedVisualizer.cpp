@@ -18,24 +18,21 @@ void QuadrupedVisualizer::setup() {
     catch (const std::exception& e) {
         CI_LOG_E("Shader Error: " << e.what());
     }
-    int numLinks = 10;
 
     plane = new myprimitives::Plane(mGlsl);
     myRobot = new Robot(mGlsl);
     sceneAxes = new Axes(mGlsl);
-    myChain = new Chain(mGlsl, numLinks);
 
     linkIdx = 0;
     footIdx = 0;
 
     robotModel.Initialize();
-    //chainModel.Initialize(numLinks);
     MathTypes::Vec6 f;
     //f << 0, 0, 0, 0, 0, 1;
     //f << 0, 0, 0, 0, 1, 0;
     f << 0, 0, 0, 1000, 0, 0;
     //robotModel.SetExternalForceAt(linkIdx, f);
-    //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0.01, 0, 0;
+    //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0.1, 0, 0;
     //robotModel.dynamics.G[5] = -3;
 
     state.bodyPose << 0, 0, 0, 0, 0, 0.5;
@@ -54,7 +51,7 @@ void QuadrupedVisualizer::update() {
     MathTypes::Vec6 f;
     //f << 0, 0, 0, 0, 0, 10;
     //f << 0, 0, 0, 0, 10, 0;
-    f << 0, 0, 0, 10, 0, 0;
+    f << 0, 0, 0, 1, 0, 0;
     robotModel.SetExternalForceAt(linkIdx, f);
 
     state = robotModel.StepDynamicsModel(state);
@@ -87,7 +84,6 @@ void QuadrupedVisualizer::update() {
     }
     //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0, 0, 0;
-    //chainModel.SetExternalForceAt(linkIdx, f);
 }
 
 void QuadrupedVisualizer::draw() {
@@ -101,7 +97,6 @@ void QuadrupedVisualizer::draw() {
     sceneAxes->Draw();
     plane->Draw();
     myRobot->Draw();
-    //myChain->Draw();
     
     ang += 0.01;
 }
@@ -110,7 +105,6 @@ void QuadrupedVisualizer::cleanup() {
     delete plane;
     delete myRobot;
     delete sceneAxes;
-    delete myChain;
 }
 
 CINDER_APP(QuadrupedVisualizer, RendererGl(RendererGl::Options().msaa(16)))

@@ -50,7 +50,6 @@ public:
 
 private:
 	StateDot RunArticulatedBodyAlgorithm(const State& state);
-	StateDot RunArticulatedBodyAlgorithmMiT(const State& state);
 
 public:
 	std::vector<SpatialTransform> Xb;

@@ -95,7 +95,7 @@ StateDot RobotDynamics::Step(const State& state)
 	return dState;
 }
 
-StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
+StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 {
 	//TODO: Calcuate everything in base coordinates. Remove global context, and calculate forces and everything else in robot base frame 
 	StateDot dState;
@@ -112,8 +112,8 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	SpatialTransform Xref_base_rot(Rref_base, MathTypes::Vec3::Zero());
 	SpatialTransform Xbase_ref_rot(Rref_base_t, MathTypes::Vec3::Zero());
 
-	//Xp[1] = SpatialTransform(Rref_base, MathTypes::Vec3::Zero());;
-	Xp[1] = SpatialTransform();;
+	Xp[1] = SpatialTransform(Rref_base, MathTypes::Vec3::Zero());;
+	//Xp[1] = SpatialTransform();
  	//Xp[1] = Xref_base_rot;
 
 	//Xp[1] = SpatialTransform(MathTypes::Vec3(state.bodyPose[0], state.bodyPose[1], state.bodyPose[2]),
@@ -123,7 +123,7 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	///////////////////////////// PASS 1 DOWN THE TREE START ///////////////////////////// 
 	v[1] = state.bodyVelocity;
 	
-	for (int i = 2; i < this->Xl.size(); i++)
+	for (size_t i = 2; i < this->Xl.size(); i++)
 	{	
 		SpatialTransform Xj(GetRotationMatrix(state.q[i - 2], this->axis[i]), MathTypes::Vec3::Zero());
 		Xp[i] = Xj * Xl[i]; // Book
@@ -135,15 +135,15 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 		c[i] = CrossProductMotion(v[i], vJoint);
 	}
 
-	for (int i = 0; i < contactPoints.size(); i++)
+	for (size_t i = 0; i < contactPoints.size(); i++)
 	{
 		int contactParent = contactPointsParents[i];
-		SpatialTransform Xpc = Xc[i] * Xp[i];
+		SpatialTransform Xpc = Xc[i] * Xp[contactParent];
 		Xcb[i] = Xc[i] * Xb[contactParent];
-		f[contactParent - 1] += Xpc.GetSpatialFormForce() * fc[i];
+		f[contactParent - 1] += Xcb[i].GetSpatialFormForce() * fc[i];
 	}
 
-	for (int i = 1; i < this->Xl.size(); i++){
+	for (size_t i = 1; i < this->Xl.size(); i++){
 		if (parents[i] != 0) {
 			Xb[i] = Xp[i] * Xb[parents[i]]; // Book
 			//Xb[i] = Xb[parents[i]] * Xp[i]; // How homog transforms work
@@ -160,12 +160,12 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 
 
 	///////////////////////////// PASS 2 DOWN THE TREE Start ///////////////////////////// 
-	for (int i = this->Xl.size() - 1; i >= 2; i--)
+	for (size_t i = this->Xl.size() - 1; i >= 2; i--)
 	{
 		U[i] = articulatedInertias[i].GetInertia() * S[i];
-		D[i] = S[i].transpose() * U[i];
+		D[i] = S[i].dot(U[i]);
 
-		u[i] = torques[i - 2] - S[i].transpose() * pa[i];
+		u[i] = torques[i - 2] - S[i].dot(pa[i]);
 		
 		MathTypes::Mat6 Ia = articulatedInertias[i].GetInertia() - (U[i] * (U[i] / D[i]).transpose());
 		MathTypes::Vec6 _pa = pa[i] + Ia * c[i] + ((U[i] * u[i]) / D[i]);
@@ -177,7 +177,7 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 
 	///////////////////////////// PASS 3 DOWN THE TREE Start ///////////////////////////// 
 	a[1]  = -articulatedInertias[1].GetInertia().inverse() * pa[1];
-	for (int i = 2; i < this->Xl.size(); i++)
+	for (size_t i = 2; i < this->Xl.size(); i++)
 	{
 		// BOOK
 		MathTypes::Vec6 a_ = Xp[i].GetSpatialForm() * a[parents[i]] + c[i];
@@ -188,11 +188,14 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)
 	///////////////////////////// PASS 3 DOWN THE TREE END ///////////////////////////// 
 
 
-	dState.bodyVelocityDDot = Xbase_ref_rot.GetSpatialForm() * a[1];
+	dState.bodyVelocityDDot = a[1];
+
+	//dState.bodyVelocityDDot.block<3, 1>(0, 0) = MathTypes::Vec3::Zero();
 
 	return dState;
 }
 
+/*
 StateDot RobotDynamics::RunArticulatedBodyAlgorithmMiT(const State& state)
 {
 	//TODO: Calcuate everything in base coordinates. Remove global context, and calculate forces and everything else in robot base frame 
@@ -228,9 +231,9 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithmMiT(const State& state)
 	for (int i = numLinks - 1; i > 0; i--)
 	{
 		U[i] = articulatedInertias[i].GetInertia() * S[i];
-		D[i] = S[i].transpose() * U[i];
+		D[i] = S[i].dot(U[i]);
 
-		u[i] = torques[i - 1] - S[i].transpose() * pa[i];
+		u[i] = torques[i - 1] - S[i].dot(pa[i]);
 
 		MathTypes::Mat6 Ia = Xp[i].GetSpatialFormTranspose() * articulatedInertias[i].GetInertia() * 
 							Xp[i].GetSpatialForm() - U[i] * U[i].transpose() / D[i];
@@ -261,3 +264,4 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithmMiT(const State& state)
 
 	return dState;
 }
+*/

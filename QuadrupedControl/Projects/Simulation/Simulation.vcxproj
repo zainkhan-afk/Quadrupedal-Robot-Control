@@ -163,8 +163,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Simulation\Dynamics\ChainDynamics.cpp" />
-    <ClCompile Include="..\..\src\Simulation\Dynamics\CubeChain.cpp" />
     <ClCompile Include="..\..\src\Simulation\Dynamics\LegController.cpp" />
     <ClCompile Include="..\..\src\Simulation\Dynamics\MPC.cpp" />
     <ClCompile Include="..\..\src\Simulation\Dynamics\Quadruped.cpp" />
@@ -176,7 +174,6 @@
     <ClCompile Include="..\..\src\Simulation\Dynamics\TestClass.cpp" />
     <ClCompile Include="..\..\src\Simulation\Dynamics\Utilities.cpp" />
     <ClCompile Include="..\..\src\Simulation\Visualization\Axes.cpp" />
-    <ClCompile Include="..\..\src\Simulation\Visualization\Chain.cpp" />
     <ClCompile Include="..\..\src\Simulation\Visualization\Cube.cpp" />
     <ClCompile Include="..\..\src\Simulation\Visualization\Entity.cpp" />
     <ClCompile Include="..\..\src\Simulation\Visualization\Plane.cpp" />
@@ -185,8 +182,6 @@
     <ClCompile Include="..\..\src\Simulation\Visualization\Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\ChainDynamics.h" />
-    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\CubeChain.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\LegController.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\MPC.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Quadruped.h" />
@@ -200,7 +195,6 @@
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Types.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Utilities.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Axes.h" />
-    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Chain.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Cube.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Entity.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Plane.h" />

@@ -7,11 +7,9 @@
 #include "Simulation/Visualization/Plane.h"
 #include "Simulation/Visualization/Cube.h"
 #include "Simulation/Visualization/Robot.h"
-#include "Simulation/Visualization/Chain.h"
 #include "Simulation/Visualization/Axes.h"
 
 #include "Simulation/Dynamics/Quadruped.h"
-#include "Simulation/Dynamics/CubeChain.h"
 #include "Simulation/Dynamics/State.h"
 
 class QuadrupedVisualizer : public ci::app::App 
@@ -33,12 +31,10 @@ private:
     int                     footIdx;
 
     Quadruped               robotModel;
-    CubeChain               chainModel;
     State                   state;
 
     Axes*                   sceneAxes;
     Robot*                  myRobot;
-    Chain*                  myChain;
 
     double                  ang = 0.0;
 };

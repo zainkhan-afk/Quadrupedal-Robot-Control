@@ -30,9 +30,6 @@
     <ClCompile Include="..\..\src\Simulation\Visualization\Axes.cpp">
       <Filter>src\Visualization</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Simulation\Visualization\Chain.cpp">
-      <Filter>src\Visualization</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Simulation\Visualization\Cube.cpp">
       <Filter>src\Visualization</Filter>
     </ClCompile>
@@ -50,12 +47,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\Simulation\Visualization\Sphere.cpp">
       <Filter>src\Visualization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Simulation\Dynamics\ChainDynamics.cpp">
-      <Filter>src\Dynamics</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\Simulation\Dynamics\CubeChain.cpp">
-      <Filter>src\Dynamics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\Simulation\Dynamics\LegController.cpp">
       <Filter>src\Dynamics</Filter>
@@ -89,12 +80,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\ChainDynamics.h">
-      <Filter>include\Dynamics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\CubeChain.h">
-      <Filter>include\Dynamics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\LegController.h">
       <Filter>include\Dynamics</Filter>
     </ClInclude>
@@ -132,9 +117,6 @@
       <Filter>include\Dynamics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Axes.h">
-      <Filter>include\Visualization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Chain.h">
       <Filter>include\Visualization</Filter>
     </ClInclude>
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Cube.h">

@@ -25,17 +25,16 @@ void QuadrupedVisualizer::setup() {
 
     linkIdx = 0;
     footIdx = 0;
-
-    robotModel.Initialize();
-    MathTypes::Vec6 f;
-    //f << 0, 0, 0, 0, 0, 1;
-    //f << 0, 0, 0, 0, 1, 0;
-    f << 0, 0, 0, 1000, 0, 0;
+    InitializeRobot();
+    //MathTypes::Vec6 f;
+    //f << 0, 0, 0, 0, 0, 5;
+    //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0.1, 0, 0;
     //robotModel.dynamics.G[5] = -3;
 
-    state.bodyPose << 0, 0, 0, 0, 0, 0.5;
+    //robotModel.dynamics.fc[footIdx] << 1, 0, 0;
+
 
     //state.q[0] = M_PI / 10.0f;
     //state.q[1] = M_PI / 10.0f;
@@ -48,12 +47,6 @@ void QuadrupedVisualizer::resize()
 }
 
 void QuadrupedVisualizer::update() {
-    MathTypes::Vec6 f;
-    //f << 0, 0, 0, 0, 0, 10;
-    //f << 0, 0, 0, 0, 10, 0;
-    f << 0, 0, 0, 1, 0, 0;
-    robotModel.SetExternalForceAt(linkIdx, f);
-
     state = robotModel.StepDynamicsModel(state);
     robotModel.GetVisualTransformations(state);
 
@@ -77,13 +70,6 @@ void QuadrupedVisualizer::update() {
         //myRobot->SetRobotFootPosition(robotModel.dynamics.Xcb[i].GetTranslation(), i);
         myRobot->SetRobotFootPosition(robotModel.footPos[i], i);
     }
-
-    f << 0, 0, 0, 0, 0, 0;
-    for (int i = 0; i < 13; i++) {
-        robotModel.SetExternalForceAt(i, f);
-    }
-    //robotModel.SetExternalForceAt(linkIdx, f);
-    //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0, 0, 0;
 }
 
 void QuadrupedVisualizer::draw() {
@@ -99,6 +85,16 @@ void QuadrupedVisualizer::draw() {
     myRobot->Draw();
     
     ang += 0.01;
+}
+
+
+void QuadrupedVisualizer::InitializeRobot()
+{
+    robotModel.Initialize();
+
+    state.bodyPose << 0, 0, 0, 0, 0, 0.5;
+
+    robotModel.SetState(state);
 }
 
 void QuadrupedVisualizer::cleanup() {

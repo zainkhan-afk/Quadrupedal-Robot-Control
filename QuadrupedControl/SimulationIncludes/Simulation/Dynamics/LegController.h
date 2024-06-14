@@ -8,7 +8,6 @@
 class LegController
 {
 public:
-	//EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	LegController();
 	LegController(float abdLinkLength, float hipLinkLength, float kneeLinkLength, float kneeLinkYOffset);
 	~LegController() {}

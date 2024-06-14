@@ -5,6 +5,7 @@
 #include "Simulation/Dynamics/State.h"
 #include "Simulation/Dynamics/SpatialInertia.h"
 #include "Simulation/Dynamics/SpatialTransform.h"
+#include "Simulation/Dynamics/LegController.h"
 #include <eigen3/Eigen/StdVector>
 
 
@@ -64,10 +65,13 @@ public:
 
 	std::vector<MathTypes::Vec3> contactPoints;
 	std::vector<int> contactPointsParents;
-	std::vector<MathTypes::Vec6> fc;
+	std::vector<MathTypes::Vec3> fc;
 
 
 	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
+
+
+
 
 private:
 	int currentIndex = 0;

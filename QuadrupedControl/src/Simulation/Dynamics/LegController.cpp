@@ -84,7 +84,7 @@ MathTypes::Vec3 LegController::InverseKinematics(MathTypes::Vec3 pos, int leg)
     else if (temp < -1)
         temp = -1;
 
-    double theta3 = acos(temp);
+    double theta3 = -acos(temp);
     double theta2 = (atan2(z_, x_) - atan2(this->l3 * sin(theta3), (this->l2 + this->l3 * cos(theta3))));
 
     q[0] = theta1;

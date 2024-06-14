@@ -52,14 +52,14 @@ MathTypes::Vec6 JointMotionSubspace(JOINT_TYPE jointType, COORD_AXIS axis) {
 MathTypes::Vec6 CrossProductMotion(const MathTypes::Vec6& v1, const MathTypes::Vec6& v2) {
 	MathTypes::Vec6 v;
 
-	MathTypes::Mat6 v_sp = MathTypes::Mat6::Zero();
+	//MathTypes::Mat6 v_sp = MathTypes::Mat6::Zero();
 
-	v_sp.template topLeftCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[0], v1[1], v1[2]));
-	v_sp.template bottomRightCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[0], v1[1], v1[2]));
-	v_sp.template bottomLeftCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[3], v1[4], v1[5]));
+	//v_sp.template topLeftCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[0], v1[1], v1[2]));
+	//v_sp.template bottomRightCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[0], v1[1], v1[2]));
+	//v_sp.template bottomLeftCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[3], v1[4], v1[5]));
 
-	v = v_sp * v2;
-	/*v << v1(1) * v2(2) - v1(2) * v2(1),
+	//v = v_sp * v2;
+	v << v1(1) * v2(2) - v1(2) * v2(1),
 		 v1(2) * v2(0) - v1(0) * v2(2),
 		 v1(0) * v2(1) - v1(1) * v2(0),
 		 v1(1) * v2(5) - v1(2) * v2(4) + v1(4) * v2(2) - v1(5) * v2(1),
@@ -67,7 +67,7 @@ MathTypes::Vec6 CrossProductMotion(const MathTypes::Vec6& v1, const MathTypes::V
 		 v1(0) * v2(4) - v1(1) * v2(3) + v1(3) * v2(1) - v1(4) * v2(0);
 
 
-	v = MathTypes::Vec6(
+	/*v = MathTypes::Vec6(
 		-v1[2] * v2[1] + v1[1] * v2[2],
 		v1[2] * v2[0] - v1[0] * v2[2],
 		-v1[1] * v2[0] + v1[0] * v2[1],
@@ -85,13 +85,13 @@ MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Ve
 	MathTypes::Mat6 v_sp = MathTypes::Mat6::Zero();
 
 
-	v_sp.template topLeftCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[0], v1[1], v1[2]));
-	v_sp.template bottomRightCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[0], v1[1], v1[2]));
-	v_sp.template topRightCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[3], v1[4], v1[5]));
+	//v_sp.template topLeftCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[0], v1[1], v1[2]));
+	//v_sp.template bottomRightCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[0], v1[1], v1[2]));
+	//v_sp.template topRightCorner<3, 3>() = VectorToSkewMat(MathTypes::Vec3(v1[3], v1[4], v1[5]));
 
-	v = v_sp * v2;
+	//v = v_sp * v2;
 
-	/*v << v2(2) * v1(1) - v2(1) * v1(2) - v2(4) * v1(5) + v2(5) * v1(4),
+	v << v2(2) * v1(1) - v2(1) * v1(2) - v2(4) * v1(5) + v2(5) * v1(4),
 		 v2(0) * v1(2) - v2(2) * v1(0) + v2(3) * v1(5) - v2(5) * v1(3),
 		 v2(1) * v1(0) - v2(0) * v1(1) - v2(3) * v1(4) + v2(4) * v1(3),
 		 v2(5) * v1(1) - v2(4) * v1(2),
@@ -99,7 +99,7 @@ MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Ve
 		 v2(4) * v1(0) - v2(3) * v1(1);
 
 
-	v = MathTypes::Vec6(
+	/*v = MathTypes::Vec6(
 		-v1[2] * v2[1] + v1[1] * v2[2] - v1[5] * v2[4] + v1[4] * v2[5],
 		v1[2] * v2[0] - v1[0] * v2[2] + v1[5] * v2[3] - v1[3] * v2[5],
 		-v1[1] * v2[0] + v1[0] * v2[1] - v1[4] * v2[3] + v1[3] * v2[4],

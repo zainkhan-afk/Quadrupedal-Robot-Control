@@ -22,7 +22,7 @@ MathTypes::Vec3 SkewMatToVecor(const MathTypes::Mat3& m)
 MathTypes::Mat3 GetRotationMatrix(double angle, COORD_AXIS axis)
 {
 	// Axis can be 0, 1 or 2 for x, y or z respectively.
-	MathTypes::Mat3 rotation;
+	MathTypes::Mat3 rotation = MathTypes::Mat3::Identity();
 
 	double s = std::sin(angle);
 	double c = std::cos(angle);
@@ -32,6 +32,7 @@ MathTypes::Mat3 GetRotationMatrix(double angle, COORD_AXIS axis)
 		rotation << 1, 0,  0, 
 					0, c, -s, 
 					0, s,  c;
+
 	}
 	else if (axis == COORD_AXIS::Y)
 	{

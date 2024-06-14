@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Gait.cpp" />
     <ClCompile Include="..\..\src\Simulation\Dynamics\LegController.cpp" />
     <ClCompile Include="..\..\src\Simulation\Dynamics\MPC.cpp" />
     <ClCompile Include="..\..\src\Simulation\Dynamics\Quadruped.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="..\..\src\Simulation\Visualization\Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Gait.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\LegController.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\MPC.h" />
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Quadruped.h" />

@@ -5,6 +5,8 @@
 #include "Simulation/Dynamics/LegController.h"
 #include "Simulation/Dynamics/SpatialInertia.h"
 #include "Simulation/Dynamics/RobotDynamics.h"
+#include "Simulation/Dynamics/Gait.h"
+
 /*
 * The quadruped has 4 legs, the legs are arranged in the follwing way when viewed from top.
 * 
@@ -81,6 +83,8 @@ private:
 	State state;
 	StateDot stateDot;
 	LegController legController;
+	Gait gait;
+
 
 public:
 	RobotDynamics dynamics;

@@ -19,6 +19,7 @@ public:
     void                resize() override;
     void                update() override;
     void                draw() override;
+    void                InitializeRobot();
 
     void                cleanup() override;
 

@@ -8,7 +8,6 @@
 
 Quadruped::Quadruped()
 {
-	 //legController = LegController(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
 }
 
 
@@ -20,6 +19,7 @@ Quadruped::~Quadruped()
 void Quadruped::Initialize()
 {
 	std::cout << "Initializing Quadruped." << std::endl;
+	legController = LegController(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
 	//legController = LegController(robotParameters.abdLinkLength, robotParameters.hipLinkLength, robotParameters.kneeLinkLength, robotParameters.kneeLinkYOffset);
 
 	
@@ -29,30 +29,32 @@ void Quadruped::Initialize()
 
 	// spatial inertias
 	MathTypes::Mat3 abadRotationalInertia;
-	abadRotationalInertia << 381, 58, 0.45, 58, 560, 0.95, 0.45, 0.95, 444;
-	abadRotationalInertia = abadRotationalInertia * 1e-6;
+	abadRotationalInertia << 0.000381,	 0.000058,	 0.00000045, 
+							 0.000058,	 0.000560,	 0.00000095,
+							 0.00000045, 0.00000095, 0.000444;
 	MathTypes::Vec3 abadCOM(0, 0.036, 0);
 	//MathTypes::Vec3 abadCOM(0, 0, 0);
 	bodyInertiaParams.abdInertia = SpatialInertia(0.54f, abadCOM, abadRotationalInertia);
 
 	MathTypes::Mat3 hipRotationalInertia;
-	hipRotationalInertia << 1983, 245, 13, 245, 2103, 1.5, 13, 1.5, 408;
-	hipRotationalInertia = hipRotationalInertia * 1e-6;
+	hipRotationalInertia << 0.001983, 0.000245, 0.000013, 
+							0.000245, 0.002103, 0.0000015,
+							0.000013, 0.0000015, 0.000408;
 	MathTypes::Vec3 hipCOM(0, 0.016, -0.02);
 	//MathTypes::Vec3 hipCOM(0, 0, 0);
 	bodyInertiaParams.hipInertia = SpatialInertia(0.634f, hipCOM, hipRotationalInertia);
 
 	MathTypes::Mat3 kneeRotationalInertia, kneeRotationalInertiaRotated;
-	kneeRotationalInertia << 6, 0, 0, 0, 248, 0, 0, 0, 245;
-	kneeRotationalInertia = kneeRotationalInertia * 1e-6;
-	//MathTypes::Vec3 kneeCOM(0, 0, 0.061);
+	kneeRotationalInertia << 0.000245,  0,		  0, 
+							 0,			0.000248, 0, 
+							 0,			0,		  0.000006;
+	//MathTypes::Vec3 kneeCOM(0, 0, -0.061);
 	MathTypes::Vec3 kneeCOM(0, 0, -0.209);
 	//MathTypes::Vec3 kneeCOM(0, 0, 0);
 	bodyInertiaParams.kneeInertia = SpatialInertia(0.064f, kneeCOM, kneeRotationalInertia);
 
 	MathTypes::Mat3 bodyRotationalInertia;
-	bodyRotationalInertia << 11253, 0, 0, 0, 36203, 0, 0, 0, 42673;
-	bodyRotationalInertia = bodyRotationalInertia * 1e-6;
+	bodyRotationalInertia << 0.011253, 0, 0, 0, 0.036203, 0, 0, 0, 0.042673;
 	MathTypes::Vec3 bodyCOM(0, 0, 0);
 	bodyInertiaParams.floatingBodyInertia = SpatialInertia(robotParameters.bodyMass, bodyCOM, bodyRotationalInertia);
 
@@ -86,10 +88,12 @@ void Quadruped::Initialize()
 		footPos.push_back(MathTypes::Vec3::Zero());
 
 		X = SpatialTransform(RIdent, GetLegSignedVector(bodyInertiaParams.abdLocation, leg));
+		//SpatialInertia abdIn(0.54f, GetLegSignedVector(abadCOM, leg), abadRotationalInertia);
+		//dynamics.AddBody(abdIn, X, COORD_AXIS::X, baseID);
+
 		// Abd
 		if (side < 0) {
 			dynamics.AddBody(bodyInertiaParams.abdInertia.FlipAlongAxis(1), X, COORD_AXIS::X, baseID);
-			//dynamics.AddBody(bodyInertiaParams.abdInertia, X, COORD_AXIS::X, baseID);
 		}
 		else {
 			dynamics.AddBody(bodyInertiaParams.abdInertia, X, COORD_AXIS::X, baseID);
@@ -100,9 +104,11 @@ void Quadruped::Initialize()
 		// Hip
 		//X = SpatialTransform(GetRotationMatrix(M_PI, COORD_AXIS::Z), GetLegSignedVector(-bodyInertiaParams.hipLocation, leg));
 		X = SpatialTransform(RIdent, GetLegSignedVector(bodyInertiaParams.hipLocation, leg));
+		//SpatialInertia hipIn(0.634f, GetLegSignedVector(hipCOM, leg), hipRotationalInertia);
+		//dynamics.AddBody(hipIn, X, COORD_AXIS::Y, parentID);
+
 		if (side < 0) {
 			dynamics.AddBody(bodyInertiaParams.hipInertia.FlipAlongAxis(1), X, COORD_AXIS::Y, parentID);
-			//dynamics.AddBody(bodyInertiaParams.hipInertia, X, COORD_AXIS::Y, parentID);
 		}
 		else {
 			dynamics.AddBody(bodyInertiaParams.hipInertia, X, COORD_AXIS::Y, parentID);
@@ -112,9 +118,11 @@ void Quadruped::Initialize()
 
 		// Knee
 		X = SpatialTransform(RIdent, bodyInertiaParams.kneeLocation);
+		//SpatialInertia kneeIn(0.064f, GetLegSignedVector(kneeCOM, leg), kneeRotationalInertia);
+		//dynamics.AddBody(kneeIn, X, COORD_AXIS::Y, parentID);
+		
 		if (side < 0) {
 			dynamics.AddBody(bodyInertiaParams.kneeInertia.FlipAlongAxis(1), X, COORD_AXIS::Y, parentID);
-			//dynamics.AddBody(bodyInertiaParams.kneeInertia, X, COORD_AXIS::Y, parentID);
 		}
 		else {
 			dynamics.AddBody(bodyInertiaParams.kneeInertia, X, COORD_AXIS::Y, parentID);
@@ -196,6 +204,16 @@ State Quadruped::GetState()
 void Quadruped::Integrate(State& state,const StateDot& dstate)
 {
 	state.bodyVelocity += dstate.bodyVelocityDDot * deltaT;
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (state.bodyVelocity[i] > 10) { state.bodyVelocity[i] = 10; }
+		if (state.bodyVelocity[i] < -10) { state.bodyVelocity[i] = -10; }
+
+		if (state.bodyVelocity[i + 3] > 10) { state.bodyVelocity[i + 3] = 10; }
+		if (state.bodyVelocity[i + 3] < -10) { state.bodyVelocity[i + 3] = -10; }
+	}
+
 	state.bodyPose += state.bodyVelocity * deltaT;
 
 	//state.bodyPose.template block<3, 1>(3, 0) += dstate.bodyPositionDot * deltaT;
@@ -204,9 +222,13 @@ void Quadruped::Integrate(State& state,const StateDot& dstate)
 	{
 		double prevQ = state.q[i];
 		state.qDot[i] += dstate.qDDot[i] * deltaT;
+
+		if (state.qDot[i] > 20.0) { state.qDot[i] = 10.0; }
+		if (state.qDot[i] < -20.0) { state.qDot[i] = -10.0; }
+
 		state.q[i] += state.qDot[i] * deltaT;
 
-		dynamics.torques[i] = (prevQ - state.q[i]) * 0.5;
+		dynamics.torques[i] = (prevQ - state.q[i]) * 0.8;
 	}
 }
 
@@ -265,9 +287,10 @@ void Quadruped::GetVisualTransformations(const State& state)
 
 State Quadruped::StepDynamicsModel(State& state)
 {
+	state = gait.step(legController, state, deltaT);
 	StateDot dState = dynamics.Step(state);
 
-	Integrate(state, dState);
+	//Integrate(state, dState);
 
 	return state;
 }

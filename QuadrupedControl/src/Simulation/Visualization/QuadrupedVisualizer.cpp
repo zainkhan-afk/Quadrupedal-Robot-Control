@@ -31,7 +31,7 @@ void QuadrupedVisualizer::setup() {
     //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0.1, 0, 0;
-    //robotModel.dynamics.G[5] = -3;
+    robotModel.dynamics.G[5] = -9;
 
     //robotModel.dynamics.fc[footIdx] << 1, 0, 0;
 
@@ -47,11 +47,22 @@ void QuadrupedVisualizer::resize()
 }
 
 void QuadrupedVisualizer::update() {
+    //state.q[2] = 0;
+
+
+    MathTypes::Vec6 f;
+    //f << 0, 0, 0, 0, 0, 10;
+
+    //robotModel.dynamics.fc[footIdx] = (robotModel.footPos[footIdx] - MathTypes::Vec3(robotModel.footPos[footIdx][0], robotModel.footPos[footIdx][1], -0.1));
+
+
+    
+    robotModel.dynamics.fc[footIdx] << 0, 0, 1;
+    
     state = robotModel.StepDynamicsModel(state);
     robotModel.GetVisualTransformations(state);
 
     for (int i = 0; i < 13; i++) {
-        //MathTypes::Mat4 H = SpatialToHomog(robotModel.dynamics.Xb[i+1]);
 
         //MathTypes::Vec3 R = RotationMatrixToEuler(robotModel.dynamics.Xb[i + 1].GetRotation());
         //MathTypes::Vec3 P = robotModel.dynamics.Xb[i + 1].GetTranslation();
@@ -70,18 +81,25 @@ void QuadrupedVisualizer::update() {
         //myRobot->SetRobotFootPosition(robotModel.dynamics.Xcb[i].GetTranslation(), i);
         myRobot->SetRobotFootPosition(robotModel.footPos[i], i);
     }
+
+
+    f << 0, 0, 0, 0, 0, 0;
+    for (int i = 0; i < 13; i++)
+    {
+        robotModel.SetExternalForceAt(i, f);
+    }
 }
 
 void QuadrupedVisualizer::draw() {
     //mCam.lookAt(vec3(4.0 * sin(ang), 4.0 * cos(ang), 1.0), vec3(0, 0, 0), vec3(0, 0, 1));
-    mCam.lookAt(vec3(state.bodyPose[3] + 3.0f, state.bodyPose[4] - 3.0, state.bodyPose[5] + 1.0), vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]), vec3(0, 0, 1));
-    //mCam.lookAt(vec3(3.0f, - 3.0, 1.0), vec3(0), vec3(0, 0, 1));
+    //mCam.lookAt(vec3(state.bodyPose[3] + 3.0f, state.bodyPose[4] - 3.0, state.bodyPose[5] + 1.0), vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]), vec3(0, 0, 1));
+    mCam.lookAt(vec3(3.0f, - 3.0, 1.0), vec3(0), vec3(0, 0, 1));
 
     gl::clear();
     gl::setMatrices(mCam);
 
     sceneAxes->Draw();
-    plane->Draw();
+    //plane->Draw();
     myRobot->Draw();
     
     ang += 0.01;

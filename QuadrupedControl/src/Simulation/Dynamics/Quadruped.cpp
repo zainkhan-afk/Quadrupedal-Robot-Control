@@ -32,31 +32,39 @@ void Quadruped::Initialize()
 	abadRotationalInertia << 0.000381,	 0.000058,	 0.00000045, 
 							 0.000058,	 0.000560,	 0.00000095,
 							 0.00000045, 0.00000095, 0.000444;
+	//abadRotationalInertia << 1, 0, 0, 0, 1, 0, 0, 0, 1;
 	MathTypes::Vec3 abadCOM(0, 0.036, 0);
 	//MathTypes::Vec3 abadCOM(0, 0, 0);
 	bodyInertiaParams.abdInertia = SpatialInertia(0.54f, abadCOM, abadRotationalInertia);
+	//bodyInertiaParams.abdInertia = SpatialInertia(1, abadCOM, abadRotationalInertia);
 
 	MathTypes::Mat3 hipRotationalInertia;
 	hipRotationalInertia << 0.001983, 0.000245, 0.000013, 
 							0.000245, 0.002103, 0.0000015,
 							0.000013, 0.0000015, 0.000408;
+	//hipRotationalInertia << 1, 0, 0, 0, 1, 0, 0, 0, 1;
 	MathTypes::Vec3 hipCOM(0, 0.016, -0.02);
 	//MathTypes::Vec3 hipCOM(0, 0, 0);
 	bodyInertiaParams.hipInertia = SpatialInertia(0.634f, hipCOM, hipRotationalInertia);
+	//bodyInertiaParams.hipInertia = SpatialInertia(1, hipCOM, hipRotationalInertia);
 
 	MathTypes::Mat3 kneeRotationalInertia, kneeRotationalInertiaRotated;
 	kneeRotationalInertia << 0.000245,  0,		  0, 
 							 0,			0.000248, 0, 
 							 0,			0,		  0.000006;
+	//kneeRotationalInertia << 1, 0, 0, 0, 1, 0, 0, 0, 1;
 	//MathTypes::Vec3 kneeCOM(0, 0, -0.061);
 	MathTypes::Vec3 kneeCOM(0, 0, -0.209);
 	//MathTypes::Vec3 kneeCOM(0, 0, 0);
 	bodyInertiaParams.kneeInertia = SpatialInertia(0.064f, kneeCOM, kneeRotationalInertia);
+	//bodyInertiaParams.kneeInertia = SpatialInertia(1, kneeCOM, kneeRotationalInertia);
 
 	MathTypes::Mat3 bodyRotationalInertia;
 	bodyRotationalInertia << 0.011253, 0, 0, 0, 0.036203, 0, 0, 0, 0.042673;
+	//bodyRotationalInertia << 1, 0, 0, 0, 1, 0, 0, 0, 1;
 	MathTypes::Vec3 bodyCOM(0, 0, 0);
 	bodyInertiaParams.floatingBodyInertia = SpatialInertia(robotParameters.bodyMass, bodyCOM, bodyRotationalInertia);
+	//bodyInertiaParams.floatingBodyInertia = SpatialInertia(1, bodyCOM, bodyRotationalInertia);
 
 
 	// locations
@@ -132,6 +140,7 @@ void Quadruped::Initialize()
 
 
 		dynamics.AddContactPoint(MathTypes::Vec3(0, 0, -robotParameters.kneeLinkLength), parentID);
+		//dynamics.AddContactPoint(MathTypes::Vec3(0, 0, 0), parentID);
 
 		side *= -1;
 	}
@@ -287,10 +296,10 @@ void Quadruped::GetVisualTransformations(const State& state)
 
 State Quadruped::StepDynamicsModel(State& state)
 {
-	state = gait.step(legController, state, deltaT);
+	//state = gait.step(legController, state, deltaT);
 	StateDot dState = dynamics.Step(state);
 
-	//Integrate(state, dState);
+	Integrate(state, dState);
 
 	return state;
 }

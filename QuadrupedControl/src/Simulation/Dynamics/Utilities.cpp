@@ -107,6 +107,34 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 		q[k] = (R(k, i) + R(i, k)) * t;
 	}
 	
+	/*MathTypes::Mat3 r = R.transpose();
+	double tr = r.trace();
+	if (tr > 0.0) {
+		double S = sqrt(tr + 1.0) * 2.0;
+		q(0) = 0.25 * S;
+		q(1) = (r(2, 1) - r(1, 2)) / S;
+		q(2) = (r(0, 2) - r(2, 0)) / S;
+		q(3) = (r(1, 0) - r(0, 1)) / S;
+	} else if ((r(0, 0) > r(1, 1)) && (r(0, 0) > r(2, 2))) {
+		double S = sqrt(1.0 + r(0, 0) - r(1, 1) - r(2, 2)) * 2.0;
+		q(0) = (r(2, 1) - r(1, 2)) / S;
+		q(1) = 0.25 * S;
+		q(2) = (r(0, 1) + r(1, 0)) / S;
+		q(3) = (r(0, 2) + r(2, 0)) / S;
+	} else if (r(1, 1) > r(2, 2)) {
+		double S = sqrt(1.0 + r(1, 1) - r(0, 0) - r(2, 2)) * 2.0;
+		q(0) = (r(0, 2) - r(2, 0)) / S;
+		q(1) = (r(0, 1) + r(1, 0)) / S;
+		q(2) = 0.25 * S;
+		q(3) = (r(1, 2) + r(2, 1)) / S;
+	} else {
+		double S = sqrt(1.0 + r(2, 2) - r(0, 0) - r(1, 1)) * 2.0;
+		q(0) = (r(1, 0) - r(0, 1)) / S;
+		q(1) = (r(0, 2) + r(2, 0)) / S;
+		q(2) = (r(1, 2) + r(2, 1)) / S;
+		q(3) = 0.25 * S;
+	}*/
+	
 	return q;
 }
 
@@ -135,16 +163,15 @@ MathTypes::Vec3 QuatToEuler(MathTypes::Vec4 q)
 
 	MathTypes::Vec3 euler = MathTypes::Vec3::Zero();
 	
-	/*float w = q[0];
-	float x = q[1];
-	float y = q[2];
-	float z = q[3];*/
+	//float w = q[0];
+	//float x = q[1];
+	//float y = q[2];
+	//float z = q[3];
 
-	double x = q[0];
-	double y = q[1];
-	double z = q[2];
-	double w = q[3];
-
+	float x = q[0];
+	float y = q[1];
+	float z = q[2];
+	float w = q[3];
 
 	double t0 = +2.0 * (w * x + y * z);
 	double t1 = +1.0 - 2.0 * (x * x + y * y);
@@ -160,6 +187,14 @@ MathTypes::Vec3 QuatToEuler(MathTypes::Vec4 q)
 	double t4 = +1.0 - 2.0 * (y * y + z * z);
 	euler[2] = std::atan2(t3, t4);
 
+	/*double as = std::min(-2. * (q[1] * q[3] - q[0] * q[2]), .99999);
+	euler(2) =
+		std::atan2(2 * (q[1] * q[2] + q[0] * q[3]),
+			q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]);
+	euler(1) = std::asin(as);
+	euler(0) =
+		std::atan2(2 * (q[2] * q[3] + q[0] * q[1]),
+			q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3]);*/
 	return euler;
 }
 

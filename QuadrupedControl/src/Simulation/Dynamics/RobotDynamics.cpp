@@ -116,8 +116,7 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 	Xp[1] = SpatialTransform();
  	//Xp[1] = Xref_base_rot;
 
-	//Xp[1] = SpatialTransform(MathTypes::Vec3(state.bodyPose[0], state.bodyPose[1], state.bodyPose[2]),
-		//				 MathTypes::Vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]));
+	//Xp[1] = SpatialTransform(MathTypes::Vec3(state.bodyPose[0], state.bodyPose[1], state.bodyPose[2]), MathTypes::Vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]));
 
 
 	///////////////////////////// PASS 1 DOWN THE TREE START ///////////////////////////// 
@@ -141,10 +140,15 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 		SpatialTransform Xpc = Xc[i] * Xp[contactParent];
 		Xcb[i] = Xc[i] * Xb[contactParent];
 
+		MathTypes::Vec3 p = Xc[i].GetTranslation();
+		MathTypes::Vec3 r = Xb[contactParent].GetInverse().GetTranslation();
+
+		MathTypes::Vec3 foot_pos = Xb[contactParent].GetInverse().GetRotation()*(p - r);
+
 		MathTypes::Vec6 f_sp = MathTypes::Vec6::Zero();
 
-		f_sp.topLeftCorner<3, 1>() = Xpc.GetTranslation().cross(fc[i]);
-		//f_sp.bottomLeftCorner<3, 1>() = fc[i];
+		f_sp.topLeftCorner<3, 1>() = foot_pos.cross(fc[i]);
+		f_sp.bottomLeftCorner<3, 1>() = fc[i];
 
 		f[contactParent - 1] += f_sp;
 		//f[contactParent - 1] += Xcb[i].GetSpatialFormForce() * fc[i];
@@ -161,8 +165,8 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 		}
 
 		articulatedInertias[i].SetInertia(linkInertias[i].GetInertia());
-		pa[i] = CrossProductMotion(v[i], linkInertias[i].GetInertia() * v[i]) - 
-			Xbase_ref_rot.GetSpatialFormForce() * Xb[i].GetSpatialFormForce() * f[i - 1];
+		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - 
+			/*Xbase_ref_rot.GetSpatialFormForce() * */Xb[i].GetSpatialFormForce() * f[i - 1];
 	}
 	///////////////////////////// PASS 1 DOWN THE TREE END ///////////////////////////// 
 
@@ -198,7 +202,7 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 
 	//dState.bodyVelocityDDot = a[1];
 
-	//dState.bodyVelocityDDot.block<3, 1>(0, 0) = MathTypes::Vec3::Zero();
+	dState.bodyVelocityDDot.block<3, 1>(0, 0) = MathTypes::Vec3::Zero();
 
 	return dState;
 }

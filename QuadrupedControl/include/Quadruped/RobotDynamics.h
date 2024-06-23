@@ -4,8 +4,11 @@
 #include "Quadruped/Types.h"
 #include "Quadruped/State.h"
 #include "Quadruped/SpatialInertia.h"
-
+#include "Quadruped/SpatialTransform.h"
 #include <eigen3/Eigen/StdVector>
+
+
+#define _USE_MATH_DEFINES
 
 
 /*
@@ -37,7 +40,8 @@ public:
 	RobotDynamics();
 	~RobotDynamics();
 
-	void AddBody(SpatialInertia I, MathTypes::Mat6 pos, COORD_AXIS axis, int parent);
+	void AddBody(SpatialInertia I, SpatialTransform X, COORD_AXIS axis, int parent);
+	void AddContactPoint(MathTypes::Vec3 contactPoint, int parent);
 	void SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces);
 	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
 
@@ -46,14 +50,28 @@ public:
 
 private:
 	StateDot RunArticulatedBodyAlgorithm(const State& state);
+	StateDot RunArticulatedBodyAlgorithmMiT(const State& state);
 
 public:
-	std::vector<MathTypes::Mat6> Xb;
+	std::vector<SpatialTransform> Xb;
+	int numLinks = 13;
+	std::vector<int> parents;
+	std::vector<SpatialTransform> Xl;
+	std::vector<SpatialTransform> Xc;
+	std::vector<SpatialTransform> Xcb;
+	std::vector<COORD_AXIS> axis;
+	std::vector<float> torques;
+	std::vector<MathTypes::Vec6> a;
+
+	std::vector<MathTypes::Vec3> contactPoints;
+	std::vector<int> contactPointsParents;
+	std::vector<MathTypes::Vec6> fc;
+
+
+	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 
 private:
-	int numLinks = 13;
 	int currentIndex = 0;
-	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
 
 	std::vector<SpatialInertia> linkInertias;
 	std::vector<SpatialInertia> articulatedInertias;
@@ -65,19 +83,15 @@ private:
 	std::vector<MathTypes::Vec6> pa;
 
 	std::vector<MathTypes::Vec6> U;
-	std::vector<MathTypes::Vec6> a;
 
 	std::vector<MathTypes::Vec6> f;
 
-	std::vector<MathTypes::Mat6> Xl;
-	std::vector<MathTypes::Mat6> Xp;
-	//std::vector<MathTypes::Mat6> Xb;
+	std::vector<SpatialTransform> Xp;
 
-	std::vector<int> parents;
 	std::vector<float> D;
 	std::vector<float> u;
-	std::vector<float> torques;
-	std::vector<COORD_AXIS> axis;
+
+	Eigen::ColPivHouseholderQR<MathTypes::Mat6> invIA0;
 
 };
 

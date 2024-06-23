@@ -175,6 +175,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Axes.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Chain.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Cube.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Entity.h" />
@@ -182,14 +183,17 @@
     <ClInclude Include="..\..\include\QuadrupedVisualizer\QuadrupedVisualizer.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Resources.h" />
     <ClInclude Include="..\..\include\QuadrupedVisualizer\Robot.h" />
+    <ClInclude Include="..\..\include\QuadrupedVisualizer\Sphere.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Axes.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Chain.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Cube.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Entity.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Plane.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\QuadrupedVisualizer.cpp" />
     <ClCompile Include="..\..\src\QuadrupedVisualizer\Robot.cpp" />
+    <ClCompile Include="..\..\src\QuadrupedVisualizer\Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\shaders\fragment.glsl" />

@@ -50,10 +50,12 @@ public:
 	void SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces);
 	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
 
+	void GetVisualTransformations(const State& state);
+
+
 	State StepDynamicsModel(State& state);
 
 	State GetState();
-
 	void Integrate(State& state, const StateDot& dstate);
 
 private:
@@ -76,13 +78,15 @@ private:
 		MathTypes::Vec3 abdLocation, hipLocation, kneeLocation;
 	} bodyInertiaParams;
 
-	double deltaT = 0.001;
+	double deltaT = 0.01;
 	State state;
 	StateDot stateDot;
 	LegController legController;
 
 public:
 	RobotDynamics dynamics;
+	std::vector<MathTypes::Mat4> transformationChain;
+	std::vector<MathTypes::Vec3> footPos;
 };
 
 

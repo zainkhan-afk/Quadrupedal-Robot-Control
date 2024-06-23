@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="src\Dynamics">
+      <UniqueIdentifier>{12ab0d76-e196-453c-8a26-34d68f2f32ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Visualization">
+      <UniqueIdentifier>{2a893b4b-a4be-4633-aaf2-045d9efb2c08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Dynamics">
+      <UniqueIdentifier>{0b2acd4e-0e0a-4f28-933f-bd831832d909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Visualization">
+      <UniqueIdentifier>{bc96a01a-8d4d-469d-b3ac-9b99722e38be}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Simulation\Visualization\Axes.cpp">
+      <Filter>src\Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Visualization\Cube.cpp">
+      <Filter>src\Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Visualization\Entity.cpp">
+      <Filter>src\Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Visualization\Plane.cpp">
+      <Filter>src\Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Visualization\QuadrupedVisualizer.cpp">
+      <Filter>src\Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Visualization\Robot.cpp">
+      <Filter>src\Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Visualization\Sphere.cpp">
+      <Filter>src\Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\LegController.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\MPC.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Quadruped.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\QuadrupedControl.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\RobotDynamics.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Spatial.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\SpatialInertia.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\SpatialTransform.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\TestClass.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Utilities.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Gait.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\LegController.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\MPC.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Quadruped.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\QuadrupedControl.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\RobotDynamics.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Spatial.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\SpatialInertia.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\SpatialTransform.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\State.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\TestClass.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Types.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Utilities.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Axes.h">
+      <Filter>include\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Cube.h">
+      <Filter>include\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Entity.h">
+      <Filter>include\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Plane.h">
+      <Filter>include\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\QuadrupedVisualizer.h">
+      <Filter>include\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Resources.h">
+      <Filter>include\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Robot.h">
+      <Filter>include\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Sphere.h">
+      <Filter>include\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Gait.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\Tests\QuadrupedModelVisualizer\Resources.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -9,7 +9,7 @@ class SpatialInertia
 public:
 	//EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	SpatialInertia();
-	SpatialInertia(float mass, const MathTypes::Vec3& com, const MathTypes::Mat3& inertia);
+	SpatialInertia(double mass, const MathTypes::Vec3& com, const MathTypes::Mat3& inertia);
 	SpatialInertia(const MathTypes::Mat4&);
 	~SpatialInertia();
 

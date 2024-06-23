@@ -40,16 +40,16 @@ MathTypes::Vec3 LegController::ForwardKinematics(MathTypes::Vec3 q, int leg)
 
     //int sideSign = GetLegSign(leg);
 
-    float s1 = std::sin(q[0]);
-    float s2 = std::sin(q[1]);
-    float s3 = std::sin(q[2]);
+    double s1 = std::sin(q[0]);
+    double s2 = std::sin(q[1]);
+    double s3 = std::sin(q[2]);
 
-    float c1 = std::cos(q[0]);
-    float c2 = std::cos(q[1]);
-    float c3 = std::cos(q[2]);
+    double c1 = std::cos(q[0]);
+    double c2 = std::cos(q[1]);
+    double c3 = std::cos(q[2]);
 
-    float c23 = c2 * c3 - s2 * s3;
-    float s23 = s2 * c3 + c2 * s3;
+    double c23 = c2 * c3 - s2 * s3;
+    double s23 = s2 * c3 + c2 * s3;
 
     P[0] = -this->l3 * c2 * s3 - this->l3 * s2 * c3 - this->l2 * s2;
     P[1]  = this->l14 * c1 + s1 * (this->l3 * c2 * c3 + this->l2 * c2 - this->l3 * s2 * s3);
@@ -66,27 +66,27 @@ MathTypes::Vec3 LegController::InverseKinematics(MathTypes::Vec3 pos, int leg)
 {
     //int sideSign = GetLegSign(leg);
     MathTypes::Vec3 q = MathTypes::Vec3::Zero();
-    float R = sqrt(pos[2] * pos[2] + pos[1] * pos[1]);
+    double R = sqrt(pos[2] * pos[2] + pos[1] * pos[1]);
 
-    float beta = acos(pos[1] / R);
-    float alpha = acos(this->l14 / R);
+    double beta = acos(pos[1] / R);
+    double alpha = acos(this->l14 / R);
 
-    float theta1 = alpha - beta;
+    double theta1 = alpha - beta;
 
-    float x_ = -pos[2];
-    float y_ = -pos[1] + this->l14;
-    float z_ = -pos[0];
+    double x_ = -pos[2];
+    double y_ = -pos[1] + this->l14;
+    double z_ = -pos[0];
 
 
-    float temp = (x_ * x_ + z_ * z_ - this->l2 * this->l2 - this->l3 * this->l3) / (2 * this->l2 * this->l3);
+    double temp = (x_ * x_ + z_ * z_ - this->l2 * this->l2 - this->l3 * this->l3) / (2 * this->l2 * this->l3);
 
     if (temp > 1)
         temp = 1;
     else if (temp < -1)
         temp = -1;
 
-    float theta3 = acos(temp);
-    float theta2 = (atan2(z_, x_) - atan2(this->l3 * sin(theta3), (this->l2 + this->l3 * cos(theta3))));
+    double theta3 = acos(temp);
+    double theta2 = (atan2(z_, x_) - atan2(this->l3 * sin(theta3), (this->l2 + this->l3 * cos(theta3))));
 
     q[0] = theta1;
     q[1] = theta2;

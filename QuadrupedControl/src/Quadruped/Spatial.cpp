@@ -60,6 +60,16 @@ MathTypes::Vec6 CrossProductMotion(const MathTypes::Vec6& v1, const MathTypes::V
 		 v1(2) * v2(3) - v1(0) * v2(5) - v1(3) * v2(2) + v1(5) * v2(0),
 		 v1(0) * v2(4) - v1(1) * v2(3) + v1(3) * v2(1) - v1(4) * v2(0);
 
+
+	v = MathTypes::Vec6(
+		-v1[2] * v2[1] + v1[1] * v2[2],
+		v1[2] * v2[0] - v1[0] * v2[2],
+		-v1[1] * v2[0] + v1[0] * v2[1],
+		-v1[5] * v2[1] + v1[4] * v2[2] - v1[2] * v2[4] + v1[1] * v2[5],
+		v1[5] * v2[0] - v1[3] * v2[2] + v1[2] * v2[3] - v1[0] * v2[5],
+		-v1[4] * v2[0] + v1[3] * v2[1] - v1[1] * v2[3] + v1[0] * v2[4]
+	);
+
 	return v;
 }
 
@@ -73,15 +83,25 @@ MathTypes::Vec6 CrossProductForce(const MathTypes::Vec6& v1, const MathTypes::Ve
 		 v2(3) * v1(2) - v2(5) * v1(0),
 		 v2(4) * v1(0) - v2(3) * v1(1);
 
+
+	v = MathTypes::Vec6(
+		-v1[2] * v2[1] + v1[1] * v2[2] - v1[5] * v2[4] + v1[4] * v2[5],
+		v1[2] * v2[0] - v1[0] * v2[2] + v1[5] * v2[3] - v1[3] * v2[5],
+		-v1[1] * v2[0] + v1[0] * v2[1] - v1[4] * v2[3] + v1[3] * v2[4],
+		-v1[2] * v2[4] + v1[1] * v2[5],
+		v1[2] * v2[3] - v1[0] * v2[5],
+		-v1[1] * v2[3] + v1[0] * v2[4]
+	);
+
 	return v;
 }
 
 
-QUADRUPED_API MathTypes::Mat4 SpatialToHomog(const MathTypes::Mat6& X)
+QUADRUPED_API MathTypes::Mat4 SpatialToHomog(const SpatialTransform& X)
 {
 	MathTypes::Mat4 H = MathTypes::Mat4::Zero();
-	H.template topLeftCorner<3, 3>() = SpatialToRotMat(X);
-	H.template topRightCorner<3, 1>() = SpatialToTranslation(X);
+	H.template topLeftCorner<3, 3>() = X.GetRotation();
+	H.template topRightCorner<3, 1>() = X.GetTranslation();
 	H(3, 3) = 1;
 	return H;
 }
@@ -96,7 +116,7 @@ QUADRUPED_API MathTypes::Mat3 SpatialToRotMat(const MathTypes::Mat6& X)
 QUADRUPED_API MathTypes::Vec3 SpatialToTranslation(const MathTypes::Mat6& X)
 {
 	MathTypes::Mat3 R = SpatialToRotMat(X);
-	//MathTypes::Vec3 r = -SkewMatToVecor(R.transpose() * X.template bottomLeftCorner<3, 3>());
-	MathTypes::Vec3 r = SkewMatToVecor(X.template bottomLeftCorner<3, 3>() * R.transpose());
+	MathTypes::Vec3 r = -SkewMatToVecor(-R.transpose() * X.template bottomLeftCorner<3, 3>());
+	//MathTypes::Vec3 r = SkewMatToVecor(X.template bottomLeftCorner<3, 3>() * R.transpose());
 	return r;
 }

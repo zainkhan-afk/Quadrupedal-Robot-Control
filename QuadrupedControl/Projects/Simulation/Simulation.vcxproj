@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{d1c6758d-f4c0-4c3c-96c3-c78f73d24bde}</ProjectGuid>
+    <RootNamespace>Simulation</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)Builds\$(ProjectName)\$(Configuration)\$(Platform)</OutDir>
+    <IntDir />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)Builds\$(ProjectName)\$(Configuration)\$(Platform)</OutDir>
+    <IntDir />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)Builds\$(ProjectName)\$(Configuration)\$(Platform)</OutDir>
+    <IntDir />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)Builds\$(ProjectName)\$(Configuration)\$(Platform)</OutDir>
+    <IntDir />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\include;$(SolutionDir)SimulationIncludes;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\lib\msw;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\lib\msw\$(Platform)\$(Configuration)\$(PlatformToolset)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\include;$(SolutionDir)SimulationIncludes;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\lib\msw;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\lib\msw\$(Platform)\$(Configuration)\$(PlatformToolset)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\include;$(SolutionDir)SimulationIncludes;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\lib\msw;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\lib\msw\$(Platform)\$(Configuration)\$(PlatformToolset)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\include;$(SolutionDir)SimulationIncludes;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\lib\msw;D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\lib\msw\$(Platform)\$(Configuration)\$(PlatformToolset)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Gait.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\LegController.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\MPC.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Quadruped.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\QuadrupedControl.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\RobotDynamics.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Spatial.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\SpatialInertia.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\SpatialTransform.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\TestClass.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Utilities.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Visualization\Axes.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Visualization\Cube.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Visualization\Entity.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Visualization\Plane.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Visualization\QuadrupedVisualizer.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Visualization\Robot.cpp" />
+    <ClCompile Include="..\..\src\Simulation\Visualization\Sphere.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Gait.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\LegController.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\MPC.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Quadruped.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\QuadrupedControl.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\RobotDynamics.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Spatial.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\SpatialInertia.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\SpatialTransform.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\State.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\TestClass.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Types.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Utilities.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Axes.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Cube.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Entity.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Plane.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\QuadrupedVisualizer.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Resources.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Robot.h" />
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Visualization\Sphere.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\Tests\QuadrupedModelVisualizer\Resources.rc">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;$(SolutionDir)SimulationIncludes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;$(SolutionDir)SimulationIncludes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;$(SolutionDir)SimulationIncludes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\zain_dev\thesis\Featherstone-Dynamics\FeatherstoneDynamics\externalLibs\Cinder\include;$(SolutionDir)SimulationIncludes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

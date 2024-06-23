@@ -1,6 +1,7 @@
 #pragma once
 
 #include "QuadrupedVisualizer/Cube.h"
+#include "QuadrupedVisualizer/Sphere.h"
 #include "Quadruped/Types.h"
 
 
@@ -11,11 +12,13 @@ public:
 	~Robot();
 
 	void SetRobotLinkPose(MathTypes::Vec3 position, MathTypes::Vec3 rotation, int linkIdx);
+	void SetRobotFootPosition(MathTypes::Vec3 position, int footIdx);
 
 	void Draw();
 
 private:
 	myprimitives::Cube* bodyParts[13];
+	myprimitives::Sphere* feet[4];
 
 	struct
 	{

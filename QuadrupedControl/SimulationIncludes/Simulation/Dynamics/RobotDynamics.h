@@ -50,6 +50,8 @@ public:
 
 
 private:
+	void UpdateKinematics(const State& state);
+	void ResolveContacts();
 	StateDot RunArticulatedBodyAlgorithm(const State& state);
 
 public:
@@ -66,6 +68,10 @@ public:
 	std::vector<MathTypes::Vec3> contactPoints;
 	std::vector<int> contactPointsParents;
 	std::vector<MathTypes::Vec3> fc;
+	std::vector<MathTypes::Vec3> contactPointPositions;
+	std::vector<MathTypes::Vec3> kneeGlobalPositions;
+	std::vector<MathTypes::Vec3> footGlobalPositions;
+	std::vector<bool> isContact;
 
 
 	MathTypes::Vec6 G = MathTypes::Vec6::Zero();

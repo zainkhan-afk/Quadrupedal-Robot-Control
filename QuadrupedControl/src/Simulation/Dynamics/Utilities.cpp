@@ -77,7 +77,7 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 {
 	MathTypes::Vec4 q;
 
-	double t = R.trace();
+	/*double t = R.trace();
 	
 	if (t > 0.0f)
 	{
@@ -105,9 +105,9 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 		q[3] = (R(k, j) - R(j, k)) * t;
 		q[j] = (R(j, i) + R(i, j)) * t;
 		q[k] = (R(k, i) + R(i, k)) * t;
-	}
+	}*/
 	
-	/*MathTypes::Mat3 r = R.transpose();
+	MathTypes::Mat3 r = R;
 	double tr = r.trace();
 	if (tr > 0.0) {
 		double S = sqrt(tr + 1.0) * 2.0;
@@ -133,7 +133,7 @@ MathTypes::Vec4 RotationMatrixToQuat(MathTypes::Mat3 R)
 		q(1) = (r(0, 2) + r(2, 0)) / S;
 		q(2) = (r(1, 2) + r(2, 1)) / S;
 		q(3) = 0.25 * S;
-	}*/
+	}
 	
 	return q;
 }
@@ -163,15 +163,15 @@ MathTypes::Vec3 QuatToEuler(MathTypes::Vec4 q)
 
 	MathTypes::Vec3 euler = MathTypes::Vec3::Zero();
 	
-	//float w = q[0];
-	//float x = q[1];
-	//float y = q[2];
-	//float z = q[3];
+	double w = q[0];
+	double x = q[1];
+	double y = q[2];
+	double z = q[3];
 
-	float x = q[0];
-	float y = q[1];
-	float z = q[2];
-	float w = q[3];
+	//double x = q[0];
+	//double y = q[1];
+	//double z = q[2];
+	//double w = q[3];
 
 	double t0 = +2.0 * (w * x + y * z);
 	double t1 = +1.0 - 2.0 * (x * x + y * y);

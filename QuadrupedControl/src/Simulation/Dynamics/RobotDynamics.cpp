@@ -1,6 +1,8 @@
 #include "Simulation/Dynamics/RobotDynamics.h"
 #include "Simulation/Dynamics/Spatial.h"
 #include <math.h>
+#include "cinder/Log.h"
+#include <sstream>
 
 
 RobotDynamics::RobotDynamics()
@@ -70,6 +72,10 @@ void RobotDynamics::AddContactPoint(MathTypes::Vec3 contactPoint, int parent)
 	contactPoints.push_back(contactPoint);
 	contactPointsParents.push_back(parent);
 	fc.push_back(MathTypes::Vec3::Zero());
+	contactPointPositions.push_back(MathTypes::Vec3::Zero());
+	footGlobalPositions.push_back(MathTypes::Vec3::Zero());
+	kneeGlobalPositions.push_back(MathTypes::Vec3::Zero());
+	isContact.push_back(false);
 }
 
 void RobotDynamics::SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces)
@@ -90,9 +96,69 @@ StateDot RobotDynamics::Step(const State& state)
 	StateDot dState;
 
 	dState = RunArticulatedBodyAlgorithm(state);
-	//dState = RunArticulatedBodyAlgorithmMiT(state);
 
 	return dState;
+}
+
+void RobotDynamics::UpdateKinematics(const State& state)
+{
+	Xp[1] = SpatialTransform();
+	v[1] = state.bodyVelocity;
+
+	for (size_t i = 2; i < this->Xl.size(); i++)
+	{
+		SpatialTransform Xj(GetRotationMatrix(state.q[i - 2], this->axis[i]), MathTypes::Vec3::Zero());
+		Xp[i] = Xj * Xl[i]; // Book
+
+		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 2];
+
+		v[i] = Xp[i].GetSpatialForm() * v[parents[i]] + vJoint;
+		c[i] = CrossProductMotion(v[i], vJoint);
+	}
+
+	for (size_t i = 0; i < contactPoints.size(); i++)
+	{
+		int contactParent = contactPointsParents[i];
+		SpatialTransform Xpc = Xc[i] * Xp[contactParent];
+		Xcb[i] = Xc[i] * Xb[contactParent];
+
+		//MathTypes::Vec3 p = Xc[i].GetTranslation();
+		//MathTypes::Vec3 r = Xb[contactParent].GetInverse().GetTranslation();
+
+		MathTypes::Vec3 p = contactPointPositions[i];
+		MathTypes::Vec3 r = kneeGlobalPositions[i];
+
+		MathTypes::Vec3 foot_pos = /*Xb[contactParent].GetInverse().GetRotation() **/ (p - r);
+
+		contactPointPositions[i] = foot_pos;
+
+		//CI_LOG_D("Foot " << i << " Pos: " << foot_pos.transpose());
+	}
+
+	for (size_t i = 1; i < this->Xl.size(); i++) {
+		if (parents[i] != 0) {
+			Xb[i] = Xp[i] * Xb[parents[i]]; // Book
+		}
+		else {
+			Xb[i] = Xp[i];
+		}
+
+	}
+}
+
+void RobotDynamics::ResolveContacts() 
+{
+	for (size_t i = 0; i < contactPoints.size(); i++)
+	{
+		if (!isContact[i]) { continue; }
+		int contactParent = contactPointsParents[i];
+		MathTypes::Vec6 f_sp = MathTypes::Vec6::Zero();
+
+		f_sp.topLeftCorner<3, 1>() = contactPointPositions[i].cross(fc[i]);
+		f_sp.bottomLeftCorner<3, 1>() = fc[i];
+
+		f[contactParent - 1] += f_sp;
+	}
 }
 
 StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
@@ -113,59 +179,18 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 	SpatialTransform Xbase_ref_rot(Rref_base_t, MathTypes::Vec3::Zero());
 
 	//Xp[1] = SpatialTransform(Rref_base, MathTypes::Vec3::Zero());;
-	Xp[1] = SpatialTransform();
  	//Xp[1] = Xref_base_rot;
 
 	//Xp[1] = SpatialTransform(MathTypes::Vec3(state.bodyPose[0], state.bodyPose[1], state.bodyPose[2]), MathTypes::Vec3(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]));
 
 
 	///////////////////////////// PASS 1 DOWN THE TREE START ///////////////////////////// 
-	v[1] = state.bodyVelocity;
+	UpdateKinematics(state);
+	ResolveContacts();
 	
-	for (size_t i = 2; i < this->Xl.size(); i++)
-	{	
-		SpatialTransform Xj(GetRotationMatrix(state.q[i - 2], this->axis[i]), MathTypes::Vec3::Zero());
-		Xp[i] = Xj * Xl[i]; // Book
-		//Xp[i] = Xl[i] * Xj; // How homog transforms work
-
-		MathTypes::Vec6 vJoint = S[i] * state.qDot[i - 2];
-		
-		v[i] = Xp[i].GetSpatialForm() * v[parents[i]] + vJoint;
-		c[i] = CrossProductMotion(v[i], vJoint);
-	}
-
-	for (size_t i = 0; i < contactPoints.size(); i++)
-	{
-		int contactParent = contactPointsParents[i];
-		SpatialTransform Xpc = Xc[i] * Xp[contactParent];
-		Xcb[i] = Xc[i] * Xb[contactParent];
-
-		MathTypes::Vec3 p = Xc[i].GetTranslation();
-		MathTypes::Vec3 r = Xb[contactParent].GetInverse().GetTranslation();
-
-		MathTypes::Vec3 foot_pos = Xb[contactParent].GetInverse().GetRotation()*(p - r);
-
-		MathTypes::Vec6 f_sp = MathTypes::Vec6::Zero();
-
-		f_sp.topLeftCorner<3, 1>() = foot_pos.cross(fc[i]);
-		f_sp.bottomLeftCorner<3, 1>() = fc[i];
-
-		f[contactParent - 1] += f_sp;
-		//f[contactParent - 1] += Xcb[i].GetSpatialFormForce() * fc[i];
-		//f[contactParent - 1] += Xpc.GetSpatialFormForce() * fc[i];
-	}
-
-	for (size_t i = 1; i < this->Xl.size(); i++){
-		if (parents[i] != 0) {
-			Xb[i] = Xp[i] * Xb[parents[i]]; // Book
-			//Xb[i] = Xb[parents[i]] * Xp[i]; // How homog transforms work
-		}
-		else {
-			Xb[i] = Xp[i];
-		}
-
+	for (size_t i = 1; i < this->Xl.size(); i++) {
 		articulatedInertias[i].SetInertia(linkInertias[i].GetInertia());
-		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) - 
+		pa[i] = CrossProductForce(v[i], linkInertias[i].GetInertia() * v[i]) -
 			/*Xbase_ref_rot.GetSpatialFormForce() * */Xb[i].GetSpatialFormForce() * f[i - 1];
 	}
 	///////////////////////////// PASS 1 DOWN THE TREE END ///////////////////////////// 
@@ -200,9 +225,9 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 	///////////////////////////// PASS 3 DOWN THE TREE END ///////////////////////////// 
 
 
-	//dState.bodyVelocityDDot = a[1];
+	dState.bodyVelocityDDot = a[1];
 
-	dState.bodyVelocityDDot.block<3, 1>(0, 0) = MathTypes::Vec3::Zero();
+	//dState.bodyVelocityDDot.block<3, 1>(0, 0) = MathTypes::Vec3::Zero();
 
 	return dState;
 }

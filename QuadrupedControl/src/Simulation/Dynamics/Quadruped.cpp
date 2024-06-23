@@ -3,7 +3,7 @@
 #include "Simulation/Dynamics/Utilities.h"
 #include "Simulation/Dynamics/Spatial.h"
 #include <math.h>
-
+#include "cinder/Log.h"
 
 
 Quadruped::Quadruped()
@@ -94,7 +94,7 @@ void Quadruped::Initialize()
 		transformationChain.push_back(MathTypes::Mat4::Identity());
 		transformationChain.push_back(MathTypes::Mat4::Identity());
 		footPos.push_back(MathTypes::Vec3::Zero());
-
+		
 		X = SpatialTransform(RIdent, GetLegSignedVector(bodyInertiaParams.abdLocation, leg));
 		//SpatialInertia abdIn(0.54f, GetLegSignedVector(abadCOM, leg), abadRotationalInertia);
 		//dynamics.AddBody(abdIn, X, COORD_AXIS::X, baseID);
@@ -251,6 +251,10 @@ void Quadruped::GetVisualTransformations(const State& state)
 	transformationChain[0](1, 3) = position[1];
 	transformationChain[0](2, 3) = position[2];
 
+	MathTypes::Mat4 Hbase_ref = MathTypes::Mat4::Identity();
+	Hbase_ref.template topLeftCorner<3, 3>() = R.transpose();
+	Hbase_ref.template topRightCorner<3, 1>() = -R * position;
+
 	int footIdx = 0;
 
 	for (int i = 1; i < transformationChain.size(); i++)
@@ -283,10 +287,21 @@ void Quadruped::GetVisualTransformations(const State& state)
 			TFoot(2, 3) = dynamics.contactPoints[footIdx][2];
 
 			TFoot = transformationChain[i] * TFoot;
+
+			footPos[footIdx] = TFoot.template topRightCorner<3, 1>();
+			dynamics.footGlobalPositions[footIdx] = TFoot.template topRightCorner<3, 1>();
+
+			if (dynamics.footGlobalPositions[footIdx][2] <= 0.0) { dynamics.isContact[footIdx] = true; }
+			else{ dynamics.isContact[footIdx] = false; }
+			dynamics.kneeGlobalPositions[footIdx] = transformationChain[i].template topRightCorner<3, 1>();
+			dynamics.contactPointPositions[footIdx] = dynamics.footGlobalPositions[footIdx];
+			dynamics.contactPointPositions[footIdx][2] = 0.0;
+			CI_LOG_D("Foot " << footIdx << " Global Pos: " << footPos[footIdx].transpose());
+
 			
-			footPos[footIdx][0] = TFoot(0, 3);
+			/*footPos[footIdx][0] = TFoot(0, 3);
 			footPos[footIdx][1] = TFoot(1, 3);
-			footPos[footIdx][2] = TFoot(2, 3);
+			footPos[footIdx][2] = TFoot(2, 3);*/
 	
 			footIdx++;
 		}

@@ -26,12 +26,13 @@ void QuadrupedVisualizer::setup() {
     linkIdx = 0;
     footIdx = 0;
     InitializeRobot();
+    CI_LOG_D("THIS IS A DEBUG LOG");
     //MathTypes::Vec6 f;
     //f << 0, 0, 0, 0, 0, 5;
     //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0.1, 0, 0;
-    robotModel.dynamics.G[5] = -9;
+    robotModel.dynamics.G[5] = -0.5;
 
     //robotModel.dynamics.fc[footIdx] << 1, 0, 0;
 
@@ -55,17 +56,21 @@ void QuadrupedVisualizer::update() {
 
     //robotModel.dynamics.fc[footIdx] = (robotModel.footPos[footIdx] - MathTypes::Vec3(robotModel.footPos[footIdx][0], robotModel.footPos[footIdx][1], -0.1));
 
-
+    MathTypes::Vec3 contactF; 
+    contactF << 0, 0, 0.3;
     
-    robotModel.dynamics.fc[footIdx] << 0, 0, 1;
+    robotModel.dynamics.fc[0] = contactF;
+    robotModel.dynamics.fc[1] = contactF;
+    robotModel.dynamics.fc[2] = contactF;
+    robotModel.dynamics.fc[3] = contactF;
     
     state = robotModel.StepDynamicsModel(state);
     robotModel.GetVisualTransformations(state);
 
     for (int i = 0; i < 13; i++) {
 
-        //MathTypes::Vec3 R = RotationMatrixToEuler(robotModel.dynamics.Xb[i + 1].GetRotation());
-        //MathTypes::Vec3 P = robotModel.dynamics.Xb[i + 1].GetTranslation();
+        //MathTypes::Vec3 R = RotationMatrixToEuler(robotModel.dynamics.Xb[i + 1].GetInverse().GetRotation());
+        //MathTypes::Vec3 P = robotModel.dynamics.Xb[i + 1].GetInverse().GetTranslation();
 
         MathTypes::Vec3 R;
         MathTypes::Vec3 P;
@@ -78,7 +83,7 @@ void QuadrupedVisualizer::update() {
     }
 
     for (int i = 0; i < 4; i++) {
-        //myRobot->SetRobotFootPosition(robotModel.dynamics.Xcb[i].GetTranslation(), i);
+        //myRobot->SetRobotFootPosition(robotModel.dynamics.Xcb[i].GetInverse().GetTranslation(), i);
         myRobot->SetRobotFootPosition(robotModel.footPos[i], i);
     }
 
@@ -99,7 +104,7 @@ void QuadrupedVisualizer::draw() {
     gl::setMatrices(mCam);
 
     sceneAxes->Draw();
-    //plane->Draw();
+    plane->Draw();
     myRobot->Draw();
     
     ang += 0.01;

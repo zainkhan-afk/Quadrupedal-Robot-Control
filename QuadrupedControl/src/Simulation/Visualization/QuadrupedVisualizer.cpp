@@ -32,7 +32,7 @@ void QuadrupedVisualizer::setup() {
     //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.SetExternalForceAt(linkIdx, f);
     //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0.1, 0, 0;
-    robotModel.dynamics.G[5] = -0.5;
+    robotModel.dynamics.G[5] = -0.1;
 
     //robotModel.dynamics.fc[footIdx] << 1, 0, 0;
 
@@ -104,7 +104,7 @@ void QuadrupedVisualizer::draw() {
     gl::setMatrices(mCam);
 
     sceneAxes->Draw();
-    plane->Draw();
+    //plane->Draw();
     myRobot->Draw();
     
     ang += 0.01;

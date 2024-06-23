@@ -81,6 +81,18 @@
     <ClCompile Include="..\..\src\Simulation\Dynamics\Gait.cpp">
       <Filter>src\Dynamics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\ContactSpringDamper.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\PlaneCollider.cpp">
+      <Filter>src\Dynamics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Collider.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Simulation\Dynamics\Environment.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\LegController.h">
@@ -145,6 +157,18 @@
     </ClInclude>
     <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Gait.h">
       <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\ContactSpringDamper.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\PlaneCollider.h">
+      <Filter>include\Dynamics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Collider.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SimulationIncludes\Simulation\Dynamics\Environment.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

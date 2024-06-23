@@ -73,9 +73,10 @@ void RobotDynamics::AddContactPoint(MathTypes::Vec3 contactPoint, int parent)
 	contactPointsParents.push_back(parent);
 	fc.push_back(MathTypes::Vec3::Zero());
 	contactPointPositions.push_back(MathTypes::Vec3::Zero());
-	footGlobalPositions.push_back(MathTypes::Vec3::Zero());
-	kneeGlobalPositions.push_back(MathTypes::Vec3::Zero());
+	contactBodyGlobalPositions.push_back(MathTypes::Vec3::Zero());
+	contactParentGlobalPositions.push_back(MathTypes::Vec3::Zero());
 	isContact.push_back(false);
+	numContacts++;
 }
 
 void RobotDynamics::SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces)
@@ -102,6 +103,7 @@ StateDot RobotDynamics::Step(const State& state)
 
 void RobotDynamics::UpdateKinematics(const State& state)
 {
+	if (kinematicsUpdated) { return; }
 	Xp[1] = SpatialTransform();
 	v[1] = state.bodyVelocity;
 
@@ -122,11 +124,8 @@ void RobotDynamics::UpdateKinematics(const State& state)
 		SpatialTransform Xpc = Xc[i] * Xp[contactParent];
 		Xcb[i] = Xc[i] * Xb[contactParent];
 
-		//MathTypes::Vec3 p = Xc[i].GetTranslation();
-		//MathTypes::Vec3 r = Xb[contactParent].GetInverse().GetTranslation();
-
 		MathTypes::Vec3 p = contactPointPositions[i];
-		MathTypes::Vec3 r = kneeGlobalPositions[i];
+		MathTypes::Vec3 r = contactParentGlobalPositions[i];
 
 		MathTypes::Vec3 foot_pos = /*Xb[contactParent].GetInverse().GetRotation() **/ (p - r);
 
@@ -144,6 +143,13 @@ void RobotDynamics::UpdateKinematics(const State& state)
 		}
 
 	}
+	kinematicsUpdated = true;
+}
+
+void RobotDynamics::ResetFlags()
+{
+	kinematicsUpdated = false;
+	contactsResolved = false;
 }
 
 void RobotDynamics::ResolveContacts() 

@@ -47,14 +47,18 @@ public:
 	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
 
 	StateDot Step(const State& state);
-
+	void UpdateKinematics(const State& state);
+	void ResetFlags();
 
 private:
-	void UpdateKinematics(const State& state);
 	void ResolveContacts();
 	StateDot RunArticulatedBodyAlgorithm(const State& state);
 
 public:
+	bool kinematicsUpdated = false;
+	bool contactsResolved = false;
+	int numContacts = 0;
+
 	std::vector<SpatialTransform> Xb;
 	int numLinks = 13;
 	std::vector<int> parents;
@@ -69,8 +73,8 @@ public:
 	std::vector<int> contactPointsParents;
 	std::vector<MathTypes::Vec3> fc;
 	std::vector<MathTypes::Vec3> contactPointPositions;
-	std::vector<MathTypes::Vec3> kneeGlobalPositions;
-	std::vector<MathTypes::Vec3> footGlobalPositions;
+	std::vector<MathTypes::Vec3> contactParentGlobalPositions;
+	std::vector<MathTypes::Vec3> contactBodyGlobalPositions;
 	std::vector<bool> isContact;
 
 

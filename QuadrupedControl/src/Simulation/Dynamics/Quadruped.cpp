@@ -146,52 +146,9 @@ void Quadruped::Initialize()
 	}
 }
 
-
-
-void Quadruped::SetFloatingBaseStateFromIMU(float IMUData[])
-{
-	// Rotational Data
-	state.bodyPose[0] = IMUData[0];
-	state.bodyPose[1] = IMUData[1];
-	state.bodyPose[2] = IMUData[2];
-	// Translational Data
-	state.bodyPose[3] = IMUData[3];
-	state.bodyPose[4] = IMUData[4];
-	state.bodyPose[5] = IMUData[5];
-}
-
-
-
-void Quadruped::SetJointsStateFromSensors(float jointStateData[])
-{
-	for (int i = 0; i < robotParameters.numActuatedDoF; i++)
-	{
-		state.q[i] = jointStateData[i];
-	}
-
-	for (int i = 0; i < robotParameters.numActuatedDoF; i++)
-	{
-		state.qDot[i] = jointStateData[robotParameters.numActuatedDoF + i];
-	}
-}
-
-
 void Quadruped::SetState(const State& newState)
 {
 	state = newState;
-}
-
-
-void Quadruped::SetState(float IMUData[], float jointStateData[])
-{
-	SetFloatingBaseStateFromIMU(IMUData);
-	SetJointsStateFromSensors(jointStateData);
-
-	for (int i = 0; i < 4; i++)
-	{
-		MathTypes::Vec3 q = MathTypes::Vec3(state.q[i * 3 + 0], state.q[i * 3 + 1], state.q[i * 3 + 2]);
-		MathTypes::Vec3 p = legController.ForwardKinematics(q, i);
-	}
 }
 
 void Quadruped::SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces)
@@ -289,20 +246,13 @@ void Quadruped::GetVisualTransformations(const State& state)
 			TFoot = transformationChain[i] * TFoot;
 
 			footPos[footIdx] = TFoot.template topRightCorner<3, 1>();
-			dynamics.footGlobalPositions[footIdx] = TFoot.template topRightCorner<3, 1>();
+			dynamics.contactBodyGlobalPositions[footIdx] = TFoot.template topRightCorner<3, 1>();
 
-			if (dynamics.footGlobalPositions[footIdx][2] <= 0.0) { dynamics.isContact[footIdx] = true; }
-			else{ dynamics.isContact[footIdx] = false; }
-			dynamics.kneeGlobalPositions[footIdx] = transformationChain[i].template topRightCorner<3, 1>();
-			dynamics.contactPointPositions[footIdx] = dynamics.footGlobalPositions[footIdx];
+			dynamics.contactParentGlobalPositions[footIdx] = transformationChain[i].template topRightCorner<3, 1>();
+			dynamics.contactPointPositions[footIdx] = dynamics.contactBodyGlobalPositions[footIdx];
 			dynamics.contactPointPositions[footIdx][2] = 0.0;
 			CI_LOG_D("Foot " << footIdx << " Global Pos: " << footPos[footIdx].transpose());
 
-			
-			/*footPos[footIdx][0] = TFoot(0, 3);
-			footPos[footIdx][1] = TFoot(1, 3);
-			footPos[footIdx][2] = TFoot(2, 3);*/
-	
 			footIdx++;
 		}
 	}

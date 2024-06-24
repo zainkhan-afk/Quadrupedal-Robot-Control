@@ -52,7 +52,6 @@ public:
 	void ResetFlags();
 
 private:
-	void ResolveContacts();
 
 public:
 	bool kinematicsUpdated = false;
@@ -75,7 +74,10 @@ public:
 	std::vector<MathTypes::Vec3> contactPointPositions;
 	std::vector<MathTypes::Vec3> contactParentGlobalPositions;
 	std::vector<MathTypes::Vec3> contactBodyGlobalPositions;
+	std::vector<MathTypes::Vec3> contactVelocity;
 	std::vector<bool> isContact;
+
+	std::vector<MathTypes::Vec6> f;
 
 
 	MathTypes::Vec6 G = MathTypes::Vec6::Zero();
@@ -97,7 +99,6 @@ private:
 
 	std::vector<MathTypes::Vec6> U;
 
-	std::vector<MathTypes::Vec6> f;
 
 	std::vector<SpatialTransform> Xp;
 

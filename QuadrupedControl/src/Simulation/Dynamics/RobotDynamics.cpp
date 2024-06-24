@@ -75,6 +75,7 @@ void RobotDynamics::AddContactPoint(MathTypes::Vec3 contactPoint, int parent)
 	contactPointPositions.push_back(MathTypes::Vec3::Zero());
 	contactBodyGlobalPositions.push_back(MathTypes::Vec3::Zero());
 	contactParentGlobalPositions.push_back(MathTypes::Vec3::Zero());
+	contactVelocity.push_back(MathTypes::Vec3::Zero());
 	isContact.push_back(false);
 	numContacts++;
 }
@@ -118,9 +119,13 @@ void RobotDynamics::UpdateKinematics(const State& state)
 		MathTypes::Vec3 p = contactPointPositions[i];
 		MathTypes::Vec3 r = contactParentGlobalPositions[i];
 
-		MathTypes::Vec3 foot_pos = /*Xb[contactParent].GetInverse().GetRotation() **/ (p - r);
+		MathTypes::Vec3 foot_pos = p - r;
 
 		contactPointPositions[i] = foot_pos;
+
+		MathTypes::Vec6 vcp = Xcb[i].GetSpatialForm() * v[contactParent];
+
+		contactVelocity[i] = vcp.template bottomLeftCorner<3, 1>() + vcp.template topLeftCorner<3, 1>().cross(foot_pos);
 
 		//CI_LOG_D("Foot " << i << " Pos: " << foot_pos.transpose());
 	}
@@ -143,20 +148,6 @@ void RobotDynamics::ResetFlags()
 	contactsResolved = false;
 }
 
-void RobotDynamics::ResolveContacts() 
-{
-	for (size_t i = 0; i < contactPoints.size(); i++)
-	{
-		if (!isContact[i]) { continue; }
-		int contactParent = contactPointsParents[i];
-		MathTypes::Vec6 f_sp = MathTypes::Vec6::Zero();
-
-		f_sp.topLeftCorner<3, 1>() = contactPointPositions[i].cross(fc[i]);
-		f_sp.bottomLeftCorner<3, 1>() = fc[i];
-
-		f[contactParent - 1] += f_sp;
-	}
-}
 
 StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 {
@@ -183,7 +174,6 @@ StateDot RobotDynamics::RunArticulatedBodyAlgorithm(const State& state)//
 
 	///////////////////////////// PASS 1 DOWN THE TREE START ///////////////////////////// 
 	UpdateKinematics(state);
-	ResolveContacts();
 	
 	for (size_t i = 1; i < this->Xl.size(); i++) {
 		articulatedInertias[i].SetInertia(linkInertias[i].GetInertia());

@@ -7,7 +7,7 @@ bool PlaneCollider::IsColliding(const MathTypes::Vec3& contactPt, const double f
 {
 	if (contactPt[2] <= floorHeight)
 	{
-		penetration = floorHeight - contactPt[2];
+		penetration = contactPt[2] - floorHeight;
 		return true;
 	}
 	else

@@ -86,7 +86,7 @@ void QuadrupedVisualizer::draw() {
     gl::setMatrices(mCam);
 
     sceneAxes->Draw();
-    //plane->Draw();
+    plane->Draw();
     myRobot->Draw();
     
     ang += 0.01;

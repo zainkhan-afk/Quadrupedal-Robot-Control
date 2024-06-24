@@ -17,9 +17,14 @@ public:
 
 	void AddContact(const ContactInfo& contact);
 
-	void SolveContacts(const Quadruped* robot);
+	void SolveContacts(Quadruped* robot);
+	void CalculateContactForces(Quadruped* robot);
+	void PropagateContactForces(Quadruped* robot);
+
 
 private:
+	double K = 1000;
+	double D = 500;
 	std::vector<ContactInfo> contactsToSolve;
 };
 

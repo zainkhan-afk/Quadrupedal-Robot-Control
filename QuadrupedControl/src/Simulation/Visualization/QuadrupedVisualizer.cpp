@@ -23,22 +23,21 @@ void QuadrupedVisualizer::setup() {
     myRobot = new Robot(mGlsl);
     sceneAxes = new Axes(mGlsl);
 
-    linkIdx = 0;
-    footIdx = 0;
-    InitializeRobot();
-    CI_LOG_D("THIS IS A DEBUG LOG");
-    //MathTypes::Vec6 f;
-    //f << 0, 0, 0, 0, 0, 5;
-    //robotModel.SetExternalForceAt(linkIdx, f);
-    //robotModel.SetExternalForceAt(linkIdx, f);
-    //robotModel.dynamics.fc[footIdx] << 0, 0, 0, 0.1, 0, 0;
-    robotModel.dynamics.G[5] = -0.1;
+    CI_LOG_D("Initializing robot.");
 
-    //robotModel.dynamics.fc[footIdx] << 1, 0, 0;
+    State st;
 
+    st.bodyPose << 0, 0, 0, 0, 0, 0.5;
 
-    //state.q[0] = M_PI / 10.0f;
-    //state.q[1] = M_PI / 10.0f;
+    Quadruped* robot = new Quadruped();
+    robot->Initialize();
+    robot->SetState(st);
+    robot->dynamics.G << 0, 0, 0, 0, 0, -5;
+
+    simEnviron.AddRobot(robot);
+
+    PlaneCollider* pc = new PlaneCollider();
+    simEnviron.AddPlane(pc);
 }
 
 void QuadrupedVisualizer::resize()
@@ -48,25 +47,8 @@ void QuadrupedVisualizer::resize()
 }
 
 void QuadrupedVisualizer::update() {
-    //state.q[2] = 0;
-
-
-    MathTypes::Vec6 f;
-    //f << 0, 0, 0, 0, 0, 10;
-
-    //robotModel.dynamics.fc[footIdx] = (robotModel.footPos[footIdx] - MathTypes::Vec3(robotModel.footPos[footIdx][0], robotModel.footPos[footIdx][1], -0.1));
-
-    MathTypes::Vec3 contactF; 
-    contactF << 0, 0, 0.3;
-    
-    robotModel.dynamics.fc[0] = contactF;
-    robotModel.dynamics.fc[1] = contactF;
-    robotModel.dynamics.fc[2] = contactF;
-    robotModel.dynamics.fc[3] = contactF;
-    
-    state = robotModel.StepDynamicsModel(state);
-    robotModel.GetVisualTransformations(state);
-
+    simEnviron.Step(dt);
+    std::vector<MathTypes::Mat4> transformationChain = simEnviron.GetRobotTransformationChain();
     for (int i = 0; i < 13; i++) {
 
         //MathTypes::Vec3 R = RotationMatrixToEuler(robotModel.dynamics.Xb[i + 1].GetInverse().GetRotation());
@@ -74,24 +56,24 @@ void QuadrupedVisualizer::update() {
 
         MathTypes::Vec3 R;
         MathTypes::Vec3 P;
-        R = RotationMatrixToEuler(robotModel.transformationChain[i].template topLeftCorner<3, 3>());
-        P[0] = robotModel.transformationChain[i](0, 3);
-        P[1] = robotModel.transformationChain[i](1, 3);
-        P[2] = robotModel.transformationChain[i](2, 3);
+        R = RotationMatrixToEuler(simEnviron.robot->transformationChain[i].template topLeftCorner<3, 3>());
+        P[0] = simEnviron.robot->transformationChain[i](0, 3);
+        P[1] = simEnviron.robot->transformationChain[i](1, 3);
+        P[2] = simEnviron.robot->transformationChain[i](2, 3);
 
         myRobot->SetRobotLinkPose(P, R, i);
     }
 
     for (int i = 0; i < 4; i++) {
         //myRobot->SetRobotFootPosition(robotModel.dynamics.Xcb[i].GetInverse().GetTranslation(), i);
-        myRobot->SetRobotFootPosition(robotModel.footPos[i], i);
+        myRobot->SetRobotFootPosition(simEnviron.robot->footPos[i], i);
     }
 
-
+    MathTypes::Vec6 f;
     f << 0, 0, 0, 0, 0, 0;
     for (int i = 0; i < 13; i++)
     {
-        robotModel.SetExternalForceAt(i, f);
+        simEnviron.robot->SetExternalForceAt(i, f);
     }
 }
 
@@ -108,16 +90,6 @@ void QuadrupedVisualizer::draw() {
     myRobot->Draw();
     
     ang += 0.01;
-}
-
-
-void QuadrupedVisualizer::InitializeRobot()
-{
-    robotModel.Initialize();
-
-    state.bodyPose << 0, 0, 0, 0, 0, 0.5;
-
-    robotModel.SetState(state);
 }
 
 void QuadrupedVisualizer::cleanup() {

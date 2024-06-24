@@ -167,9 +167,9 @@ State Quadruped::GetState()
 	return state;
 }
 
-void Quadruped::Integrate(State& state,const StateDot& dstate)
+void Quadruped::Integrate(const StateDot& dstate, double dt)
 {
-	state.bodyVelocity += dstate.bodyVelocityDDot * deltaT;
+	state.bodyVelocity += dstate.bodyVelocityDDot * dt;
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -180,25 +180,31 @@ void Quadruped::Integrate(State& state,const StateDot& dstate)
 		if (state.bodyVelocity[i + 3] < -10) { state.bodyVelocity[i + 3] = -10; }
 	}
 
-	state.bodyPose += state.bodyVelocity * deltaT;
+	state.bodyPose += state.bodyVelocity * dt;
 
 	//state.bodyPose.template block<3, 1>(3, 0) += dstate.bodyPositionDot * deltaT;
 
 	for (int i = 0; i < 12; i++)
 	{
 		double prevQ = state.q[i];
-		state.qDot[i] += dstate.qDDot[i] * deltaT;
+		state.qDot[i] += dstate.qDDot[i] * dt;
 
 		if (state.qDot[i] > 20.0) { state.qDot[i] = 10.0; }
 		if (state.qDot[i] < -20.0) { state.qDot[i] = -10.0; }
 
-		state.q[i] += state.qDot[i] * deltaT;
+		state.q[i] += state.qDot[i] * dt;
 
 		dynamics.torques[i] = (prevQ - state.q[i]) * 0.8;
 	}
 }
 
-void Quadruped::GetVisualTransformations(const State& state)
+void Quadruped::UpdateKinematics()
+{
+	CalculateVisualTransformations();
+	dynamics.UpdateKinematics(state);
+}
+
+void Quadruped::CalculateVisualTransformations()
 {
 	MathTypes::Mat3  R = GetRotationMatrix(state.bodyPose[0], COORD_AXIS::X) * GetRotationMatrix(state.bodyPose[1], COORD_AXIS::Y) * GetRotationMatrix(state.bodyPose[2], COORD_AXIS::Z);
 	MathTypes::Vec3 position(state.bodyPose[3], state.bodyPose[4], state.bodyPose[5]);
@@ -258,13 +264,18 @@ void Quadruped::GetVisualTransformations(const State& state)
 	}
 }
 
+StateDot Quadruped::RunArticulatedBodyAlgorithm()
+{
+	StateDot dState = dynamics.RunArticulatedBodyAlgorithm(state);
+	return dState;
+}
 
-State Quadruped::StepDynamicsModel(State& state)
+State Quadruped::StepDynamicsModel()
 {
 	//state = gait.step(legController, state, deltaT);
-	StateDot dState = dynamics.Step(state);
+	//StateDot dState = dynamics.Step(state);
 
-	Integrate(state, dState);
+	//Integrate(dState);
 
 	return state;
 }

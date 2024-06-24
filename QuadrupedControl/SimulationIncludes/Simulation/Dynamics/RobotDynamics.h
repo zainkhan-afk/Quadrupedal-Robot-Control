@@ -45,14 +45,14 @@ public:
 	void AddContactPoint(MathTypes::Vec3 contactPoint, int parent);
 	void SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces);
 	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
-
-	StateDot Step(const State& state);
+	
 	void UpdateKinematics(const State& state);
+	StateDot RunArticulatedBodyAlgorithm(const State& state);
+
 	void ResetFlags();
 
 private:
 	void ResolveContacts();
-	StateDot RunArticulatedBodyAlgorithm(const State& state);
 
 public:
 	bool kinematicsUpdated = false;

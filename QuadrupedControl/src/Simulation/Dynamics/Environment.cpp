@@ -30,7 +30,13 @@ void Environment::AddCollisionObject(Collider* collisionObject) {
 }
 
 void Environment::Step(double dt) {
+	if (robot == nullptr) { return; }
+	robot->UpdateKinematics();
 	CheckCollisions();
+	StateDot dstate = robot->RunArticulatedBodyAlgorithm();
+	robot->Integrate(dstate, dt);
+	robot->UpdateKinematics();
+	robot->dynamics.ResetFlags();
 }
 
 void Environment::CheckCollisions() {
@@ -50,4 +56,9 @@ void Environment::CheckCollisions() {
 	}
 
 	contactSolver.SolveContacts(robot);
+}
+
+std::vector<MathTypes::Mat4> Environment::GetRobotTransformationChain()
+{
+	return robot->transformationChain;
 }

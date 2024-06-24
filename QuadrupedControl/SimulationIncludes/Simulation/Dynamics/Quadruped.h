@@ -51,13 +51,15 @@ public:
 	void SetExternalForces(const std::vector<MathTypes::Vec6>& externalForces);
 	void SetExternalForceAt(int i, const MathTypes::Vec6& externalForce);
 
-	void GetVisualTransformations(const State& state);
+	void UpdateKinematics();
+	void CalculateVisualTransformations();
 
+	StateDot RunArticulatedBodyAlgorithm();
 
-	State StepDynamicsModel(State& state);
+	State StepDynamicsModel();
 
 	State GetState();
-	void Integrate(State& state, const StateDot& dstate);
+	void Integrate(const StateDot& dstate, double dt);
 
 private:
 	struct 
@@ -79,7 +81,6 @@ private:
 		MathTypes::Vec3 abdLocation, hipLocation, kneeLocation;
 	} bodyInertiaParams;
 
-	double deltaT = 0.01;
 	State state;
 	StateDot stateDot;
 	LegController legController;

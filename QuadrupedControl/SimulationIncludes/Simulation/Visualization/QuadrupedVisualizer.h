@@ -11,6 +11,8 @@
 
 #include "Simulation/Dynamics/Quadruped.h"
 #include "Simulation/Dynamics/State.h"
+#include "Simulation/Dynamics/Environment.h"
+#include "Simulation/Dynamics/PlaneCollider.h"
 
 class QuadrupedVisualizer : public ci::app::App 
 {
@@ -19,7 +21,6 @@ public:
     void                resize() override;
     void                update() override;
     void                draw() override;
-    void                InitializeRobot();
 
     void                cleanup() override;
 
@@ -31,11 +32,11 @@ private:
     int                     linkIdx;
     int                     footIdx;
 
-    Quadruped               robotModel;
-    State                   state;
+    Environment             simEnviron;
 
     Axes*                   sceneAxes;
     Robot*                  myRobot;
 
     double                  ang = 0.0;
+    double                  dt = 0.01;
 };

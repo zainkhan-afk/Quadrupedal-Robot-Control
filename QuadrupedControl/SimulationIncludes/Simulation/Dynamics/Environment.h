@@ -18,6 +18,7 @@ public:
 	void AddCollisionObject(Collider* collisionObject);
 
 	void Step(double dt);
+	std::vector<MathTypes::Mat4> GetRobotTransformationChain();
 
 	State GetRobotState() { return robotState; };
 
@@ -25,9 +26,11 @@ private:
 	void CheckCollisions();
 	void UpdateCollisionForces();
 
+public:
+	Quadruped* robot;
+
 private:
 	State robotState;
-	Quadruped* robot;
 	PlaneCollider* plane;
 
 	std::vector<Collider*> collisionObjects;

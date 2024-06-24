@@ -92,15 +92,6 @@ void RobotDynamics::SetExternalForceAt(int i, const MathTypes::Vec6& externalFor
 	f[i] = externalForce;
 }
 
-StateDot RobotDynamics::Step(const State& state)
-{
-	StateDot dState;
-
-	dState = RunArticulatedBodyAlgorithm(state);
-
-	return dState;
-}
-
 void RobotDynamics::UpdateKinematics(const State& state)
 {
 	if (kinematicsUpdated) { return; }
